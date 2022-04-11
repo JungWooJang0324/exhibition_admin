@@ -13,7 +13,7 @@ import connection.DbConnection;
 
 public class AdminMemberDAO {
 
-	public List<MemberVO> selectMember() throws SQLException{
+	public List<MemberVO> selectAllMember() throws SQLException{
 		List<MemberVO> mv= new ArrayList<MemberVO>();
 		Connection conn=null;
 		Statement stmt=null;
@@ -24,7 +24,7 @@ public class AdminMemberDAO {
 			conn=dc.getConn();
 			stmt=conn.createStatement();
 			StringBuilder selectMember = new StringBuilder();
-			selectMember.append("SELECT userid, password, name, tel, zipcode, address1, address2, isdeleted, isubscribe_date ")
+			selectMember.append("SELECT userid, name, isubscribe_date ")
 			.append("FROM member");
 			
 			rs=stmt.executeQuery(selectMember.toString());			
@@ -32,13 +32,7 @@ public class AdminMemberDAO {
 			while(rs.next()) {
 				mVO=new MemberVO();
 				mVO.setUserId(rs.getString("userid"));
-				mVO.setPassword(rs.getString("password"));
 				mVO.setName(rs.getString("name"));
-				mVO.setTel(rs.getString("tel"));
-				mVO.setZipcode(rs.getString("zipcode"));
-				mVO.setAddress1(rs.getString("address1"));
-				mVO.setAddress2(rs.getString("address2"));
-				mVO.setIsDeleted(rs.getString("isdeleted"));
 				mVO.setIsubscribeDate(rs.getDate("isubscribe_date"));
 				
 				mv.add(mVO);
@@ -52,10 +46,20 @@ public class AdminMemberDAO {
 		return mv;
 	}
 	
+	public List<MemberVO> selectMember(String id){
+		List<MemberVO> list = new ArrayList<MemberVO>();
+		
+		
+		
+		return list;
+	}
+	
+	
+	
 	public static void main(String[] args) {
 		AdminMemberDAO amDAO=new AdminMemberDAO();
 		try {
-			List<MemberVO> list = amDAO.selectMember();
+			List<MemberVO> list = amDAO.selectAllMember();
 			StringBuilder sb= new StringBuilder();
 			for(MemberVO mv: list) {
 				sb.append(mv.getUserId()).append(" ")

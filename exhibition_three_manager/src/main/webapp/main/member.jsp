@@ -25,9 +25,10 @@
         	#manager_div{width: 100px; height: 100px; background-color: white; border-radius: 100px; margin-left: 50px;}
         	#manager_name{margin-left: 30%; margin-top: 10px; width: 100px; color:white; font-weight: bold;}
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
-        	.member_tab {width:600px; border-spacing: 10px; font-size: 20px; text-align: center;}
-        	.member_tab th {background-color: #EEEDE7; font-weight: bold;}
-        	th {background-color: #EEEDE7; font-weight: bold; margin-right: 10%;}
+        	.member_tab {width:100%; border-spacing: 10px;  text-align: center;}
+        	th {background-color: #EEEDE7; font-weight: bold; text-align: center;}
+        	.member_tab th {background-color: #EEEDE7; font-size: 20px; font-weight: bold;}
+        	.modalTab th {width:100%;}
         	#addon td {text-align: right; }
    			.circle {
    				margin-left:30%;
@@ -44,6 +45,20 @@
 	            display: block;
 	        }
         </style>
+        
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
+        <script type="text/javascript">
+        $(function() {
+			$(".userId").click(function() {
+				var el= document.getElementById("userId").getAttribute('data-value');
+				<% AdminMemberDAO dao= new AdminMemberDAO();
+				
+				%>
+			});
+		}); //read
+        
+        </script>
 </head>
 <body class="sb-nav-fixed">
      <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -51,7 +66,13 @@
             <a class="navbar-brand ps-3" href="index.jsp">Exhibition Admin</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-           
+            <!-- Navbar Search-->
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
@@ -139,14 +160,8 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4" >회원관리</h1>
-                         <!-- Navbar Search-->
-			            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" style="float: right">
-			                <div class="input-group">
-			                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-			                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-			                </div>
-			            </form>
+                        <h1 class="mt-4">회원관리</h1>
+                        
                         <div class="row">
                         
  				<div class="card mb-4">
@@ -155,17 +170,11 @@
                                 회원
                             </div>
                             <div class="card-body">
-                                <table id="datatablesSimple">
+                                <table id="datatablesSimple" class="member_tab">
                                     <thead>
                                     <tr>
                                     	<th>USERID</th>
                                     	<th>NAME</th>
-                                    	<th>PASSWORD</th>
-                                    	<th>TEL</th>
-                                    	<th>ZIPCODE</th>
-                                    	<th>ADDRESS1</th>
-                                    	<th>ADDRESS2</th>
-                                    	<th>ISDELETED</th>
                                     	<th>ISUBSCRIBE_DATE</th>
                                     </tr>
                                     </thead>
@@ -173,18 +182,12 @@
     						 		<%
     						 		AdminMemberDAO amDAO = new AdminMemberDAO();
     						 		try {
-	    						 		List<MemberVO> list = amDAO.selectMember();
+	    						 		List<MemberVO> list = amDAO.selectAllMember();
 	    						 		for(MemberVO mv: list){
 	    						 		%>
 	    						 		<tr>
 	    						 			<td><%=mv.getUserId() %></td>
-	    						 			<td><%=mv.getName() %></td>
-	    						 			<td><%=mv.getPassword() %></td>
-	    						 			<td><%=mv.getTel() %></td>
-	    						 			<td><%=mv.getZipcode() %></td>
-	    						 			<td><%=mv.getAddress1()%></td>
-	    						 			<td><%=mv.getAddress2()%></td>
-	    						 			<td><%=mv.getIsDeleted()%></td>
+	    						 			<td><a href="#" data-bs-toggle="modal" id="userId" data-bs-target="#memberDetail" class="userId" data-value="<%=mv.getUserId()%>"><%=mv.getName() %></a></td>
 	    						 			<td><%=mv.getIsubscribeDate()%></td>
 	    						 		</tr>
 	    						 		<% }
@@ -197,8 +200,26 @@
                             </div>
                         </div>
                         
+                        <!-- 페이지 이동 -->                            
+                            <div id="pageNavigation">
+							  <ul class="pagination justify-content-center">
+							    <li class="page-item disabled">
+							      <a class="page-link" href="#" tabindex="-1"><</a>
+							    </li>
+							    <li class="page-item"><a class="page-link" href="#">1</a></li>
+							     <li class="page-item active">
+							      <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+							    </li>
+							    <li class="page-item"><a class="page-link" href="#">3</a></li>
+							    <li class="page-item">
+							      <a class="page-link" href="#">></a>
+							    </li>
+							  </ul>
+							</div>
                              <canvas id="myAreaChart" width="100%" height="40"></canvas>
                                     </div>
+                                    
+                            
                                 </div>
 				                </main>
                             
@@ -213,6 +234,60 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="modal fade" id="memberDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="staticBackdropLabel">회원 상세</h5>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+					 	<table class="modalTab" style="width: 98%; border: 1px solid #333; ">
+					 		<tr>
+					 			<th colspan="2" class="modalTh">회원 id</th>
+					 		</tr>
+					 		<tr>
+					 			<td id="id" class="modalTh">ㅑㅇ</td>
+					 		</tr>
+					 		
+					 		<tr>
+					 			<th colspan="2" class="modalTh">회원 명</th>
+					 		</tr>
+				 			<tr>
+					 			<td id="memberName" class="modalTh">이름</td>
+					 		</tr>
+					 		
+					 		<tr>
+					 			<th class="modalTh" colspan="2" >상세주소</th>
+					 		</tr>
+					 		<tr>
+					 			<td id="address1" class="modalTh">서울시 강남구</td>
+					 		</tr>
+							<tr>
+					 			<td id="address2" class="modalTh">역삼동...</td>
+							</tr>
+					 		<tr>
+					 			<th class="modalTh">우편번호</th>
+					 		</tr>
+							<tr>
+					 			<td id="zipcode" class="modalTh">zipcode</td>
+							</tr>
+					 		<tr>
+					 			<th colspan="2" class="modalTh">전화번호</th>
+					 		</tr>
+					 		<tr>
+					 			<td id="tel" class="modalTh">Tel</td>
+					 		</tr>
+					 		<tr>
+					 			<th colspan="2" class="modalTh">가입일</th>
+					 		</tr>
+					 		<tr>
+					 			<td id="subDate" class="modalTh">subscribe Date</td>
+					 		</tr>
+					 	</table>
+				      </div>
+				      </div></div></div>
                 </footer>
 	            </div>
             </div>

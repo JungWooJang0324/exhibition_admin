@@ -1,8 +1,5 @@
-<%@page import="DAO.AdminDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,20 +8,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Login - SB Admin</title>
+        <title>Password Reset - SB Admin</title>
         <link href="../css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-      
-      
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script type="text/javascript">
-        $(function() {
-        	$("#loginBtn").click(function() {
-				$("#loginForm").submit();
-			})
-		});
-        
-        </script>
     </head>
     <body class="bg-primary">
         <div id="layoutAuthentication">
@@ -34,26 +20,22 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Password Recovery</h3></div>
                                     <div class="card-body">
-                                        <form action="login_check.jsp" method="post" id="loginForm">
+                                        <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
+                                        <form>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inEmail" type="email" name="admin_id" placeholder="name@example.com" />
+                                                <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>
                                             </div>
-                                            <div class="form-floating mb-3">
-                                                <input class="form-control" id="inPassword" type="password" name="admin_pw" placeholder="Password" />
-                                                <label for="inputPassword">Password</label>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                                <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
-                                            </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="password.html">비밀번호를 잊어버리셨습니까?</a>
-                                                <a class="btn btn-primary" id="loginBtn" href="#">Login</a>
+                                                <a class="small" href="login.jsp">Return to login</a>
+                                                <a class="btn btn-primary" href="login.jsp">Reset Password</a>
                                             </div>
                                         </form>
+                                    </div>
+                                    <div class="card-footer text-center py-3">
+                                        <div class="small"><a href="register.html">Need an account? Sign up!</a></div>
                                     </div>
                                 </div>
                             </div>
