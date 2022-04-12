@@ -1,5 +1,9 @@
+<%@page import="VO.BoardVO"%>
+<%@page import="java.util.List"%>
+<%@page import="DAO.BoardManagerDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    info="게시판 글 추가 summernote"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,7 +28,7 @@
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-<!-- include summernote css/js 1MB 이하 이미지만 오릴 수 있음-->
+<!-- include summernote css/js 1MB 이하 이미지만 올릴 수 있음-->
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
@@ -33,7 +37,7 @@
 <script type="text/javascript">
 $(function(){
 	 $('#summernote').summernote({ 
-			height: 400,                 // set editor height
+		height: 400,                 		// set editor height
 		  	focus: true,                  // set focus to editable area after initializing summernote
 			  lang: "ko-KR",
 			  toolbar: [
@@ -43,11 +47,12 @@ $(function(){
 		          ['para', ['ul', 'ol', 'paragraph']],
 		          ['table', ['table']],
 		          ['insert', [ 'picture']]
-		       ] });
+       ] });
 	 
-	 $("#addPost").click(function(){
-		 $("#confirmAdd").modal('show');	
-	 });
+	 $("#backBtn").click(function(){
+		location.href="board.jsp";
+	});
+	 
 });//ready
 
 
@@ -55,12 +60,14 @@ $(function(){
 </head>
 <body>
 <div id="wrap">
-	<form method="post">
+	<form name= "addBoardAdminFrm" method="post">
+	<% BoardManagerDAO bDAO = new BoardManagerDAO(); 
+		%>
 	<div style="color:#D8D8D8 "> 작성자 </div>
 	<div id="name" style="font-size: 20px; margin-top: 5px;"> 홍길동 </div><hr>
 	<div id="selectDiv">
 		<select id="selectBoard" class="inputBox" style="margin-bottom: 5px; width: 80%">
-			<option>게시판을 선택해주세요.</option>
+			<option></option>
 		</select>
 		<select id="selecthead" class="inputBox" style="margin-bottom: 5px; width: 19%">
 			<option>말머리 선택</option>
@@ -69,56 +76,32 @@ $(function(){
 	<div id="subjectDiv">
 		<input id="subject" class="inputBox" type="text"  style="margin-bottom: 5px; width: 100%"placeholder=" 제목을 입력해주세요."/>
 	</div>
-	<div id="summernote">
-		<p>내용을 입력해주세요</p>
+	<div id="summernote" >
+		<p></p>
+	</div>
+	<div id="btnDiv" style="margin-top: 30px">
+		<button type="button" id="backBtn" class="btn btn-secondary" style="float: left;margin-left: 10px">뒤로가기</button> 
+		<button type="button" id = "addBtn" class="btn btn-primary" 
+			style="float: right; margin-right: 10px" data-toggle="modal" data-target="#confirmAdd" >게시글 추가</button>
 	</div>
 	</form>
-	<div id="btnDiv" style="margin-top: 30px">
-		<button type="button" class="btn btn-primary" style="float: left;margin-left: 10px">뒤로가기</button> 
-		<button type="button" id = "addPost" class="btn btn-primary" 
-			style="float: right;margin-right: 10px" data-bs-toggle="modal" data-bs-target="#confirmAdd" >게시글 추가</button>
-	</div>
-	<!-- 게시글 추가 확인 모달  -->
-	<div class="modal fade" id="confirmAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
+<!-- 모달 -->
+</div>
+	<div class="modal fade" id="confirmAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"></span></button>
 	      </div>
-	      <div class="modal-body" style="text-align: center">
+	      <div class="modal-body">
 	        게시글을 추가하시겠습니까?
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary">OK</button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		        <button type="button" class="btn btn-primary">OK</button>
 	      </div>
 	    </div>
 	  </div>
-	</div>
-	
-</div>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
   </div>
-</div>
 </body>
 </html>

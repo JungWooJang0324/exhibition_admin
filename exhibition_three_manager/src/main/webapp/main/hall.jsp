@@ -1,8 +1,11 @@
+<%@page import="DAO.ExHallManagerDAO"%>
+<%@page import="java.sql.SQLException"%>
+<%@page import="org.apache.catalina.mbeans.UserMBean"%>
 <%@page import="java.util.List"%>
-<%@page import="VO.ExhibitionHallVO"%>
-<%@page import="DAO.ExhibitonHallManagerDAO"%>
+<%@page import="VO.ExHallVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    info="전시장"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,20 +25,26 @@
  	#manager_div{width: 100px; height: 100px; background-color: white; border-radius: 100px; margin-left: 50px;}
  	#manager_name{margin-left: 60px; margin-top: 10px; width: 100px; color:white; font-weight: bold;}
  	hr {width:200px; margin: 0px auto; margin-top:10px;}
- 	#btnAddDiv{ text-align: right; margin-bottom: 100px}
- 	.modalTab{width: 500px; }
+	#searchDiv{ margin-bottom: 30px; text-align: right}
+ 	#btnAddDiv{ text-align: right; margin-top: 20px; position: relative}
+ 	#pageNavigation{position: absolute; bottom: 20%; left: 50%}
+ 	.modalTab{width: 90%; }
 	.modalTh{font-size: 12px; color: #B2B2B2; padding-left: 20px; padding-right: 20px; padding-top: 20px }
-	.modalTd{height: 40px; vertical-align: top; padding-left: 20px; padding-right: 20px}
- 	/* inline style : card-content */
+	.modalTd{height: 40px; vertical-align: top; padding-left: 20px; padding-right: 20px};
 </style>
 <script type="text/javascript">
+$(function({
+	$("#btnAdd").click(function(){
+		$("#hallAddfrm").submit();
+	});
+});
 </script> 
  </head>
  
  <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/project2/main/index.jsp">Exhibition Admin</a>
             <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
@@ -79,7 +88,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시 일정관리
                             </a>
-                            <a class="nav-link collapsed" href="admin_hall.jsp">
+                            <a class="nav-link collapsed" href="hall.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시장 관리
                             </a>
@@ -89,7 +98,7 @@
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="member.jsp">
+                            <a class="nav-link" href="board.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
@@ -136,9 +145,16 @@
 	                	<!-- 제목  -->
                         <h1 class="mt-4" style=" font-weight: bold; margin: 0px auto;">전시장 관리</h1>
                         <ol class="breadcrumb mb-4"  style="height: 30px; font-weight: bold;margin: 0px auto;">
-                            <li class="breadcrumb-item active"><a href="index.jsp">Dashboard</a></li>
+                            <li class="breadcrumb-item active" style="margin-left: 10px"><a href="index.jsp">Dashboard</a></li>
                             <li class="breadcrumb-item active">전시장 관리</li>
                         </ol>
+                        <!-- 검색 div -->
+                        <div id="searchDiv" >
+                        	<input type="text" placeholder="내용을 검색해주세요">
+                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 30px;">
+                        		<i class="fa-solid fa-magnifying-glass"></i>
+                       		</button>
+                        </div>
                         <!-- 전시장 테이블 -->
                         <div class="card-content" style=" margin: 0px auto">
                             <div class="table-responsive">
@@ -152,16 +168,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                  <%--  <% ExhibitonHallManagerDAO ehmDAO = new ExhibitonHallManagerDAO(); 
-                                  		List<ExhibitionHallVO> hallList = ehmDAO.selectExhibitonHall("경기");%>
-                                    <%for(ExhibitionHallVO ehVO : hallList){ %>
+                                  	<%
+                                  	ExHallManagerDAO ehmDAO = new ExHallManagerDAO(); 
+                                  	List<ExHallVO> list = ehmDAO.selectExhibitonHall("");
+                                  	for(ExHallVO ehVO: list){
+                                  	%>
                                         <tr class="odd gradeX">
                                             <td><%=ehVO.getExHallNum()%></td>
                                             <td><a href="#void" data-bs-toggle="modal" data-bs-target="#hallDetail"><%=ehVO.getExName() %></a></td>                                          	
                                             <td><%=ehVO.getExLoc() %></td>
                                         </tr>
-                                     <%} %>  --%>
-                                      </tbody>
+                                   	 <%}
+                                   	if(list==null){%>
+                              			<tr><td colspan="3">"저장된 값이 없습니다."</td></tr>
+                           			<%}%>	 
+                                     </tbody>
                                   </table>
                                   </form>
                                 </div>
@@ -211,59 +232,79 @@
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
+				      	<form id="hallAddFrm" action="admin_">
 					 	<table class="modalTab">
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시장</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="hallName" class="modalTd "></td>
+					 			<td class="modalTd">
+					 				<input type="text" name="exHall" placeholder="전시장명"/>
+				 				</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">주소</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTh">
-									<select class="inputBox" id="exLoc">
-										<option>서울</option>
-										<option>경기</option>
+					 			<td class="modalTd">
+									<select class="inputBox" id="exLoc" name="exLoc">
+										<option value="seoul">서울</option>
+										<option value="gyenggi">경기</option>
 									</select>
 								</td>
 					 		</tr>
 					 		<tr>
-					 			<th class="modalTh">상세주소</th><th class="modalTh">우편번호</th>
+					 			<th class="modalTh">상세주소</th><th class="modalTh" style="padding-left: 20px">우편번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="address1" class="modalTh"></td><td id="address2" class="modalTh"></td>
+					 			<td  class="modalTd">
+					 				<input type="text" id="address" name="addr" placeholder="주소"/>
+				 				</td>
+				 				<td class="modalTd">
+				 					<input id="zipcode"type="text" name="zipcode" placeholder="우편번호" />
+			 					</td>
 					 		</tr>
 					 		<tr>
-					 			<th class="modalTh">경도</th><th class="modalTh">위도</th>
+					 			<th class="modalTh">위도</th><th class="modalTh" style="padding-left: 20px">경도</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="latitude" class="modalTh"></td><td id="longtitude" class="modalTh"></td>
+					 			<td class="modalTd">
+					 				<input id="lat"  type="text" name="latitude" placeholder="위도"/>
+				 				</td>
+			 					<td  class="modalTd">
+			 						<input id="lng" type="text" name="longitutde" placeholder="경도"/>
+		 						</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시장 담당자</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="mgrName" class="modalTh"></td>
+					 			<td  class="modalTd">
+					 				<input id="mgrName" type="text" name="mgrName" placeholder="담당자명"/>	
+				 				</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시 담당자 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="mgrTel" class="modalTh"></td>
+					 			<td  class="modalTd">
+					 				<input id="mgrTel" type="text" name="mgrTel" placeholder="담당자 번호"/>
+					 			</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시장 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="exTel" class="modalTh"></td>
+					 			<td  class="modalTd">
+				 					<input id="exTel" type="text" name="exTel" placeholder="전시장 번호"/>
+				 				</td>
 					 		</tr>
 					 	</table>
+					 	</form>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">돌아가기</button>
-				        <button type="button" class="btn btn-primary">전시 추가</button>
+				        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#confirmAdd">전시 추가</button>
 				      </div>
 				    </div>
 				  </div>
@@ -282,7 +323,7 @@
 					 			<th colspan="2" class="modalTh">전시장 명</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="hallName" class="modalTd "></td>
+					 			<td class="modalTd"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시장 번호</th>
@@ -297,10 +338,10 @@
 					 			<td id="address1" class="modalTh"></td><td id="address2" class="modalTh"></td>
 					 		</tr>
 					 		<tr>
-					 			<th class="modalTh">경도</th><th class="modalTh">위도</th>
+					 			<th class="modalTh">위도</th><th class="modalTh">경도</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="latitude" class="modalTh"></td><td id="longtitude" class="modalTh"></td>
+					 			<td id="lat" class="modalTh"></td><td id="lng" class="modalTh"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시장 담당자</th>
@@ -356,6 +397,23 @@
 				      </div>
 				      <div class="modal-body">
 				        전시 내용을 수정하시겠습니까?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary">Ok</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- 전시장 수정 확인 모달  -->
+				<div class="modal fade" id="confirmAdd"" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        전시장을 추가하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

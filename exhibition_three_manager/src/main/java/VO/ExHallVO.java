@@ -1,16 +1,16 @@
 package VO;
 
-public class ExhibitionHallVO {
+public class ExHallVO {
 	int exHallNum;
 	String exName, address1, address2, mgrName, mgrTel, exTel, zipcode, inputDate, exLoc;
 	double latitude, longtitude; 
 	char hallDeleted;
 	
-	public ExhibitionHallVO() {
+	public ExHallVO() {
 		super();
 	}
 
-	public ExhibitionHallVO(int exHallNum, String exName, String address1, String address2, String mgrName,
+	public ExHallVO(int exHallNum, String exName, String address1, String address2, String mgrName,
 			String mgrTel, String exTel, String zipcode, String inputDate, String exLoc, double latitude,
 			double longtitude, char hallDeleted) {
 		super();

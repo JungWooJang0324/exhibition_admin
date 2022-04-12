@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import VO.ExhibitionHallVO;
+import VO.ExHallVO;
 import connection.DbConnection;
 
-public class ExhibitonHallManagerDAO {
+public class ExHallManagerDAO {
 	
 		
-	public List<ExhibitionHallVO> selectExhibitonHall(String exName) {
+	public List<ExHallVO> selectExhibitonHall(String exName){
 		
-		List<ExhibitionHallVO> hallList=null;
+		List<ExHallVO> hallList=null;
 		Connection con =null;
 		PreparedStatement pstmt =null;
 		ResultSet rs= null;
@@ -23,47 +23,48 @@ public class ExhibitonHallManagerDAO {
 		DbConnection dc= DbConnection.getInstance();
 			
 		try {
-			
-	
 			con=dc.getConn();
-			
 			
 			StringBuilder selectExhibitionHall = new StringBuilder();
 			selectExhibitionHall
 			.append("	SELECT ex_hall_num, ex_name, ex_loc	")
 			.append("	from EXHIBITION_HALL				")
-			.append("	where ex_name like '%'||?||'%'	");
+			.append("	where ex_name like '%'||?||'%'		");
 			
 			pstmt = con.prepareStatement(selectExhibitionHall.toString());
 			pstmt.setString(1, exName);
 			
 			rs= pstmt.executeQuery();
 			
-			hallList=  new ArrayList<ExhibitionHallVO>();
+			hallList=  new ArrayList<ExHallVO>();
 					
+			ExHallVO ehVO= null;
 			while(rs.next()) {
-				ExhibitionHallVO ehVO= new ExhibitionHallVO();
+				ehVO= new ExHallVO();
 				ehVO.setExHallNum(rs.getInt("ex_hall_num"));
 				ehVO.setExName(rs.getString("ex_name"));
 				ehVO.setExLoc(rs.getString("ex_loc"));
 				hallList.add(ehVO);
 			}	
 			
+			System.out.println("전시장 목록 select 성공");
+			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace();	
 		}finally {
 			
-			try {
-				dc.close(rs, pstmt, con);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+				try {
+					dc.close(rs, pstmt, con);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			
 		}
 		return hallList;
 	}//selectExhibitonHall
 	
 	
-	public void insertExhibitonHall(ExhibitionHallVO ehVO) throws SQLException{
+	public void insertExhibitonHall(ExHallVO ehVO){
 		Connection conn=null;
 		PreparedStatement pstmt = null;
 		
@@ -87,14 +88,23 @@ public class ExhibitonHallManagerDAO {
 				pstmt.setString(9, ehVO.getExTel()); 
 				
 				pstmt.executeUpdate();
+				
+				System.out.println("전시장 insert 성공");
+				
+		} catch (SQLException e) {
+			e.printStackTrace();		
 		}finally {
-			dc.close(null, pstmt, conn);
+			try {
+				dc.close(null, pstmt, conn);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}//insertExhibitonHall
 	
 	
-	public boolean upadateExhibitonHall(ExhibitionHallVO ehVO) throws SQLException{
+	public boolean upadateExhibitonHall(ExHallVO ehVO){
 		int flag=0;
 		
 		Connection con=null;
@@ -108,9 +118,10 @@ public class ExhibitonHallManagerDAO {
 				StringBuilder upadateExhibitonHall=new StringBuilder();
 				
 				upadateExhibitonHall
-				.append("	update EXHIBITION_HALL				")
-				.append("	set	ex_name=?, ex_loc=?, zipcode=?, latitude=?, longtitude=?, mgr_name=?, mgr_tel=?, ex_tel=?			")
-				.append("	where ex_hall_num=?				")
+				.append("	update EXHIBITION_HALL									")
+				.append("	set	ex_name=?, ex_loc=?, zipcode=?, latitude=?, "
+						+ "longtitude=?, mgr_name=?, mgr_tel=?, ex_tel=?			")
+				.append("	where ex_hall_num=?										")
 				;
 				
 				pstmt=con.prepareStatement(upadateExhibitonHall.toString());
@@ -126,8 +137,17 @@ public class ExhibitonHallManagerDAO {
 				pstmt.setInt(9, ehVO.getExHallNum()); 
 				
 				flag=pstmt.executeUpdate();
+				
+				System.out.println("전시장 update 성공");
+		
+		} catch (SQLException e) {
+			e.printStackTrace();		
 		}finally {
-			dc.close(null, pstmt, con);
+			try {
+				dc.close(null, pstmt, con);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		if(flag>0) {
@@ -138,7 +158,7 @@ public class ExhibitonHallManagerDAO {
 	}//upadateExhibitonHall
 	
 	
-	public boolean deleteExhibitonHall(int exHallNum) throws SQLException{
+	public boolean deleteExhibitonHall(int exHallNum){
 		int flag=0;
 		
 		Connection con=null;
@@ -156,8 +176,17 @@ public class ExhibitonHallManagerDAO {
 				pstmt.setInt(1, exHallNum); 
 				
 				flag=pstmt.executeUpdate();
+				
+				System.out.println("전시장 delete 성공");
+		
+		} catch (SQLException e) {
+			e.printStackTrace();		
 		}finally {
-			dc.close(null, pstmt, con);
+			try {
+				dc.close(null, pstmt, con);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		if(flag>0) {
@@ -168,9 +197,9 @@ public class ExhibitonHallManagerDAO {
 	}//deleteExhibitonHall
 	
 	
-	public ExhibitionHallVO selectExhibitonHallDetail(int exHallNum) throws SQLException{
+	public ExHallVO selectExhibitonHallDetail(int exHallNum) {
 
-		ExhibitionHallVO ehVO= null;
+		ExHallVO ehVO= null;
 		Connection con =null;
 		PreparedStatement pstmt =null;
 		ResultSet rs= null;
@@ -184,16 +213,16 @@ public class ExhibitonHallManagerDAO {
 			StringBuilder selectExhibitonHallDetail = new StringBuilder();
 			selectExhibitonHallDetail
 			.append("	SELECT ex_hall_num, ex_name, ex_loc, zipcode, latitude, longtitude, "
-					+ "mgr_name, mgr_tel, ex_tel	")
-			.append("	from EXHIBITION_HALL				")
-			.append("	where ex_hall_num=?				");
+					+ "mgr_name, mgr_tel, ex_tel													")
+			.append("	from EXHIBITION_HALL														")
+			.append("	where ex_hall_num=?															");
 			
 			
 			pstmt = con.prepareStatement(selectExhibitonHallDetail.toString());
 			pstmt.setInt(1, exHallNum);
 			
 			rs = pstmt.executeQuery();
-			ehVO= new ExhibitionHallVO();
+			ehVO= new ExHallVO();
 			
 			while(rs.next()) {
 				ehVO.setExHallNum(rs.getInt("ex_hall_num"));
@@ -206,9 +235,17 @@ public class ExhibitonHallManagerDAO {
 				ehVO.setMgrTel(rs.getString("mgrTel"));
 				ehVO.setExTel(rs.getString("exTel"));
 			}	
+		
+			System.out.println("전시 상세 select 성공");	
 			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}finally {
-			dc.close(rs, pstmt, con);
+			try {
+				dc.close(rs, pstmt, con);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return ehVO; 
@@ -217,8 +254,10 @@ public class ExhibitonHallManagerDAO {
 	
 	
 	public static void main(String[] args) {
-		ExhibitonHallManagerDAO ehmDAO = new ExhibitonHallManagerDAO ();
-		ehmDAO.selectExhibitonHall("");
+		ExHallManagerDAO ehmDAO = new ExHallManagerDAO ();
+			ehmDAO.selectExhibitonHall("");
+			System.out.println(ehmDAO.selectExhibitonHall(""));
+		
 	}//main 
 }
 	

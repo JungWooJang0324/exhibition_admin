@@ -1,5 +1,9 @@
+<%@page import="VO.BoardVO"%>
+<%@page import="java.util.List"%>
+<%@page import="DAO.BoardManagerDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    info="게시판"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,19 +26,21 @@
         	#manager_div{width: 100px; height: 100px; background-color: white; border-radius: 100px; margin-left: 50px;}
         	#manager_name{margin-left: 60px; margin-top: 10px; width: 100px; color:white; font-weight: bold;}
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
-        	#btnAddDiv{ text-align: right; margin-bottom: 100px}
-        	#inputDiv{width: 80%; margin: 0px auto; margin-bottom: 30px}
-        	#searchDate{ margin-bottom: 10px}
-        	.modalTab{width: 500px; }
+        	#searchDiv{ margin-bottom: 30px; text-align: right}
+      		#btnAddDiv{ text-align: right; margin-top: 20px; position: relative}
+ 			#pageNavigation{position: absolute; bottom: 20%; left: 50%}
+        	#modalTab{width: 500px;}
 			.modalTh{font-size: 12px; color: #B2B2B2; padding-left: 20px; padding-right: 20px; padding-top: 20px }
 			.modalTd{height: 40px; vertical-align: top; padding-left: 20px; padding-right: 20px}
         </style>
+        
 <script type="text/javascript">
 $(function(){
 	$("#btnAdd").click(function(){
-		location.href="admin_add_post.jsp";
+		location.href="add_board_admin.jsp";
 	});
 });
+
 
 </script> 
         </head>
@@ -78,14 +84,13 @@ $(function(){
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
                                 </div>
                                	회원 관리
-
                             </a>
                           <div class="sb-sidenav-menu-heading">EXHIBITIONS</div>
                             <a class="nav-link collapsed" href="ex_schedule.jsp" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시 일정관리
                             </a>
-                            <a class="nav-link collapsed" href="admin_hall.jsp">
+                            <a class="nav-link collapsed" href="hall.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시장 관리
                             </a>
@@ -95,7 +100,7 @@ $(function(){
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="member.jsp">
+                            <a class="nav-link" href="board.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
@@ -136,19 +141,22 @@ $(function(){
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
-                        <h1 class="mt-4" style="width: 90%; font-weight: bold;margin: 0px auto;">게시판 관리</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active"></li>
+                    <div class="container-fluid px-4" style="width: 90%;">
+                        <h1 class="mt-4" style=" font-weight: bold; margin: 0px auto;">게시판 관리</h1>
+                        <ol class="breadcrumb mb-4" style="height: 30px; font-weight: bold;margin: 0px auto;">
+                        	<li class="breadcrumb-item active" style="margin-left: 10px"><a href="index.jsp">Dashboard</a></li>
+                            <li class="breadcrumb-item active">게시판 관리</li>
                         </ol>
-                        <div id="inputDiv">
-                        	<input id="searchDate" type="date" /><br>
-                        	<input type="text">
-                        	<input type="text" placeholder="내용을 입력해주세요">
-                        
-                        
+                        <!-- 검색 div -->
+                        <div id="searchDiv" >
+                        	<input id="searchDate" type="date" />
+                        	<input type="text" id="search" placeholder="내용을 입력해주세요">
+                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 30px;">
+                        		<i class="fa-solid fa-magnifying-glass"></i>
+                       		</button>
                         </div>
-                        <div class="card-content" style="width: 80%; margin: 0px auto">
+                        <!-- 게시판 테이블 -->
+                        <div class="card-content" >
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="hallTables" style="text-align: center;">
                                     <thead>
@@ -162,14 +170,25 @@ $(function(){
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    <%
+                                  	BoardManagerDAO bDAO = new BoardManagerDAO(); 
+                                  	List<BoardVO> list = bDAO.selectBoardAdmin("");
+                                  	for(BoardVO bVO: list){
+                                  	%>
                                         <tr class="odd gradeX">
-                                            <td>1</td>
-                                            <td><a href="#void">글제목</a></td>
-                                            <td>김작성</td>
-                                            <td>2022-04-06</td>
-                                            <td>Q&A</td>
-                                            <td><button type="button" class="btn btn-secondary btn-sm">삭제</button></td>
-                                        </tr>
+                                            <td><%= bVO.getBdId()%></td>
+                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#boardDetail"><%=bVO.getTitle() %></a></td>                                          	
+                                            <td><%=bVO.getUserId() %></td>
+                                            <td><%=bVO.getInputDate() %></td>
+                                            <td><%=bVO.getCatName() %></td>
+                                   	 		<td><button type="button" class="btn btn-secondary btn-sm">삭제</button></td>
+                                   	 <%}
+                                   	if(list==null){%>
+                              			<tr>
+                              				<td colspan="3">"등록된 글이 없습니다."</td>
+                              				<td><button type="button" class="btn btn-secondary btn-sm">삭제</button></td>
+                              			</tr>
+                           			<%}%>	 
                                       </tbody>
                                    </table>
                                  </div>
@@ -177,7 +196,7 @@ $(function(){
                                  	<button type="button" class="btn btn-primary btn-lg" id="btnAdd">글쓰기</button>
 								</div>
                                </div>
-                               <div id="space"></div>
+                               <!-- 페이지 이동 -->
 	                            <div id="pageNavigation">
 								  <ul class="pagination justify-content-center">
 								    <li class="page-item disabled">
@@ -217,47 +236,59 @@ $(function(){
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-					 	<table class="modalTab">
+					 	<table id="modalTab">
+					 	<thead>
 					 		<tr>
-					 			<th class="modalTh">글 번호</th><th class="modalTh" style="width: 200px">수정/작성 일자</th>
+					 			<th class="modalTh" style="width: 250px">글 번호</th>
+					 			<th class="modalTh">수정/작성 일자</th>
 					 		</tr>
+				 		</thead>
+				 		<tbody>
 					 		<tr>
-					 			<td class="modalTd ">글 번호</td><td class="modalTd "><input type="date" class="inputBox"/></td>
+					 		<% BoardVO bVO= bDAO.selectBoardDetail(1); %>
+					 			<td class="modalTd "><%=bVO.getBdId()%></td>
+					 			<td class="modalTd "><%=bVO.getInputDate()%></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">제목</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd ">안녕하세요</td>
+					 			<td  colspan="2" class="modalTd "><%=bVO.getTitle()%></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">작성자</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd ">홍길동</td>
+					 			<td colspan="2" class="modalTd "><%=bVO.getUserId()%></td>
 					 		</tr>
 					 		<tr>
-					 			<th class="modalTh">카테고리</th><th class="modalTh">카테고리 번호</th>
+					 			<th class="modalTh">카테고리</th>
+					 			<th class="modalTh">카테고리 번호</th>
 					 		</tr>
 					 		<tr>
 					 			<td class="modalTd ">
 									<select class="inputBox">
-										<option>후기</option>
-										<option>QnA</option>
+						 			<% switch(bVO.getCatNum()){
+					 					case 1 : %>	
+											<option value="Q&A" selected>QnA</option>
+										<% case 2 : %>
+											<option>후기</option>
+					 				<%} %>
 									</select>
 								</td>
-								<td class="modalTd ">1</td>
+								<td class="modalTd "><%=bVO.getCatNum()%></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">글 내용</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd ">홍길동</td>
+					 			<td colspan="2" class="modalTd "><textarea style="width: 430px; height: 300px"><%=bVO.getDescription().replaceAll("br", "\n")%></textarea></td>
 					 		</tr>
+					 		</tbody>
 					 	</table>
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">돌아가기</button>
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  >돌아가기</button>
 				        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModify">게시글 수정</button>
 				      </div>
 				    </div>

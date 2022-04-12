@@ -2,9 +2,8 @@ package VO;
 
 public class BoardVO {
 
-	int bdId;
-	String title, userId, inputDate, catNum, catName;
-	StringBuilder description; 
+	int bdId, catNum;
+	String title, userId, inputDate, catName, description;
 	char isdeleted;
 	
 	
@@ -13,8 +12,8 @@ public class BoardVO {
 	}
 
 
-	public BoardVO(int bdId, String title, String userId, String inputDate, String catNum, String catName,
-			StringBuilder description, char isdeleted) {
+	public BoardVO(int bdId, String title, String userId, String inputDate, int catNum, String catName,
+			String description, char isdeleted) {
 		super();
 		this.bdId = bdId;
 		this.title = title;
@@ -67,12 +66,12 @@ public class BoardVO {
 	}
 
 
-	public String getCatNum() {
+	public int getCatNum() {
 		return catNum;
 	}
 
 
-	public void setCatNum(String catNum) {
+	public void setCatNum(int catNum) {
 		this.catNum = catNum;
 	}
 
@@ -87,12 +86,12 @@ public class BoardVO {
 	}
 
 
-	public StringBuilder getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
 
-	public void setDescription(StringBuilder description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
