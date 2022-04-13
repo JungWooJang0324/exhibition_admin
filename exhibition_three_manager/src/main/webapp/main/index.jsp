@@ -72,7 +72,7 @@
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
-                            <a class="nav-link collapsed" href="member.jsp">
+                            <a class="nav-link collapsed" href="admin_member.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
                                 </div>
                                	회원 관리
