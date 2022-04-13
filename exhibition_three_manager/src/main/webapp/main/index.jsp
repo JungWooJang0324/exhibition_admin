@@ -10,33 +10,41 @@
         <title>Exhibition Admin</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
+        <link href="../css/circle.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-      
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
         <style>
+       	  	table {text-align: center;}
         	#manager_div{width: 100px; height: 100px; background-color: white; border-radius: 100px; margin-left: 50px;}
         	#manager_name{margin-left: 30%; margin-top: 10px; width: 100px; color:white; font-weight: bold;}
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
-        	.member_tab {width:600px; border-spacing: 10px; font-size: 20px; text-align: center;}
-        	.member_tab th {background-color: #EEEDE7; font-weight: bold;}
-        	th {background-color: #EEEDE7; font-weight: bold; margin-right: 10%;}
-        	#addon td {text-align: right; }
-   			.circle {
-   				margin-left:30%;
-   				margin-top: 10%;
-	            width: 120px;
-	            height: 120px;
-	            line-height: 120px;
-	            -moz-border-radius: 50%;
-	            border-radius: 50%;
-	            border: solid 3px #1464F4;
-	            background-color: #ffffff;
-	            color: #1464F4;
-	            text-align: center;
-	            display: block;
-	        }
+        	.member_tab {width:600px; border-spacing: 10px;}
+        	th {color: #868B8E; margin-right: 10%; font-weight: normal; border-bottom: 1px solid #868B8E; border-top: 1px solid #868B8E;
+        	 font-size: 15px; height: 50px;
+        	}
+   			
         </style>
+          <script type="text/javascript">
+        const numb = document.querySelector(".number");
+        let counter = 0;
+        setInterval(() => {
+          if(counter == 100 ){
+            clearInterval();
+          }else{
+            counter+=1;
+            numb.textContent = counter + "%";
+          }
+        }, 80);
+        </script>
+        </head>
         </head>
  <body class="sb-nav-fixed">
+ <%
+if(session.getAttribute("admin_id")==null){
+	response.sendRedirect("login.jsp");
+}
+%>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.jsp">Exhibition Admin</a>
@@ -150,18 +158,49 @@
                                     		<th>오늘 가입 회원수</th>
                                     	</tr>
                                     	<tr>
-                                    		<td><div class="circle">3명</div>
+                                    		<td style="padding-left: 14%;">
+                                    		<div class="circular" style=" margin-top:70px;">
+										    <div class="inner"></div>
+										    <div class="number">100명</div>
+										    <div class="circle">
+										      <div class="bar left">
+										        <div class="progress"></div>
+										      </div>
+										      <div class="bar right">
+										        <div class="progress"></div>
+										      </div>
+										    </div>
+										  </div>
                                     		</td>
-                                    		<td class="circle">2명</td>
+                                    		<td style="padding-left: 20%;">
+                                    		<div class="circular" style=" margin-top:70px;">
+										    <div class="inner"></div>
+										    <div class="number">3명</div>
+										    <div class="circle">
+										      <div class="bar left">
+										        <div class="progress"></div>
+										      </div>
+										      <div class="bar right">
+										        <div class="progress"></div>
+										      </div>
+										    </div>
+										  </div>
+                                    		</td>
                                     	</tr>
                                     </table>
                                     <canvas id="myAreaChart" width="100%" height="40"></canvas>
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="col-xl-6" >
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                    <div id="admin"></div>
+                                    <canvas id="myAreaChart" width="100%" height="40"></canvas>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
@@ -194,18 +233,18 @@
                                     <div class="card-body">
                                      <table id="addon" cellspacing="10px">
                                     	<tr>
-                                    		<td>예약:</td>
-                                    		<td>N건</td>
-                                    		<td></n></n></td>
-											<td>내일 마감될 전시 예정건</td>
-                                    		<td>N건</td>
+                                    		<th>예약:</h>
+                                    		<td width="20%">N건</td>
+                                    		<td width="10%"></td>
+											<th>내일 마감될 전시 예정건</th>
+                                    		<td width="20%">N건</td>
                                     	</tr>
                                     	<tr>
-                                    		<td>오늘의 예약건수:</td>
-                                    		<td>N건</td>
-                                    		<td></n></n></td>
-											<td>신규 회원</td>
-                                    		<td>N건</td>
+                                    		<th>오늘의 예약건수:</th>
+                                    		<td width="20%">N건</td>
+                                    		<td width="10%"></td>
+											<th>신규 회원</th>
+                                    		<td width="20%">N건</td>
                                     	</tr>
                                     	
                                     </table>
