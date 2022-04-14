@@ -41,10 +41,12 @@
     </head>
     
     <body class="sb-nav-fixed">
-  <jsp:include page="admin_id_session.jsp"/>
+   
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.jsp">Exhibition Admin</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -57,9 +59,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/login.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -71,32 +73,32 @@
                         <div class="nav">
 						<div id="manager_div"><img src="../assets/img/Profile-PNG-Clipart.png" style="width:100px; margin-left: 0px;"/></div>
 							<div id="manager_name">
-								<%=session.getAttribute("admin_id") %>
+								관리자 이름
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/admin_member.jsp" style="background-color:#343a40">
+                            <a class="nav-link collapsed" href="admin_member.jsp" style="background-color:#343a40">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
                                 </div>
                                	회원 관리
 
                             </a>
                           <div class="sb-sidenav-menu-heading">EXHIBITIONS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" >
+                            <a class="nav-link collapsed" href="ex_schedule.jsp" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시 일정관리
                             </a>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/hall.jsp">
+                            <a class="nav-link collapsed" href="hall.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시장 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOOKING</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/booking.jsp">
+                            <a class="nav-link" href="booking.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/board.jsp">
+                            <a class="nav-link" href="board.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
@@ -108,8 +110,9 @@
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/password.jsp">Forgot Password</a>
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -129,62 +132,20 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        <%=session.getAttribute("admin_id") %>
+                        Start Bootstrap
                     </div>
                 </nav>
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
+                    <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">회원 관리</h1>
                         <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="index.jsp" style="text-decoration:none; color:#333;">Dashboard</a></li>
                             <li class="breadcrumb-item active">회원 관리</li>
                         </ol>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                            <!-- 회원 아이디 검색창 -->
-                             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-							  <div class="container-fluid">
-							    <a class="navbar-brand" href="#">Navbar</a>
-							    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							      <span class="navbar-toggler-icon"></span>
-							    </button>
-							    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-							      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							        <li class="nav-item">
-							          <a class="nav-link active" aria-current="page" href="#">Home</a>
-							        </li>
-							        <li class="nav-item">
-							          <a class="nav-link" href="#">Link</a>
-							        </li>
-							        <li class="nav-item dropdown">
-							          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							            Dropdown
-							          </a>
-							          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-							            <li><a class="dropdown-item" href="#">Action</a></li>
-							            <li><a class="dropdown-item" href="#">Another action</a></li>
-							            <li><hr class="dropdown-divider"></li>
-							            <li><a class="dropdown-item" href="#">Something else here</a></li>
-							          </ul>
-							        </li>
-							        <li class="nav-item">
-							          <a class="nav-link disabled">Disabled</a>
-							        </li>
-							      </ul>
-							      
-							    </div>
-							  </div>
-							</nav>
-								<!-- 검색창 끝 -->
-                            </div>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                회원 정보
-                            </div>
-                            <div class="card-body">
+                        <!-- 검색창 -->
+							<div id="searchDiv" >
                             <form class="d-flex" style="float:right">
 			                         <div class="input-group mb-3" style="width:300px;">
 											 <select class="form-select" aria-label=".form-select-sm example" >
@@ -195,13 +156,16 @@
 										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px">
 									</div>
 							      </form>
+                        	</div>
+                        
+                            <div class="card-body">
                             <!-- 테이블 정의 -->
                                 <table class="table table-hover" id="member_tab">
                             	<thead> 
 							   <tr>
-                                    	<th>USERID</th>
-                                    	<th>NAME</th>
-                                    	<th>ISUBSCRIBE_DATE</th>
+                                    	<th>ID</th>
+                                    	<th>이름</th>
+                                    	<th>가입일</th>
                                     </tr>
 						  	</thead> 
 						  	<tbody> 
@@ -223,18 +187,18 @@
 	    						 		}%>
 						  	</tbody> 
 						  </table>
-						    <div> 
+						  
+                            </div>
+                               <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">이전</a></li> 
+									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="">이전</a></li> 
 									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">1</a></li> 
 									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">2</a></li> 
 									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">3</a></li> 
 									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">다음</a></li> 
 								</ul> 
-						  </div>
-                            </div>
+							</div>
                         </div>
-                    </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
@@ -337,7 +301,6 @@
 							</div>
 					      	<div class="text-secondary">이름</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
-							  <input type="text" class="form-control" placeholder="이름">
 							</div>
 					      	<div class="text-secondary">전화번호</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
@@ -363,7 +326,6 @@
 					      	 </div>
 					      	<div>가입일</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
-							  <input type="text" class="form-control" placeholder="가입일은 바꿀필요가?">
 							</div>
 					      </div>
 					      <div class="modal-footer">

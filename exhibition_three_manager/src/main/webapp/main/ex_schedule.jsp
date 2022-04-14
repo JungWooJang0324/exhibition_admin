@@ -1,3 +1,4 @@
+<%@page import="VO.ExHallVO"%>
 <%@page import="VO.ExhibitionVO"%>
 <%@page import="DAO.AdminExhibitionDAO"%>
 <%@page import="java.sql.SQLException"%>
@@ -66,14 +67,21 @@
 
 		});
 
-
+	function hi(){
+	
+		 
+		 
+	 });
+	 
 	</script>  
     </head>
     <body class="sb-nav-fixed">
-	<jsp:include page="admin_id_session.jsp"/>
+
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="index.html">Exhibition Admin</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -86,9 +94,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/login.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -100,32 +108,32 @@
                         <div class="nav">
 						<div id="manager_div"><img src="../assets/img/Profile-PNG-Clipart.png" style="width:100px; margin-left: 0px;"/></div>
 							<div id="manager_name">
-								<%=session.getAttribute("admin_id") %>
+								관리자 이름
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/admin_member.jsp" >
+                            <a class="nav-link collapsed" href="admin_member.jsp" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
                                 </div>
                                	회원 관리
 
                             </a>
                           <div class="sb-sidenav-menu-heading">EXHIBITIONS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" style="background-color:#343a40">
+                            <a class="nav-link collapsed" href="ex_schedule.jsp" style="background-color:#343a40">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시 일정관리
                             </a>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/hall.jsp">
+                            <a class="nav-link collapsed" href="hall.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시장 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOOKING</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/booking.jsp">
+                            <a class="nav-link" href="booking.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/board.jsp">
+                            <a class="nav-link" href="board.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
@@ -137,8 +145,9 @@
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/password.jsp">Forgot Password</a>
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -158,7 +167,7 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        <%=session.getAttribute("admin_id") %>
+                        Start Bootstrap
                     </div>
                 </nav>
             </div>
@@ -167,7 +176,7 @@
                     <div class="container-fluid px-4">
                         <h1 class="mt-4">전시 일정관리</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="http://localhost/exhibition_three_manager/main/index.jsp">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
                         <div class="card mb-4">
@@ -293,7 +302,7 @@
                     </div>
                 </footer>
                  <!-- 전시 추가 modal  -->
-	                <div class="modal fade" tabindex="-1" id="addModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
+	                <div class="modal fade" tabindex="-1" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -301,17 +310,27 @@
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
+					      <form action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" id="addFrm">
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
-								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="전시명"  style="width:200px">
+								  <input type="email" class="form-control" id="exName" name="exName" placeholder="전시명"  style="width:200px">
 								</div>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시장</label>
-							      	<select class="form-select" aria-label=".form-select-sm example" style="width:300px">
-									  <option selected>서울 현대 미술관</option>
-									  <option value="1">One</option>
-									  <option value="2">Two</option>
-									  <option value="3">Three</option>
+								  <label for="exampleFormControlInput1" class="form-label">전시장 / 담당자</label>
+							      	<select class="form-select" id="addExHall"aria-label=".form-select-sm example" style="width:400px">
+									  <option selected>전시장과 담당자를 선택해주세요</option>
+									  <%
+									  	try{
+									 	List<ExHallVO> exNameList = aDAO.selectExhibitionHall();
+									  	for(ExHallVO eVO : exNameList){
+									  %>
+									   <option value='<%=eVO.getExHallNum()%>'><%=eVO.getExName()%> / 담당자 : <%=eVO.getMgrName() %></option>
+									   <%
+									  	}//end for
+									  	}catch(SQLException e){
+									  		e.printStackTrace();
+									  	}
+									   %>
 									</select>
 								</div>
 					      	<div class="mb-3">
@@ -328,7 +347,7 @@
 					      	<div class="mb-3" >
 						      	<label class="form-label">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="inputGroupFile02">
+								  <input type="file" class="form-control" id="exPoster">
 								</div>
 						      	<div style="width:200px; height:200px;">
 						      		<img src="images/adult.png" class="rounded float-start" alt="...">
@@ -341,7 +360,7 @@
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="inputGroupFile02">
+								  <input type="file" class="form-control" id="addImg">
 								</div>
 							</div>
 						      	<div class="mb-3">
@@ -351,49 +370,46 @@
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
-								<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="100"  style="width:100px">
+								<input type="text" class="form-control" id="totalNum" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
-								<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="0"  style="width:100px">
+								<input type="text" class="form-control" id="watchNum" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
-						    <div class="mb-3">
-								<label for="exampleFormControlTextarea1" class="form-label">담당자 이름</label>
-								<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="김전시"  style="width:100px">
-							</div>
 							
 							<div class="row">
 							<label class="form-label">전시 가격</label>
 						    <div class="mb-3 col-4">
 						    	<label>성인</label>
-								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상" >
-								  <span class="input-group-text">원</span>
+								<div class="input-group" id="adult"style="width:150px">
+								  <input type="text" class="form-control" aria-label="성인" id="adult">
+								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>청소년</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상" >
-								  <span class="input-group-text">원</span>
+								  <input type="text" class="form-control" aria-label="청소년" id="teen">
+								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상" >
-								  <span class="input-group-text">원</span>
+								  <input type="text" class="form-control" aria-label="유아/65세 이상"id="child" >
+								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 							</div>
-								
+					      </form>
 					      </div>
+					      <!-- modal body end -->
 					      <div class="modal-footer">
 					        <div class="container-fluid">
 					      <div class="row">
 					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-dark"  data-bs-dismiss="modal">돌아가기</button>
+					        <a type="button" class="btn btn-outline-dark"  data-bs-dismiss="modal" href="http://localhost/exhibition_three_manager/main/hall.jsp">돌아가기</a>
 					      	</div>
 					      	<div class="col-6 text-center">
 					        <button type="button" class="btn btn-outline-info"data-bs-target="#confirmAdd" data-bs-toggle="modal" >전시 추가</button>
@@ -406,7 +422,7 @@
 					</div>
 				<!-- modal -->
                  <!-- 전시 조회 modal  -->
-	                <div class="modal fade" tabindex="-1" id="showModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
+	                <div class="modal fade" tabindex="-1" id="showModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -478,7 +494,7 @@
 					</div>
 				<!-- modal -->
                  <!-- 전시 수정 modal  -->
-	                <div class="modal fade" tabindex="-1" id="modifyModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" >
+	                <div class="modal fade" tabindex="-1" id="modifyModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -590,7 +606,7 @@
 					  </div>
 					</div>
 				<!-- 전시 수정 확인 modal -->
-				<div class="modal fade" id="confirmModify" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmModify" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -609,7 +625,7 @@
 				<!-- modal -->
 				
 				<!-- 전시 삭제 확인 modal -->
-				<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmDelete" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -627,7 +643,7 @@
 				</div>
 				<!-- modal -->
 				<!-- 전시 추가 확인 modal -->
-				<div class="modal fade" id="confirmAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmAdd" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -638,7 +654,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
 				      </div>
 				    </div>
 				  </div>
@@ -646,7 +662,7 @@
 				<!-- modal -->
 				
 				<!-- 전시 노출 확인 modal -->
-				<div class="modal fade" id="confirmShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmShow" tabindex="-1"data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
