@@ -16,7 +16,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Exhibition Admin</title>
+        <title>Exhibition Schedule</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
@@ -66,11 +66,6 @@
 
 		});
 
-	function hi(){
-	
-		 
-		 
-	 });
 	 
 	</script>  
     </head>
@@ -81,7 +76,6 @@
             <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
             <!-- <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
- -->           
  			 <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -109,64 +103,24 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
+                    <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">전시 일정관리</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.jsp">Dashboard</a></li>
+                            <li class="breadcrumb-item active"><a href="index.jsp" class="breadcrumb-item active" style="text-decoration:none">Dashboard</a></li>
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
-                        <div class="card mb-4">
-                            <div class="card-body">
-                            <!-- 회원 아이디 검색창 -->
-                          <nav class="navbar navbar-expand-lg navbar-light bg-light">
-							  <div class="container-fluid">
-							    <a class="navbar-brand" href="#">Navbar</a>
-							    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-							      <span class="navbar-toggler-icon"></span>
-							    </button>
-							    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-							      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-							        <li class="nav-item">
-							          <a class="nav-link active" aria-current="page" href="#">Home</a>
-							        </li>
-							        <li class="nav-item">
-							          <a class="nav-link" href="#">Link</a>
-							        </li>
-							        <li class="nav-item dropdown">
-							          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							            Dropdown
-							          </a>
-							          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-							            <li><a class="dropdown-item" href="#">Action</a></li>
-							            <li><a class="dropdown-item" href="#">Another action</a></li>
-							            <li><hr class="dropdown-divider"></li>
-							            <li><a class="dropdown-item" href="#">Something else here</a></li>
-							          </ul>
-							        </li>
-							        <li class="nav-item">
-							          <a class="nav-link disabled">Disabled</a>
-							        </li>
-							      </ul>
-							    </div>
-							  </div>
-							</nav>
-															<!-- 검색창 끝 -->
-                            </div>
-                        </div>
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                전시 일정관리
-                            </div>
-                            <div class="card-body">
+                        <div class="card-body">
                                <form class="d-flex" style="float:right">
 			                         <div class="input-group mb-3" style="width:300px;">
-											 <select class="form-select" aria-label=".form-select-sm example" >
+											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;" >
 											  <option value="" selected="selected">전시명</option>
 											  <option value="">전시 번호</option>
 											  <option value="">담당자</option>
 											</select>
-										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px">
+										  <input type="text" class="form-control" aria-label="전시 검색" style="width:100px;height:35px; margin-right:10px;">
+										      <button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
+                                 			<i class="fa-solid fa-magnifying-glass"></i>
+                                 			</button>
 									</div>
 							      </form>
                             <!-- 테이블 정의 -->
@@ -222,7 +176,6 @@
 						  </div>
 						  <!-- 페이지 끝 -->
                             </div>
-                        </div>
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">

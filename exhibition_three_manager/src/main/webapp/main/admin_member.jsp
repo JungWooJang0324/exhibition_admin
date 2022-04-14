@@ -82,12 +82,15 @@
 							<div id="searchDiv" >
                             <form class="d-flex" style="float:right">
 			                         <div class="input-group mb-3" style="width:300px;">
-											 <select class="form-select" aria-label=".form-select-sm example" >
+											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;">
 											  <option value="" selected="selected">이름</option>
 											  <option value="">아이디</option>
 											  <option value="">가입일</option>
 											</select>
-										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px">
+										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px;height:35px; margin-right:10px;">
+										    <button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
+                                 <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
 									</div>
 							      </form>
                         	</div>

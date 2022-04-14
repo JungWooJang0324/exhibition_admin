@@ -1,3 +1,5 @@
+<%@page import="DAO.ReservationManagerDAO"%>
+<%@page import="VO.ReservationManagerVO"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="VO.MemberVO"%>
 <%@page import="java.util.ArrayList"%>
@@ -13,7 +15,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Exhibition Admin</title>
+        <title>Reservation</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
@@ -137,15 +139,27 @@
                                     </tr>
 						  	</thead> 
 						  	<tbody> 
+									<%
+									ReservationManagerDAO rDAO = new ReservationManagerDAO();
+									try {
+									List<ReservationManagerVO> rezList = rDAO.selectReservation();
+									for(ReservationManagerVO rVO : rezList){
+									%>					  		
 						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail">
-									<td>1</td>						  		
-									<td>2</td>						  		
-									<td>3</td>						  		
-									<td>4</td>						  		
-									<td>5</td>						  		
-									<td>6</td>						  		
-						  		
+									<td><%=rVO.getRezNum()%></td>
+									<td><%=rVO.getExName()%></td>
+									<td><%=rVO.getUserName() %></td>		
+									<td><%=rVO.getVisitData() %></td>		
+									<td><%=rVO.getRezStatus() %></td>		
+									<td>
+									 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#confirmCancel">예약 취소</button>
+				        				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
+				        			</td>
 						  		</tr>
+											<%} 
+									}catch(SQLException e) {
+    									e.printStackTrace();
+    						 		}%>
 						  	
 						  	
 						  	</tbody> 
@@ -254,14 +268,14 @@
 	  </div>
 	</div>
 				<!-- 회원삭제 확인 modal -->
-				<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmCancel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-				        회원을 삭제하시겠습니까?
+				        예약을 취소하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -272,14 +286,14 @@
 				</div>
 				<!-- 회원삭제 확인 modal -->
 				<!-- 회원 수정 확인 modal -->
-				<div class="modal fade" id="confirmModify" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmOk tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-				        회원을 수정하시겠습니까?
+				        예약을 확인하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
