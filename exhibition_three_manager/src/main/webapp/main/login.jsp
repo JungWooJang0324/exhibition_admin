@@ -36,7 +36,7 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                     <div class="card-body">
-                                        <form action="login_check.jsp" method="post" id="loginForm">
+                                        <form action="http://localhost/exhibition_three_manager/main/login_check.jsp" method="post" id="loginForm">
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="inEmail" type="email" name="admin_id" placeholder="name@example.com" />
                                                 <label for="inputEmail">Email address</label>
