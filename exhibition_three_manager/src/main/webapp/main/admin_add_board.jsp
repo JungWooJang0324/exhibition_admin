@@ -17,6 +17,8 @@
 		<!-- jQuery CDN -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <style type="text/css">
 #wrap{width: 90%; margin: 0px auto; margin-top: 30px};
@@ -48,7 +50,7 @@ $(function(){
        ] });
 	 
 	 $("#backBtn").click(function(){
-		location.href="http://localhost/exhibition_three_manager/main/board.jsp";
+		location.href="board.jsp";
 	});
 	 
 });//ready
@@ -57,13 +59,12 @@ $(function(){
 </script>
 </head>
 <body>
-<jsp:include page="admin_id_session.jsp"/>
 <div id="wrap">
 	<form name= "addBoardAdminFrm" method="post">
 	<% BoardManagerDAO bDAO = new BoardManagerDAO(); 
 		%>
 	<div style="color:#D8D8D8 "> 작성자 </div>
-	<div id="name" style="font-size: 20px; margin-top: 5px;"> <%=session.getAttribute("admin_id") %> </div><hr>
+	<div id="name" style="font-size: 20px; margin-top: 5px;"> 홍길동 </div><hr>
 	<div id="selectDiv">
 		<select id="selectBoard" class="inputBox" style="margin-bottom: 5px; width: 80%">
 			<option></option>
@@ -79,8 +80,8 @@ $(function(){
 		<p></p>
 	</div>
 	<div id="btnDiv" style="margin-top: 30px">
-		<button type="button" id="backBtn" class="btn btn-secondary" style="float: left;margin-left: 10px">뒤로가기</button> 
-		<button type="button" id = "addBtn" class="btn btn-primary" 
+		<button type="button" id="backBtn" class="btn btn-outline-dark" style="float: left;margin-left: 10px">뒤로가기</button> 
+		<button type="button" id = "addBtn" class="btn btn-outline-info" 
 			style="float: right; margin-right: 10px" data-toggle="modal" data-target="#confirmAdd" >게시글 추가</button>
 	</div>
 	</form>

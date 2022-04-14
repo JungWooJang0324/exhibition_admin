@@ -17,6 +17,8 @@
 		<!-- jQuery CDN -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   		
         
@@ -27,9 +29,7 @@
         	#searchDiv{ margin-bottom: 30px; text-align: right}
       		#btnAddDiv{ text-align: right; margin-top: 20px; position: relative}
  			#pageNavigation{position: absolute; bottom: 20%; left: 50%}
-        	#modalTab{width: 500px;}
-			.modalTh{font-size: 12px; color: #B2B2B2; padding-left: 20px; padding-right: 20px; padding-top: 20px }
-			.modalTd{height: 40px; vertical-align: top; padding-left: 20px; padding-right: 20px}
+        	
         </style>
         
 <script type="text/javascript">
@@ -43,10 +43,11 @@ $(function(){
 </script> 
         </head>
  <body class="sb-nav-fixed">
- <jsp:include page="admin_id_session.jsp"/>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="index.html">Exhibition Admin</a>
+            <!-- Sidebar Toggle-->
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -59,9 +60,9 @@ $(function(){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="#!">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/login.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -73,7 +74,7 @@ $(function(){
                         <div class="nav">
 						<div id="manager_div"><img src="../assets/img/Profile-PNG-Clipart.png" style="width:100px; margin-left: 0px;"/></div>
 							<div id="manager_name">
-								<%=session.getAttribute("admin_id") %>
+								관리자 이름
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
@@ -109,8 +110,9 @@ $(function(){
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/password.jsp">Forgot Password</a>
+                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="register.html">Register</a>
+                                            <a class="nav-link" href="password.html">Forgot Password</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -131,7 +133,7 @@ $(function(){
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        <%=session.getAttribute("admin_id") %>
+                        Start Bootstrap
                     </div>
                 </nav>
             </div>
@@ -140,21 +142,28 @@ $(function(){
                     <div class="container-fluid px-4" style="width: 90%;">
                         <h1 class="mt-4" style=" font-weight: bold; margin: 0px auto;">게시판 관리</h1>
                         <ol class="breadcrumb mb-4" style="height: 30px; font-weight: bold;margin: 0px auto;">
-                        	<li class="breadcrumb-item active" style="margin-left: 10px"><a href="http://localhost/exhibition_three_manager/main/index.jsp">Dashboard</a></li>
+                        	<li class="breadcrumb-item active" style="margin-left: 10px"><a href="index.jsp" style="text-decoration: none" class="breadcrumb-item active">Dashboard</a></li>
                             <li class="breadcrumb-item active">게시판 관리</li>
                         </ol>
                         <!-- 검색 div -->
-                        <div id="searchDiv" >
-                        	<input id="searchDate" type="date" />
-                        	<input type="text" id="search" placeholder="내용을 입력해주세요">
-                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 30px;">
-                        		<i class="fa-solid fa-magnifying-glass"></i>
-                       		</button>
+                        <div class="card-body" style="width: 400px; float: right;">
+                            <form class="d-flex">
+	                        	 <select class="form-select" aria-label=".form-select-sm example"   >
+									  <option value="" selected="selected">제목 </option>
+									  <option value="">작성자</option>
+									  <option value="">작성일</option>
+									  <option value="">카테고리</option>
+								</select>
+	                        	<input type="text" class="form-control" style="margin-right: 10px">
+	                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
+	                        		<i class="fa-solid fa-magnifying-glass"></i>
+	                       		</button>
+						      </form>
                         </div>
-                        <!-- 게시판 테이블 -->
-                        <div class="card-content" >
+                        <!-- 전시장 테이블 -->
+                        <div class="card-content" style=" margin: 0px auto; clear:both;">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="hallTables" style="text-align: center;">
+                            	<table class="table table-hover" id="boardTab" style="text-align: center">
                                     <thead>
                                         <tr>
                                             <th>글번호</th>
@@ -171,9 +180,9 @@ $(function(){
                                   	List<BoardVO> list = bDAO.selectBoardAdmin("");
                                   	for(BoardVO bVO: list){
                                   	%>
-                                        <tr class="odd gradeX">
+                                         <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#boardDetail">
                                             <td><%= bVO.getBdId()%></td>
-                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#boardDetail"><%=bVO.getTitle() %></a></td>                                          	
+                                            <td><%=bVO.getTitle() %></td>                                          	
                                             <td><%=bVO.getUserId() %></td>
                                             <td><%=bVO.getInputDate() %></td>
                                             <td><%=bVO.getCatName() %></td>
@@ -189,26 +198,19 @@ $(function(){
                                    </table>
                                  </div>
                                  <div class="btnAdd" id="btnAddDiv">
-                                 	<button type="button" class="btn btn-primary btn-lg" id="btnAdd">글쓰기</button>
+                                 	<button type="button" class="btn btn-dark" id="btnAdd">글쓰기</button>
 								</div>
                                </div>
                                <!-- 페이지 이동 -->
-	                            <div id="pageNavigation">
-								  <ul class="pagination justify-content-center">
-								    <li class="page-item disabled">
-								      <a class="page-link" href="#" tabindex="-1"><</a>
-								    </li>
-								    <li class="page-item"><a class="page-link" href="#">1</a></li>
-								     <li class="page-item active">
-								      <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-								    </li>
-								    <li class="page-item"><a class="page-link" href="#">3</a></li>
-								    <li class="page-item"><a class="page-link" href="#">4</a></li>
-								    <li class="page-item">
-								      <a class="page-link" href="#">></a>
-								    </li>
-								  </ul>
-								</div>
+	                            <div> 
+								<ul class="pagination justify-content-center"> 
+									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">이전</a></li> 
+									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">1</a></li> 
+									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">2</a></li> 
+									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">3</a></li> 
+									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">다음</a></li> 
+								</ul> 
+						  </div>
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
@@ -225,45 +227,45 @@ $(function(){
                 </footer>
                 <!-- 게시글 내용 Modal -->
 				<div class="modal fade" id="boardDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-				  <div class="modal-dialog">
+			 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 				    <div class="modal-content">
 				      <div class="modal-header">
 				        <h5 class="modal-title" id="staticBackdropLabel">게시글 내용</h5>
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-					 	<table id="modalTab">
+					 	<table id="modalTab" style="width: 98%">
 					 	<thead>
 					 		<tr>
-					 			<th class="modalTh" style="width: 250px">글 번호</th>
-					 			<th class="modalTh">수정/작성 일자</th>
+					 			<th style="width: 300px">글 번호</th>
+					 			<th style="width: 300px">수정/작성 일자</th>
 					 		</tr>
 				 		</thead>
 				 		<tbody>
 					 		<tr>
 					 		<% BoardVO bVO= bDAO.selectBoardDetail(1); %>
-					 			<td class="modalTd "><%=bVO.getBdId()%></td>
-					 			<td class="modalTd "><%=bVO.getInputDate()%></td>
+					 			<td><%=bVO.getBdId()%></td>
+					 			<td><%=bVO.getInputDate()%></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">제목</th>
+					 			<th colspan="2">제목</th>
 					 		</tr>
 					 		<tr>
-					 			<td  colspan="2" class="modalTd "><%=bVO.getTitle()%></td>
+					 			<td  colspan="2"><%=bVO.getTitle()%></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">작성자</th>
+					 			<th colspan="2">작성자</th>
 					 		</tr>
 					 		<tr>
-					 			<td colspan="2" class="modalTd "><%=bVO.getUserId()%></td>
+					 			<td colspan="2"><%=bVO.getUserId()%></td>
 					 		</tr>
 					 		<tr>
-					 			<th class="modalTh">카테고리</th>
-					 			<th class="modalTh">카테고리 번호</th>
+					 			<th>카테고리</th>
+					 			<th>카테고리 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd ">
-									<select class="inputBox">
+					 			<td>
+									<select>
 						 			<% switch(bVO.getCatNum()){
 					 					case 1 : %>	
 											<option value="Q&A" selected>QnA</option>
@@ -272,20 +274,20 @@ $(function(){
 					 				<%} %>
 									</select>
 								</td>
-								<td class="modalTd "><%=bVO.getCatNum()%></td>
+								<td><%=bVO.getCatNum()%></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">글 내용</th>
+					 			<th colspan="2">글 내용</th>
 					 		</tr>
 					 		<tr>
-					 			<td colspan="2" class="modalTd "><textarea style="width: 430px; height: 300px"><%=bVO.getDescription().replaceAll("br", "\n")%></textarea></td>
+					 			<td colspan="2"><textarea style="overflow-y:scroll;width: 760px; height: 200px "><%=bVO.getDescription().replaceAll("br", "\n")%></textarea></td>
 					 		</tr>
 					 		</tbody>
 					 	</table>
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  >돌아가기</button>
-				        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModify">게시글 수정</button>
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"  >돌아가기</button>
+				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify">게시글 수정</button>
 				      </div>
 				    </div>
 				  </div>
