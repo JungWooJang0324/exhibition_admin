@@ -28,6 +28,7 @@
         </style>
         </head>
  <body class="sb-nav-fixed">
+ <jsp:include page="admin_id_session.jsp"/>
                <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.jsp">Exhibition Admin</a>

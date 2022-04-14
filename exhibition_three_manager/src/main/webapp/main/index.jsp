@@ -11,8 +11,9 @@
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
         <link href="../css/circle.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+  		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         
         <style>
        	  	table {text-align: center;}
@@ -40,11 +41,7 @@
         </head>
         </head>
  <body class="sb-nav-fixed">
- <%
-if(session.getAttribute("admin_id")==null){
-	response.sendRedirect("http://localhost/exhibition_three_manager/main/login.jsp");
-}
-%>
+<jsp:include page="admin_id_session.jsp"/>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
@@ -111,9 +108,8 @@ if(session.getAttribute("admin_id")==null){
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="login.jsp">Login</a>
-                                            <a class="nav-link" href="register.html">Register</a>
-                                            <a class="nav-link" href="password.jsp">Forgot Password</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/password.jsp">Forgot Password</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -122,9 +118,9 @@ if(session.getAttribute("admin_id")==null){
                                     </a>
                                     <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="401.html">401 Page</a>
-                                            <a class="nav-link" href="404.html">404 Page</a>
-                                            <a class="nav-link" href="500.html">500 Page</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/401.html">401 Page</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/404.html">404 Page</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/500.html">500 Page</a>
                                         </nav>
                                     </div>
                                 </nav>

@@ -17,8 +17,6 @@
 		<!-- jQuery CDN -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   		
         
@@ -37,7 +35,7 @@
 <script type="text/javascript">
 $(function(){
 	$("#btnAdd").click(function(){
-		location.href="add_board_admin.jsp";
+		location.href="admin_add_board.jsp";
 	});
 });
 
@@ -45,11 +43,10 @@ $(function(){
 </script> 
         </head>
  <body class="sb-nav-fixed">
+ <jsp:include page="admin_id_session.jsp"/>
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Exhibition Admin</a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -62,9 +59,9 @@ $(function(){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/login.jsp">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -76,7 +73,7 @@ $(function(){
                         <div class="nav">
 						<div id="manager_div"><img src="../assets/img/Profile-PNG-Clipart.png" style="width:100px; margin-left: 0px;"/></div>
 							<div id="manager_name">
-								관리자 이름
+								<%=session.getAttribute("admin_id") %>
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
@@ -112,9 +109,8 @@ $(function(){
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="login.html">Login</a>
-                                            <a class="nav-link" href="register.html">Register</a>
-                                            <a class="nav-link" href="password.html">Forgot Password</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/password.jsp">Forgot Password</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
@@ -135,7 +131,7 @@ $(function(){
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        <%=session.getAttribute("admin_id") %>
                     </div>
                 </nav>
             </div>
@@ -144,7 +140,7 @@ $(function(){
                     <div class="container-fluid px-4" style="width: 90%;">
                         <h1 class="mt-4" style=" font-weight: bold; margin: 0px auto;">게시판 관리</h1>
                         <ol class="breadcrumb mb-4" style="height: 30px; font-weight: bold;margin: 0px auto;">
-                        	<li class="breadcrumb-item active" style="margin-left: 10px"><a href="index.jsp">Dashboard</a></li>
+                        	<li class="breadcrumb-item active" style="margin-left: 10px"><a href="http://localhost/exhibition_three_manager/main/index.jsp">Dashboard</a></li>
                             <li class="breadcrumb-item active">게시판 관리</li>
                         </ol>
                         <!-- 검색 div -->

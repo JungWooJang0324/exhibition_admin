@@ -40,13 +40,11 @@ $(function({
 });
 </script> 
  </head>
- 
+ <jsp:include page="admin_id_session.jsp"/>
  <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="http://localhost/project2/main/index.jsp">Exhibition Admin</a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -59,7 +57,7 @@ $(function({
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="#!">Logout</a></li>
                     </ul>
@@ -77,28 +75,28 @@ $(function({
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
-                            <a class="nav-link collapsed" href="admin_member.jsp">
+                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/admin_member.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
                                 </div>
                                	회원 관리
 
                             </a>
                           <div class="sb-sidenav-menu-heading">EXHIBITIONS</div>
-                            <a class="nav-link collapsed" href="ex_schedule.jsp" >
+                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" >
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시 일정관리
                             </a>
-                            <a class="nav-link collapsed" href="hall.jsp">
+                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/hall.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시장 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOOKING</div>
-                            <a class="nav-link" href="booking.jsp">
+                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/booking.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="board.jsp">
+                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/board.jsp">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
@@ -110,7 +108,7 @@ $(function({
                                     </a>
                                     <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
                                         <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="login.html">Login</a>
+                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
                                             <a class="nav-link" href="register.html">Register</a>
                                             <a class="nav-link" href="password.html">Forgot Password</a>
                                         </nav>
@@ -133,7 +131,7 @@ $(function({
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        <%=session.getAttribute("admin_id") %>
                     </div>
                 </nav>
             </div>
@@ -141,11 +139,10 @@ $(function({
                 <main>
                 <div id="test">
                 </div>
-                    <div class="container-fluid px-4" style="width: 90%;">
+                    <div class="container-fluid px-4">
 	                	<!-- 제목  -->
-                        <h1 class="mt-4" style=" font-weight: bold; margin: 0px auto;">전시장 관리</h1>
-                        <ol class="breadcrumb mb-4"  style="height: 30px; font-weight: bold;margin: 0px auto;">
-                            <li class="breadcrumb-item active" style="margin-left: 10px"><a href="index.jsp">Dashboard</a></li>
+                        <h1 class="mt-4">전시장 관리</h1>
+                        <ol class="breadcrumb mb-4"  >
                             <li class="breadcrumb-item active">전시장 관리</li>
                         </ol>
                         <!-- 검색 div -->
