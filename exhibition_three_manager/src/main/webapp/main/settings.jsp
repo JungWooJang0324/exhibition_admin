@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@include file="admin_id_session.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,7 +49,7 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="login.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="logout.jsp">Logout</a></li>
                     </ul>
                 </li>
             </ul>

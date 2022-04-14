@@ -1,6 +1,7 @@
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
 <%@page import="DAO.BoardManagerDAO"%>
+<%@include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판 글 추가 summernote"%>
@@ -64,7 +65,7 @@ $(function(){
 	<% BoardManagerDAO bDAO = new BoardManagerDAO(); 
 		%>
 	<div style="color:#D8D8D8 "> 작성자 </div>
-	<div id="name" style="font-size: 20px; margin-top: 5px;"> 홍길동 </div><hr>
+	<div id="name" style="font-size: 20px; margin-top: 5px;"> <%=session.getAttribute("admin_id") %> </div><hr>
 	<div id="selectDiv">
 		<select id="selectBoard" class="inputBox" style="margin-bottom: 5px; width: 80%">
 			<option></option>

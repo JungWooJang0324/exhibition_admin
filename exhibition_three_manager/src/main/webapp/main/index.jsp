@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="admin_id_session.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,8 +18,6 @@
         
         <style>
        	  	table {text-align: center;}
-        	#manager_div{width: 100px; height: 100px; background-color: white; border-radius: 100px; margin-left: 50px;}
-        	#manager_name{margin-left: 30%; margin-top: 10px; width: 100px; color:white; font-weight: bold;}
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
         	.member_tab {width:600px; border-spacing: 10px;}
         	th {color: #868B8E; margin-right: 10%; font-weight: normal; border-bottom: 1px solid #868B8E; border-top: 1px solid #868B8E;
@@ -26,23 +25,21 @@
         	}
    			
         </style>
-          <script type="text/javascript">
-        const numb = document.querySelector(".number");
-        let counter = 0;
-        setInterval(() => {
-          if(counter == 100 ){
-            clearInterval();
-          }else{
-            counter+=1;
-            numb.textContent = counter + "%";
-          }
-        }, 80);
+        <script type="text/javascript">
+	        const numb = document.querySelector(".number");
+	        let counter = 0;
+	        setInterval(() => {
+	          if(counter == 100 ){
+	            clearInterval();
+	          }else{
+	            counter+=1;
+	            
+	          }
+	        }, 80);
         </script>
         </head>
-        </head>
  <body class="sb-nav-fixed">
-<jsp:include page="admin_id_session.jsp"/>
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
             <!-- Navbar Search-->
@@ -57,9 +54,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/login.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/logout.jsp">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -67,71 +64,7 @@
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-						<div id="manager_div"><img src="../assets/img/Profile-PNG-Clipart.png" style="width:100px; margin-left: 0px;"/></div>
-							<div id="manager_name">
-								<%=session.getAttribute("admin_id") %>
-							</div>
-							<hr/>
-                          <div class="sb-sidenav-menu-heading">MEMBERS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/admin_member.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
-                                </div>
-                               	회원 관리
-
-                            </a>
-                          <div class="sb-sidenav-menu-heading">EXHIBITIONS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" >
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                전시 일정관리
-                            </a>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/hall.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                                전시장 관리
-                            </a>
-                            <div class="sb-sidenav-menu-heading">BOOKING</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/booking.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                예약 관리
-                            </a>
-                            <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/admin_add_board.jsp">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                게시판 관리
-                            </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
-                                        Authentication
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/login.jsp">Login</a>
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/password.jsp">Forgot Password</a>
-                                        </nav>
-                                    </div>
-                                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                        Error
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/401.html">401 Page</a>
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/404.html">404 Page</a>
-                                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/500.html">500 Page</a>
-                                        </nav>
-                                    </div>
-                                </nav>
-                            </div>
-                      
-                        </div>
-                    </div>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-						<%=session.getAttribute("admin_id") %>
-                    </div>
+                     <jsp:include page="nav.jsp"/>
                 </nav>
             </div>
             <div id="layoutSidenav_content">
