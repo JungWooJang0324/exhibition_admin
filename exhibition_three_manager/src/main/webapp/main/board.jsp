@@ -48,7 +48,7 @@ $(function(){
  <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -136,7 +136,7 @@ $(function(){
                                  </div>
                                 <!-- 글쓰기 버튼 -->
                                 <div>
-						  			<button type="button" class="btn btn-dark" style="float:right;" data-bs-target="#addModal" data-bs-toggle="modal">글쓰기</button>
+						  			<button type="button" class="btn btn-dark" style="float:right;" id="btnAdd" data-bs-target="#addModal" data-bs-toggle="modal">글쓰기</button>
 						  		</div>
                                </div>
                                <!-- 페이지 이동 -->
