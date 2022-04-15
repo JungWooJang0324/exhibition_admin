@@ -1,7 +1,7 @@
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
 <%@page import="DAO.BoardManagerDAO"%>
-<%@include file="admin_id_session.jsp" %>
+<%@include file="admin_id_session.jsp" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -9,25 +9,29 @@
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Exhibition Admin</title>
+        <title>Board</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
         <link href="../css/styles.css" rel="stylesheet" />
-		<!-- jQuery CDN -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <!-- jQeury CDN -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-  		
-        
+        <script src="js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="assets/demo/chart-area-demo.js"></script>
+        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+        <script src="js/datatables-simple-demo.js"></script>
+     
         <style>
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
         	#searchDiv{ margin-bottom: 30px; text-align: right}
-      		#btnAddDiv{ text-align: right; margin-top: 20px; position: relative}
- 			#pageNavigation{position: absolute; bottom: 20%; left: 50%}
+      	/* 	#btnAddDiv{ text-align: right; margin-top: 20px; position: relative}
+ 			#pageNavigation{position: absolute; bottom: 20%; left: 50%} */
         	
         </style>
         
@@ -72,10 +76,10 @@ $(function(){
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4" style="width: 90%;">
-                        <h1 class="mt-4" style=" font-weight: bold; margin: 0px auto;">게시판 관리</h1>
-                        <ol class="breadcrumb mb-4" style="height: 30px; font-weight: bold;margin: 0px auto;">
-                        	<li class="breadcrumb-item active" style="margin-left: 10px"><a href="index.jsp" style="text-decoration: none" class="breadcrumb-item active">Dashboard</a></li>
+                    <div class="container-fluid px-4" style="width:90%">
+                        <h1 class="mt-4">게시판 관리</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="index.jsp" style="text-decoration:none; color:#333;">Dashboard</a></li>
                             <li class="breadcrumb-item active">게시판 관리</li>
                         </ol>
                         <!-- 검색 div -->
@@ -130,9 +134,10 @@ $(function(){
                                       </tbody>
                                    </table>
                                  </div>
-                                 <div class="btnAdd" id="btnAddDiv">
-                                 	<button type="button" class="btn btn-dark" id="btnAdd">글쓰기</button>
-								</div>
+                                <!-- 글쓰기 버튼 -->
+                                <div>
+						  			<button type="button" class="btn btn-dark" style="float:right;" data-bs-target="#addModal" data-bs-toggle="modal">글쓰기</button>
+						  		</div>
                                </div>
                                <!-- 페이지 이동 -->
 	                            <div> 
