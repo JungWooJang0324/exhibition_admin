@@ -8,6 +8,9 @@
 <%@include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<!-- prefix -->
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -38,7 +41,25 @@
         	#member_tab{ text-align:center;}
 </style>
     <script type="text/javascript">
+   
+	
 	$( function() {
+ $("#bookingDetail").on("show.bs.modal", function(e) {		
+    	var num= $(e.relatedTarget).data('num');
+    	var exName= $(e.relatedTarget).data('exName');
+    	var userName= $(e.relatedTarget).data('userName');
+    	var viData= $(e.relatedTarget).data('viData');
+    	var rezStatus= $(e.relatedTarget).data('rezStatus');
+    	var modal= $(this);
+    	modal.find("#resNum").text(num);
+    	modal.find("#exName").text(exName);
+    	modal.find("#userName").text(userName);
+    	modal.find("#viData").text(viData);
+    	modal.find("#rezStatus").text(rezStatus);
+    });
+	});  
+
+		
     $( "#reservationDate" ).datepicker({
 		  dateFormat: "yy-mm-dd",
 		  dayNames: [ "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" ],
@@ -46,7 +67,8 @@
 		  monthNamesShort: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" ],
 		  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
 		});
-	});    
+    
+	
     </script>
     </head>
     
@@ -141,26 +163,25 @@
 						  	<tbody> 
 									<%
 									ReservationManagerDAO rDAO = new ReservationManagerDAO();
-									try {
 									List<ReservationManagerVO> rezList = rDAO.selectReservation();
-									for(ReservationManagerVO rVO : rezList){
-									%>					  		
-						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail">
-									<td><%=rVO.getRezNum()%></td>
-									<td><%=rVO.getExName()%></td>
-									<td><%=rVO.getUserName() %></td>		
-									<td><%=rVO.getVisitData() %></td>		
-									<td><%=rVO.getRezStatus() %></td>		
+										
+									pageContext.setAttribute("rezList", rezList);
+									%>
+									<c:forEach var="res" items="${rezList}">
+						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}"
+						  		data-exName="${res.exName}" data-userName="${res.userName}" data-viData="${res.visitData}" data-rezStatus="${res.rezStatus}">
+									<td><c:out value="${res.rezNum}"/></td>
+									<td><c:out value="${res.exName}"/></td>
+									<td><c:out value="${res.userName}"/></td>
+									<td><c:out value="${res.visitData}"/></td>
+									<td><c:out value="${res.rezStatus}"/></td>
+									
 									<td>
 									 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#confirmCancel">예약 취소</button>
 				        				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
 				        			</td>
 						  		</tr>
-											<%} 
-									}catch(SQLException e) {
-    									e.printStackTrace();
-    						 		}%>
-						  	
+						  			</c:forEach>
 						  	
 						  	</tbody> 
 						  </table>
@@ -190,6 +211,7 @@
                     </div>
                 </footer>
                <!-- 예약 관리 상세 모달  -->
+              
 				<div class="modal fade" id="bookingDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
@@ -203,7 +225,7 @@
 					 			<th colspan="2" class="modalTh">전시명</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"></td>
+					 			<td class="modalTd" id="exName"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시 번호</th>
@@ -215,13 +237,13 @@
 					 			<th colspan="2" class="modalTh">예약 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"></td>
+					 			<td class="modalTd" id="resNum"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약자명</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"></td>
+					 			<td class="modalTd" id="userName"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약일자</th>
@@ -236,10 +258,10 @@
 					 			<td class="modalTd"></td>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"></td>
+					 			<th colspan="2" class="modalTh">방문기간</th>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">방문기간</th>
+					 			<td class="modalTd" id="rezStatus"></td>
 					 		</tr>
 					 	</table>
 				      </div>

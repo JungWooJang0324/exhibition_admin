@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import VO.ExHallVO;
 import connection.DbConnection;
 
 public class ExHallManagerDAO {
 	
 		
-	public List<ExHallVO> selectExhibitonHall(String exName){
+	public List<ExHallVO> selectExhibitonHall(String exName) throws ClassNotFoundException, NamingException{
 		
 		List<ExHallVO> hallList=null;
 		Connection con =null;
@@ -64,7 +66,7 @@ public class ExHallManagerDAO {
 	}//selectExhibitonHall
 	
 	
-	public void insertExhibitonHall(ExHallVO ehVO){
+	public void insertExhibitonHall(ExHallVO ehVO) throws ClassNotFoundException, NamingException{
 		Connection conn=null;
 		PreparedStatement pstmt = null;
 		
@@ -104,7 +106,7 @@ public class ExHallManagerDAO {
 	}//insertExhibitonHall
 	
 	
-	public boolean upadateExhibitonHall(ExHallVO ehVO){
+	public boolean upadateExhibitonHall(ExHallVO ehVO) throws ClassNotFoundException, NamingException{
 		int flag=0;
 		
 		Connection con=null;
@@ -158,7 +160,7 @@ public class ExHallManagerDAO {
 	}//upadateExhibitonHall
 	
 	
-	public boolean deleteExhibitonHall(int exHallNum){
+	public boolean deleteExhibitonHall(int exHallNum) throws ClassNotFoundException, NamingException{
 		int flag=0;
 		
 		Connection con=null;
@@ -197,7 +199,7 @@ public class ExHallManagerDAO {
 	}//deleteExhibitonHall
 	
 	
-	public ExHallVO selectExhibitonHallDetail(int exHallNum) {
+	public ExHallVO selectExhibitonHallDetail(int exHallNum) throws ClassNotFoundException, NamingException {
 
 		ExHallVO ehVO= null;
 		Connection con =null;
@@ -252,13 +254,13 @@ public class ExHallManagerDAO {
 	}//selectExhibitonHallDetail
 
 	
-	
-	public static void main(String[] args) {
-		ExHallManagerDAO ehmDAO = new ExHallManagerDAO ();
-			ehmDAO.selectExhibitonHall("");
-			System.out.println(ehmDAO.selectExhibitonHall(""));
-		
-	}//main 
-}
+	/*
+	 * public static void main(String[] args) { ExHallManagerDAO ehmDAO = new
+	 * ExHallManagerDAO (); ehmDAO.selectExhibitonHall("");
+	 * System.out.println(ehmDAO.selectExhibitonHall(""));
+	 * 
+	 * }//main
+	 */
+	}
 	
 

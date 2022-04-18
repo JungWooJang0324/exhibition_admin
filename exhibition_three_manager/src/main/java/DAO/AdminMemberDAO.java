@@ -8,12 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import VO.MemberVO;
 import connection.DbConnection;
 
 public class AdminMemberDAO {
 
-	public List<MemberVO> selectAllMember() throws SQLException{
+	public List<MemberVO> selectAllMember() throws SQLException, ClassNotFoundException, NamingException{
 		List<MemberVO> mv= new ArrayList<MemberVO>();
 		Connection conn=null;
 		Statement stmt=null;
@@ -56,7 +58,7 @@ public class AdminMemberDAO {
 	
 	
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		AdminMemberDAO amDAO=new AdminMemberDAO();
 		try {
 			List<MemberVO> list = amDAO.selectAllMember();
@@ -74,6 +76,6 @@ public class AdminMemberDAO {
 			System.out.println(sb.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-	}
+			}
+		}*/
 	}

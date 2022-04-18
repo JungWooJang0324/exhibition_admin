@@ -1,10 +1,14 @@
 package connection;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 /**
  * Singleton Pattern을 도입한 클래스
@@ -30,27 +34,16 @@ public class DbConnection {
 		return dc;
 	}
 	
-	public Connection getConn() throws SQLException{
-		Connection con=null;
+	public Connection getConn() throws SQLException, ClassNotFoundException, NamingException{
 		
-		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		}catch(ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		String url="jdbc:oracle:thin:@211.63.89.133:1521:orcl";
-		String id="exhibition";
-		String pw="three";
-		con= DriverManager.getConnection(url, id,pw);
-		
-		return con;
-	}
-	
-	public Statement getStatement() throws SQLException {
-		Statement stmt=null;
-		stmt=getConn().createStatement();
-		return stmt;
+		//1. JNDI사용객체 생성
+		Context ctx = new InitialContext();
+
+		//2. DBCP찾기
+		DataSource ds = (DataSource)ctx.lookup("java:/comp/env/jdbc/manager");
+		Connection conn = ds.getConnection();
+		System.out.println("DB연동 성공");
+		return conn;
 	}
 	
 	public void close(ResultSet rs, Statement stmt, Connection con) throws SQLException{
@@ -59,12 +52,6 @@ public class DbConnection {
 		if(con!=null) {con.close();}
 	}
 	
-	public static void main(String[] args) {
-		try {
-			System.out.println(new DbConnection().getConn());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+			
+	
 }

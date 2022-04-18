@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import VO.ReservationManagerVO;
 import connection.DbConnection;
 
 public class ReservationManagerDAO {
 	
 	
-	public List<ReservationManagerVO> selectReservation() throws SQLException{
+	public List<ReservationManagerVO> selectReservation() throws SQLException, ClassNotFoundException, NamingException{
 		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -48,5 +50,44 @@ public class ReservationManagerDAO {
 		return list;
 		
 	}//selectReservation
+	
+	
+	public ReservationManagerVO selectOneReservation(int rezNum) throws SQLException, ClassNotFoundException, NamingException{
+		ReservationManagerVO rVO=null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		ResultSet rs = null;
+		
+		try{
+			con=dc.getConn();
+			StringBuilder selectQuery = new StringBuilder();
+			selectQuery
+			.append("	select ex.ex_name,m.name, visit_date, rez_status 	")
+			.append("	from reservation rez, member m,exhibition ex	")
+			.append("	where rez.userid=m.userid and rez.ex_num = ?");
+
+			pstmt = con.prepareStatement(selectQuery.toString());
+			pstmt.setInt(1, rezNum);
+			rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				rVO = new ReservationManagerVO();
+				rVO.setRezNum(rs.getInt("rez_num"));
+				rVO.setExName(rs.getString("ex_name"));
+				rVO.setUserName(rs.getString("name"));
+				rVO.setVisitData(rs.getDate("visit_date"));
+				rVO.setRezStatus(rs.getString("rez_status"));
+			}//end while
+			
+		}finally {
+			dc.close(rs, pstmt, con);
+			
+		}
+		
+		return rVO;
+		
+	}//selectReservation
+	
 	
 }//class

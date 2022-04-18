@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import VO.ExHallVO;
 import VO.ExhibitionVO;
 import VO.MemberVO;
@@ -17,7 +19,7 @@ import connection.DbConnection;
 
 public class AdminExhibitionDAO {
 
-	public List<ExhibitionVO> selectExhibition(String ex_name) throws SQLException{
+	public List<ExhibitionVO> selectExhibition(String ex_name) throws SQLException, ClassNotFoundException, NamingException{
 		List<ExhibitionVO> ev= new ArrayList<ExhibitionVO>();
 		Connection conn=null;
 		PreparedStatement pstmt=null;
@@ -57,7 +59,7 @@ public class AdminExhibitionDAO {
 		return ev;
 	}
 	
-	public void insertExhibition(ExhibitionVO eVO) throws SQLException {
+	public void insertExhibition(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
@@ -91,7 +93,7 @@ public class AdminExhibitionDAO {
 		
 	}//insertExhibition
 	
-	public void insertPrice(PriceVO pVO,int exNum) throws SQLException {
+	public void insertPrice(PriceVO pVO,int exNum) throws SQLException, ClassNotFoundException, NamingException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
@@ -116,7 +118,7 @@ public class AdminExhibitionDAO {
 		
 	}//insertExhibition
 	
-	public List<ExHallVO> selectExhibitionHall() throws SQLException{
+	public List<ExHallVO> selectExhibitionHall() throws SQLException, ClassNotFoundException, NamingException{
 		List<ExHallVO> exNameList = new ArrayList<ExHallVO>();
 		Connection con = null;
 		PreparedStatement pstmt = null;

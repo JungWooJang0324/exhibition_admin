@@ -5,11 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.naming.NamingException;
+
 import connection.DbConnection;
 
 public class AdminDAO {
 	
-	public String login(String userId, String userPassword) {
+	public String login(String userId, String userPassword) throws ClassNotFoundException, NamingException {
 		Connection conn=null;
 		PreparedStatement pstmt=null;
 		ResultSet rs =null;
@@ -37,13 +39,8 @@ public class AdminDAO {
 		
 		return date;
 	}
-
-	public static void main(String[] args) {
-
-		AdminDAO ad = new AdminDAO();
-		System.out.println(ad.login("admin", "asd123"));
-	}
-
+	
+	
 }
 
 

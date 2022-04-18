@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.NamingException;
+
 import VO.BoardVO;
 import connection.DbConnection;
 
 public class BoardManagerDAO {
 	
 	
-	public List<BoardVO> selectBoardAdmin(String search) {
+	public List<BoardVO> selectBoardAdmin(String search) throws ClassNotFoundException, NamingException {
 		
 		List<BoardVO> boardList=null;
 		Connection con =null;
@@ -73,7 +75,7 @@ public class BoardManagerDAO {
 	}//selectBoardAdmin
 	
 	
-	public boolean deleteBoardAdmin(int bdId){
+	public boolean deleteBoardAdmin(int bdId) throws ClassNotFoundException, NamingException{
 		int flag=0;
 		
 		Connection con=null;
@@ -112,7 +114,7 @@ public class BoardManagerDAO {
 	}//deleteBoardAdmin
 	
 	
-	public void insertBoardAdmin(BoardVO bVO){
+	public void insertBoardAdmin(BoardVO bVO) throws ClassNotFoundException, NamingException{
 		Connection conn=null;
 		PreparedStatement pstmt = null;
 		
@@ -145,7 +147,7 @@ public class BoardManagerDAO {
 	}//insertBoardAdmin
 	
 	
-	public BoardVO selectBoardDetail(int bdId){
+	public BoardVO selectBoardDetail(int bdId) throws ClassNotFoundException, NamingException{
 		
 		BoardVO bVO= null;
 		
@@ -199,11 +201,10 @@ public class BoardManagerDAO {
 	}//selectBoardDetail
 	
 	
-	
-	public static void main(String[] args) {
-		BoardManagerDAO bDAO = new BoardManagerDAO();
-		bDAO.selectBoardAdmin("가");
-		System.out.println(bDAO.selectBoardAdmin("가").toString());
-		
-	}//main 
-}
+	/*
+	 * public static void main(String[] args) { BoardManagerDAO bDAO = new
+	 * BoardManagerDAO(); bDAO.selectBoardAdmin("가");
+	 * System.out.println(bDAO.selectBoardAdmin("가").toString());
+	 * 
+	 * }//main
+	 */}
