@@ -6,6 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
 /**
  * Singleton Pattern을 도입한 클래스
  * Connection얻기, 끊기
@@ -31,18 +36,14 @@ public class DbConnection {
 	}
 	
 	public Connection getConn() throws SQLException{
-		Connection con=null;
-		
+		Connection con=null; 
 		try {
-			Class.forName("oracle.jdbc.OracleDriver");
-		}catch(ClassNotFoundException e) {
+			Context ctx = new InitialContext();
+			DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/manager");
+			con = ds.getConnection();
+		}catch(NamingException e) {
 			e.printStackTrace();
 		}
-		
-		String url="jdbc:oracle:thin:@211.63.89.133:1521:orcl";
-		String id="exhibition";
-		String pw="three";
-		con= DriverManager.getConnection(url, id,pw);
 		
 		return con;
 	}
