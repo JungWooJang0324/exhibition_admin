@@ -89,5 +89,59 @@ public class ReservationManagerDAO {
 		
 	}//selectReservation
 	
+	//index용 - reservation수;
+	public int countReservation() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		ResultSet rs = null;
+		int cnt=0;
+		try{
+			con=dc.getConn();
+			String countQuery= "select userid from reservation where rez_status='t'";
+
+			pstmt = con.prepareStatement(countQuery);
+			rs = pstmt.executeQuery();
+
+			while(rs.next()) {
+				cnt++;
+			}//end while
+			
+		}finally {
+			dc.close(rs, pstmt, con);
+			
+		}
+		
+		return cnt;
+		
+	}//countReservation	
+	
+	
+	//index용 - 오늘 예약;
+		public int countTodaysReservation() throws SQLException, ClassNotFoundException, NamingException{
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			DbConnection dc = DbConnection.getInstance();
+			ResultSet rs = null;
+			int cnt=0;
+			try{
+				con=dc.getConn();
+				String countQuery= "select userid from reservation where to_char(to_date(rez_date,'yyyy-MM-dd'))=to_char(to_date(sysdate,'yyyy-MM-dd'))";
+
+				pstmt = con.prepareStatement(countQuery);
+				rs = pstmt.executeQuery();
+
+				while(rs.next()) {
+					cnt++;
+				}//end while
+				
+			}finally {
+				dc.close(rs, pstmt, con);
+				
+			}
+			
+			return cnt;
+			
+		}//countReservation	
 	
 }//class

@@ -144,25 +144,23 @@
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>
-                                        추가관리
+                                        예약관리
                                     </div>
+                                    <%
+                                    	ReservationManagerDAO rmd=new ReservationManagerDAO();
+                                    	int cntReserve= rmd.countReservation();
+                                    	int cntTodayRez = rmd.countTodaysReservation();
+                                    %>
                                     <div class="card-body">
                                      <table class="table table-hover" >
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    		<th>예약:</h>
-                                    		<td width="20%">N건</td>
-                                    		<td width="10%"></td>
-											<th>내일 마감될 전시 예정건</th>
-                                    		<td width="20%">N건</td>
+                                    		<th>예약</h>
+                                    		<th>오늘의 예약건수</th>
                                     	</tr>
                                     	<tr>
-                                    		<th>오늘의 예약건수:</th>
-                                    		<td width="20%">N건</td>
-                                    		<td width="10%"></td>
-											<th>신규 회원</th>
-                                    		<td width="20%">N건</td>
+                                    		<td width="20%"><%=cntReserve %>건</td>
+                                    		<td width="20%"><%=cntTodayRez %>건</td>
                                     	</tr>
-                                    	
                                     </table>
                                     <canvas id="myAreaChart" width="100%" height="40"></canvas>
                                     </div>

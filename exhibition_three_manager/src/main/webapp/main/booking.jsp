@@ -46,16 +46,9 @@
 	$( function() {
  $("#bookingDetail").on("show.bs.modal", function(e) {		
     	var num= $(e.relatedTarget).data('num');
-		var exName= $(e.relatedTarget).data('exName');
-    	var userName= $(e.relatedTarget).data('userName');
-    	var viData= $(e.relatedTarget).data('viData');
-    	var rezStatus= $(e.relatedTarget).data('rezStatus');
     	var modal= $(this);
     	modal.find("#resNum").text(num);
-    	modal.find("#exName").text(exName);
-    	modal.find("#userName").text(userName);
-    	modal.find("#viData").text(viData);
-    	modal.find("#rezStatus").text(rezStatus);
+    	
     });
 	});  
 
@@ -169,7 +162,7 @@
 									%>
 									<c:forEach var="res" items="${rezList}">
 						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}"
-						  		data-exName="${res.exName}" data-userName="${res.userName}" data-viData="${res.visitData}" data-rezStatus="${res.rezStatus}">
+						  		>
 									<td><c:out value="${res.rezNum}"/></td>
 									<td><c:out value="${res.exName}"/></td>
 									<td><c:out value="${res.userName}"/></td>
