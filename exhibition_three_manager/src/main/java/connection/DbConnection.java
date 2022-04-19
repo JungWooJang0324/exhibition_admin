@@ -34,7 +34,6 @@ public class DbConnection {
 		return dc;
 	}
 	
-<<<<<<< HEAD
 	public Connection getConn() throws SQLException, ClassNotFoundException, NamingException{
 		
 		//1. JNDI사용객체 생성
@@ -45,14 +44,6 @@ public class DbConnection {
 		Connection conn = ds.getConnection();
 		System.out.println("DB연동 성공");
 		return conn;
-=======
-
-	
-	public Statement getStatement() throws SQLException {
-		Statement stmt=null;
-		stmt=getConn().createStatement();
-		return stmt;
->>>>>>> branch 'main' of https://github.com/JungWooJang0324/exhibition_admin.git
 	}
 	
 	public void close(ResultSet rs, Statement stmt, Connection con) throws SQLException{
