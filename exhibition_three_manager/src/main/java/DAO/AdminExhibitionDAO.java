@@ -147,84 +147,77 @@ public class AdminExhibitionDAO {
 		return exNameList;
 	}//selectExhibitionHall
 	
-	//index용 전시일정수 
-	public int selectAllExhibition() throws ClassNotFoundException, SQLException, NamingException {
-		int cnt=0;
-		Connection conn=null;
-		PreparedStatement pstmt=null;
-		ResultSet rs =null;
-		DbConnection dc= DbConnection.getInstance();
 
+
+	//index용 총 전시회 수 
+	public int selectAllEx() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int cnt=0;
+		DbConnection dc = DbConnection.getInstance();
 		try {
-			conn=dc.getConn();
-			StringBuilder countExhibition = new StringBuilder();
-			countExhibition.append("SELECT ex_name from exhibition where ex_status='t'");
-			
-			pstmt=conn.prepareStatement(countExhibition.toString());
-			rs=pstmt.executeQuery();
-			
+			con = dc.getConn();
+			String selectQuery = "select ex_name from exhibition where ex_status='t'";
+			pstmt = con.prepareStatement(selectQuery);
+			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				cnt++;
-			}
-						
+			}//end while
+		
 		}finally {
-			dc.close(rs, pstmt, conn);
-		}
+			
+			dc.close(rs, pstmt, con);
+		}//end finally
+		
 		return cnt;
-	}
+	}//selectAllEx
 	
-
-	//index용 마감된 
-	public int selectEndedExhibition() throws ClassNotFoundException, SQLException, NamingException {
+	//index용 마감된 전시수 
+	public int endedEx() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		int cnt=0;
-		Connection conn=null;
-		PreparedStatement pstmt=null;
-		ResultSet rs =null;
-		DbConnection dc= DbConnection.getInstance();
-
+		DbConnection dc = DbConnection.getInstance();
 		try {
-			conn=dc.getConn();
-			StringBuilder countExhibition = new StringBuilder();
-			countExhibition.append("SELECT ex_name from exhibition where (to_date(sysdate, 'yyyy-MM-dd')-to_date(deadLine, 'yyyy-MM-dd'))<0");
-			
-			pstmt=conn.prepareStatement(countExhibition.toString());
-			rs=pstmt.executeQuery();
-			
+			con = dc.getConn();
+			String selectQuery = "select * from exhibition where (to_date(sysdate,'yyyy-MM-dd')-to_date(deadline,'yyyy-MM-dd'))>0";
+			pstmt = con.prepareStatement(selectQuery);
+			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				cnt++;
-			}
-						
+			}//end while
+		
 		}finally {
-			dc.close(rs, pstmt, conn);
-		}
+			
+			dc.close(rs, pstmt, con);
+		}//end finally
+		
 		return cnt;
-	}
-	
-	
-	//index내일마감
-	public int endTomorrowExhibition() throws ClassNotFoundException, SQLException, NamingException {
-		int cnt=0;
-		Connection conn=null;
-		PreparedStatement pstmt=null;
-		ResultSet rs =null;
-		DbConnection dc= DbConnection.getInstance();
+		}//endedEx
 
+	//index용 내일 마감될 전시
+	public int endsTomorrow() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int cnt=0;
+		DbConnection dc = DbConnection.getInstance();
 		try {
-			conn=dc.getConn();
-			StringBuilder countExhibition = new StringBuilder();
-			countExhibition.append("SELECT ex_name from exhibition where TO_DATE(TO_CHAR(SYSDATE+1,'YYYY-MM-DD'))-TO_DATE('2022-04-20','YYYY-MM-DD')=0");
-			
-			pstmt=conn.prepareStatement(countExhibition.toString());
-			rs=pstmt.executeQuery();
-			
+			con = dc.getConn();
+			String selectQuery = "select * from exhibition where to_char(to_date(sysdate+1,'yyyy-MM-dd'))=to_char(to_date(deadline,'yyyy-MM-dd'))";
+			pstmt = con.prepareStatement(selectQuery);
+			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				cnt++;
-			}
-						
+			}//end while
+			
 		}finally {
-			dc.close(rs, pstmt, conn);
-		}
+			
+			dc.close(rs, pstmt, con);
+		}//end finally
+		
 		return cnt;
-	}
-	
+	}//endedEx
 }//class

@@ -2,6 +2,7 @@ package DAO;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -82,33 +83,32 @@ public class AdminMemberDAO {
 		return cnt;
 	}
 	
-	// admin 메인화면 오늘 가입자수
-	public int countTodayMember() throws SQLException, ClassNotFoundException, NamingException {
-		int cnt=0;
+	//index용
+	public int countTodayMem() throws ClassNotFoundException, SQLException, NamingException {
 		Connection conn=null;
-		Statement stmt=null;
+		PreparedStatement pstmt=null;
 		ResultSet rs =null;
 		DbConnection dc= DbConnection.getInstance();
-
+		int cnt=0;
 		try {
 			conn=dc.getConn();
-			stmt=conn.createStatement();
-			StringBuilder countMember = new StringBuilder();
-			countMember.append("SELECT userid ")
-			.append("from member where to_char(isubscribe_date, 'YYYY-MM-dd') = to_char(sysdate, 'YYYY-MM-dd')");
+			StringBuilder selectMember = new StringBuilder();
+			selectMember.append("select userid from member where to_char(to_date(isubscribe_date,'yyyy-MM-dd'))=to_char(to_date(sysdate,'yyyy-MM-dd'))");
+			pstmt=conn.prepareStatement(selectMember.toString());
 			
-			rs=stmt.executeQuery(countMember.toString());		
-			
+			rs=pstmt.executeQuery();			
+			MemberVO mVO=null;
 			while(rs.next()) {
 				cnt++;
 			}
-						
+			
 		}finally {
-			dc.close(rs, stmt, conn);
+			dc.close(rs, pstmt, conn);
 		}
+		
+		
 		return cnt;
 	}
-	
 	/*public static void main(String[] args) {
 		AdminMemberDAO amDAO=new AdminMemberDAO();
 		try {
