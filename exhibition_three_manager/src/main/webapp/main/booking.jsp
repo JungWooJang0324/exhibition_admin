@@ -46,7 +46,7 @@
 	$( function() {
  $("#bookingDetail").on("show.bs.modal", function(e) {		
     	var num= $(e.relatedTarget).data('num');
-    	var exName= $(e.relatedTarget).data('exName');
+		var exName= $(e.relatedTarget).data('exName');
     	var userName= $(e.relatedTarget).data('userName');
     	var viData= $(e.relatedTarget).data('viData');
     	var rezStatus= $(e.relatedTarget).data('rezStatus');

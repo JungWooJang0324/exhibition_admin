@@ -55,8 +55,59 @@ public class AdminMemberDAO {
 		
 		return list;
 	}
+	// admin 메인화면 전체 가입자수
+	public int countAllMember() throws SQLException, ClassNotFoundException, NamingException {
+		int cnt=0;
+		Connection conn=null;
+		Statement stmt=null;
+		ResultSet rs =null;
+		DbConnection dc= DbConnection.getInstance();
+
+		try {
+			conn=dc.getConn();
+			stmt=conn.createStatement();
+			StringBuilder countMember = new StringBuilder();
+			countMember.append("SELECT userid ")
+			.append("FROM member");
+			
+			rs=stmt.executeQuery(countMember.toString());		
+			
+			while(rs.next()) {
+				cnt++;
+			}
+						
+		}finally {
+			dc.close(rs, stmt, conn);
+		}
+		return cnt;
+	}
 	
-	
+	// admin 메인화면 오늘 가입자수
+	public int countTodayMember() throws SQLException, ClassNotFoundException, NamingException {
+		int cnt=0;
+		Connection conn=null;
+		Statement stmt=null;
+		ResultSet rs =null;
+		DbConnection dc= DbConnection.getInstance();
+
+		try {
+			conn=dc.getConn();
+			stmt=conn.createStatement();
+			StringBuilder countMember = new StringBuilder();
+			countMember.append("SELECT userid ")
+			.append("from member where to_char(isubscribe_date, 'YYYY-MM-dd') = to_char(sysdate, 'YYYY-MM-dd')");
+			
+			rs=stmt.executeQuery(countMember.toString());		
+			
+			while(rs.next()) {
+				cnt++;
+			}
+						
+		}finally {
+			dc.close(rs, stmt, conn);
+		}
+		return cnt;
+	}
 	
 	/*public static void main(String[] args) {
 		AdminMemberDAO amDAO=new AdminMemberDAO();

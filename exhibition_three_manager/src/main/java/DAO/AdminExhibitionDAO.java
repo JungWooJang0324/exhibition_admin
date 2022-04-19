@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,5 +146,85 @@ public class AdminExhibitionDAO {
 		
 		return exNameList;
 	}//selectExhibitionHall
+	
+	//index용 전시일정수 
+	public int selectAllExhibition() throws ClassNotFoundException, SQLException, NamingException {
+		int cnt=0;
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs =null;
+		DbConnection dc= DbConnection.getInstance();
+
+		try {
+			conn=dc.getConn();
+			StringBuilder countExhibition = new StringBuilder();
+			countExhibition.append("SELECT ex_name from exhibition where ex_status='t'");
+			
+			pstmt=conn.prepareStatement(countExhibition.toString());
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt++;
+			}
+						
+		}finally {
+			dc.close(rs, pstmt, conn);
+		}
+		return cnt;
+	}
+	
+
+	//index용 마감된 
+	public int selectEndedExhibition() throws ClassNotFoundException, SQLException, NamingException {
+		int cnt=0;
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs =null;
+		DbConnection dc= DbConnection.getInstance();
+
+		try {
+			conn=dc.getConn();
+			StringBuilder countExhibition = new StringBuilder();
+			countExhibition.append("SELECT ex_name from exhibition where (to_date(sysdate, 'yyyy-MM-dd')-to_date(deadLine, 'yyyy-MM-dd'))<0");
+			
+			pstmt=conn.prepareStatement(countExhibition.toString());
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt++;
+			}
+						
+		}finally {
+			dc.close(rs, pstmt, conn);
+		}
+		return cnt;
+	}
+	
+	
+	//index내일마감
+	public int endTomorrowExhibition() throws ClassNotFoundException, SQLException, NamingException {
+		int cnt=0;
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs =null;
+		DbConnection dc= DbConnection.getInstance();
+
+		try {
+			conn=dc.getConn();
+			StringBuilder countExhibition = new StringBuilder();
+			countExhibition.append("SELECT ex_name from exhibition where TO_DATE(TO_CHAR(SYSDATE+1,'YYYY-MM-DD'))-TO_DATE('2022-04-20','YYYY-MM-DD')=0");
+			
+			pstmt=conn.prepareStatement(countExhibition.toString());
+			rs=pstmt.executeQuery();
+			
+			while(rs.next()) {
+				cnt++;
+			}
+						
+		}finally {
+			dc.close(rs, pstmt, conn);
+		}
+		return cnt;
+	}
 	
 }//class

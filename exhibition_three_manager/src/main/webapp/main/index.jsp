@@ -1,3 +1,4 @@
+<%@page import="DAO.AdminExhibitionDAO"%>
 <%@page import="DAO.ReservationManagerDAO"%>
 <%@page import="VO.ReservationManagerVO"%>
 <%@page import="java.sql.SQLException"%>
@@ -8,6 +9,8 @@
 <%@include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -71,6 +74,12 @@
                                         <i class="fas fa-chart-area me-1"></i>
                                         회원 관리
                                     </div>
+                                    <%
+                                    	AdminMemberDAO amd = new AdminMemberDAO();
+                                    	int cntAll= amd.countAllMember();
+                                    	int cntToday = amd.countTodayMember();
+                                    %>
+                                    
                                     <div class="card-body">
                                      <table class="table table-hover">
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -79,11 +88,11 @@
                                     	</tr>
                                     	<tr>
                                     		<td>
-                                    		100명
+                                    		<c:out value="<%=cntAll %>"/>
                                     		</td>
                                     		
                                     		<td>
-                                    		3명
+                                    		<c:out value="<%=cntToday %>"/>
                                     		</td>
                                     		
                                     	</tr>
@@ -108,17 +117,24 @@
                                         <i class="fas fa-chart-bar me-1"></i>
                                        전시
                                     </div>
+                                    
+                                    <%
+                                    	AdminExhibitionDAO aed = new AdminExhibitionDAO();
+                                    	int allEx=aed.selectAllExhibition();
+                                    	int ended = aed.selectEndedExhibition();
+                                    	int endTomorrow= aed.endTomorrowExhibition();
+                                    %>
                                     <div class="card-body">
                                       <table class="table table-hover" >
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    		<th>전시 일정 수</th>
+                                    		<th>공개된 전시 수</th>
                                     		<th>마감된 전시 일정</th>
                                     		<th>내일 마감 전시</th>
                                     	</tr>
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    		<td>5건</td>
-                                    		<td>2건</td>
-                                    		<td>3건</td>
+                                    		<td><%=allEx %>건</td>
+                                    		<td><%=ended %>건</td>
+                                    		<td><%=endTomorrow %>건</td>
                                     	</tr>
                                     </table>
                                     <canvas id="myBarChart" width="100%" height="40"></canvas></div>
