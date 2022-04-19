@@ -76,8 +76,8 @@
                                     </div>
                                     <%
                                     	AdminMemberDAO amd = new AdminMemberDAO();
-                                    	int cntAll= amd.countAllMember();
-                                    	int cntToday = amd.countTodayMember();
+                                    	int cntAll= amd.selectAllMember().size();
+                                    	int cntToday = amd.countTodayMem();
                                     %>
                                     
                                     <div class="card-body">
@@ -120,9 +120,9 @@
                                     
                                     <%
                                     	AdminExhibitionDAO aed = new AdminExhibitionDAO();
-                                    	int allEx=aed.selectAllExhibition();
-                                    	int ended = aed.selectEndedExhibition();
-                                    	int endTomorrow= aed.endTomorrowExhibition();
+                                    	int allEx=aed.selectAllEx();
+                                    	int ended = aed.endedEx();
+                                    	int endTomorrow= aed.endsTomorrow();
                                     %>
                                     <div class="card-body">
                                       <table class="table table-hover" >
