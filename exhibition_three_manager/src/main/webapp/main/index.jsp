@@ -1,3 +1,4 @@
+<%@page import="DAO.BoardManagerDAO"%>
 <%@page import="DAO.AdminExhibitionDAO"%>
 <%@page import="DAO.ReservationManagerDAO"%>
 <%@page import="VO.ReservationManagerVO"%>
@@ -103,19 +104,32 @@
                             </div>
                             <div class="col-xl-6" >
                                 <div class="card mb-4">
-                                    <div class="card-body">
-                                    <div id="admin"></div>
-                                    <canvas id="myAreaChart" width="100%" height="40"></canvas>
+                                <div class="card-header">
+                                        <i class="fas fa-chart-bar me-1"></i>
+                                       게시판 관리
                                     </div>
+                                     <%
+                                    	BoardManagerDAO bmd=new BoardManagerDAO();
+                                     	int cntNewContext = bmd.cntNewContext();
+                                    %>
+                                    <div class="card-body">
+                                      <table class="table table-hover" >
+                                    	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
+                                    		<th>새 글수</th>
+                                    	</tr>
+                                    	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
+                                    		<td><%=cntNewContext %></td>
+                                    	</tr>
+                                    </table>
+                                    <canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                        </div>
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
-                                       전시
+                                       전시 관리
                                     </div>
                                     
                                     <%

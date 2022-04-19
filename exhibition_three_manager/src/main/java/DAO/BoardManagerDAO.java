@@ -201,6 +201,42 @@ public class BoardManagerDAO {
 	}//selectBoardDetail
 	
 	
+	//index용 - 새글 수
+	public int cntNewContext() throws ClassNotFoundException, NamingException{
+		int cnt=0;
+		Connection con =null;
+		PreparedStatement pstmt =null;
+		ResultSet rs= null;
+		
+		DbConnection dc= DbConnection.getInstance();
+		try {
+			con=dc.getConn();
+			StringBuilder countQuery = new StringBuilder();
+			countQuery
+			.append("	select userid	")
+			.append("	from board ")
+			.append("	where to_char(to_date(input_date,'yyyy-MM-dd'))>to_char(to_date(sysdate-2,'yyyy-MM-dd'))");
+				
+			
+			pstmt = con.prepareStatement(countQuery.toString());
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				cnt++;
+			}	
+			
+		}catch(SQLException se) {
+			se.printStackTrace();
+		}finally {
+			try {
+				dc.close(rs, pstmt, con);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return cnt;
+	}//cntNewContext
 	/*
 	 * public static void main(String[] args) { BoardManagerDAO bDAO = new
 	 * BoardManagerDAO(); bDAO.selectBoardAdmin("가");
