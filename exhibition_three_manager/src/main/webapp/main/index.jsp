@@ -1,3 +1,4 @@
+<%@page import="DAO.AdminExhibitionDAO"%>
 <%@page import="DAO.ReservationManagerDAO"%>
 <%@page import="VO.ReservationManagerVO"%>
 <%@page import="java.sql.SQLException"%>
@@ -78,12 +79,17 @@
                                     		<th>오늘 가입 회원수</th>
                                     	</tr>
                                     	<tr>
+                                    	<%
+                                    		AdminMemberDAO amd = new AdminMemberDAO();
+                                    		int allMember= amd.selectAllMember().size();
+                                    		int todayMem = amd.countTodayMem();
+                                    	%>
                                     		<td>
-                                    		100명
+                                    			<%=allMember %>
                                     		</td>
                                     		
                                     		<td>
-                                    		3명
+                                    		<%=todayMem %>
                                     		</td>
                                     		
                                     	</tr>
@@ -108,17 +114,23 @@
                                         <i class="fas fa-chart-bar me-1"></i>
                                        전시
                                     </div>
+                                    <%
+                                    	AdminExhibitionDAO aed = new AdminExhibitionDAO();
+                                    	int allExhib = aed.selectAllEx();
+                                    	int endedEx = aed.endedEx();
+                                    	int endsTomorrow=aed.endsTomorrow();
+                                    %>
                                     <div class="card-body">
                                       <table class="table table-hover" >
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    		<th>전시 일정 수</th>
+                                    		<th>공지된 전시 수</th>
                                     		<th>마감된 전시 일정</th>
                                     		<th>내일 마감 전시</th>
                                     	</tr>
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    		<td>5건</td>
-                                    		<td>2건</td>
-                                    		<td>3건</td>
+                                    		<td><%=allExhib %>건</td>
+                                    		<td><%=endedEx %>건</td>
+                                    		<td><%=endsTomorrow%>건</td>
                                     	</tr>
                                     </table>
                                     <canvas id="myBarChart" width="100%" height="40"></canvas></div>

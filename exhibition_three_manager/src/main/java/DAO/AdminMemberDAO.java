@@ -2,6 +2,7 @@ package DAO;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -55,6 +56,34 @@ public class AdminMemberDAO {
 		
 		return list;
 	}
+	
+	//index¿ë
+	public int countTodayMem() throws ClassNotFoundException, SQLException, NamingException {
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs =null;
+		DbConnection dc= DbConnection.getInstance();
+		int cnt=0;
+		try {
+			conn=dc.getConn();
+			StringBuilder selectMember = new StringBuilder();
+			selectMember.append("select userid from member where to_char(to_date(isubscribe_date,'yyyy-MM-dd'))=to_char(to_date(sysdate,'yyyy-MM-dd'))");
+			pstmt=conn.prepareStatement(selectMember.toString());
+			
+			rs=pstmt.executeQuery();			
+			MemberVO mVO=null;
+			while(rs.next()) {
+				cnt++;
+			}
+			
+		}finally {
+			dc.close(rs, pstmt, conn);
+		}
+		
+		
+		return cnt;
+	}
+	
 	
 	
 	

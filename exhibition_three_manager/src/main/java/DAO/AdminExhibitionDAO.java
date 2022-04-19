@@ -146,4 +146,77 @@ public class AdminExhibitionDAO {
 		return exNameList;
 	}//selectExhibitionHall
 	
+	
+
+	//index용 총 전시회 수 
+	public int selectAllEx() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int cnt=0;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			String selectQuery = "select ex_name from exhibition where ex_status='t'";
+			pstmt = con.prepareStatement(selectQuery);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				cnt++;
+			}//end while
+		
+		}finally {
+			
+			dc.close(rs, pstmt, con);
+		}//end finally
+		
+		return cnt;
+	}//selectAllEx
+	
+	//index용 마감된 전시수 
+	public int endedEx() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int cnt=0;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			String selectQuery = "select * from exhibition where (to_date(sysdate,'yyyy-MM-dd')-to_date(deadline,'yyyy-MM-dd'))>0";
+			pstmt = con.prepareStatement(selectQuery);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				cnt++;
+			}//end while
+		
+		}finally {
+			
+			dc.close(rs, pstmt, con);
+		}//end finally
+		
+		return cnt;
+		}//endedEx
+
+	//index용 내일 마감될 전시
+	public int endsTomorrow() throws SQLException, ClassNotFoundException, NamingException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int cnt=0;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			String selectQuery = "select * from exhibition where to_char(to_date(sysdate+1,'yyyy-MM-dd'))=to_char(to_date(deadline,'yyyy-MM-dd'))";
+			pstmt = con.prepareStatement(selectQuery);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				cnt++;
+			}//end while
+			
+		}finally {
+			
+			dc.close(rs, pstmt, con);
+		}//end finally
+		
+		return cnt;
+	}//endedEx
 }//class
