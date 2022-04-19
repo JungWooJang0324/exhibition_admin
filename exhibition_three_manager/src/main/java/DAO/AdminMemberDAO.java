@@ -9,7 +9,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import VO.MemberVO;
 import connection.DbConnection;
@@ -48,6 +51,111 @@ public class AdminMemberDAO {
 		
 		return mv;
 	}
+	
+	/**
+	 * 회원 레코드 수
+	 * @param field
+	 * @param query
+	 * @return
+	 * @throws SQLException
+	 */
+	public int getCount(String field, String query) throws SQLException {
+		int count = 0;
+		StringBuilder sql = new StringBuilder();
+		sql
+		.append("	select count(*) from member where ")
+		.append(query).append("	like '%'||?||'%'	");
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Context ctx = null;
+		DataSource ds = null;
+		try {
+			ctx = new InitialContext();
+			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/manager");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			con = ds.getConnection();
+			pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, field);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+				System.out.println("count : "+count);
+			}//end if
+
+		}finally {
+			if(rs != null)
+				rs.close();
+			if(pstmt != null)
+				pstmt.close();
+			if(con != null)
+				con.close();
+		}
+		
+		return count;
+	}//getCount
+	
+	/**
+	 * 회원 조회 메소드
+	 * @param startRow
+	 * @param endRow
+	 * @param field
+	 * @param query
+	 * @return
+	 * @throws SQLException
+	 * @throws NamingException
+	 */
+	public List<MemberVO> getList(int startRow, int endRow, String field,String query) throws SQLException, NamingException{
+		
+		StringBuilder sql = new StringBuilder();
+		sql
+		.append("	select * from	")
+		.append("	(select rownum rn, userid, name, tel,zipcode, address1, address2, isdeleted, isubscribe_date	")
+		.append("	from (select * from member where	")
+		.append(query).append(" like '%'||?||'%' ").append("	order by userid))	")
+		.append("	where rn between ? and ?	");
+		
+		List<MemberVO> list = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			pstmt = con.prepareStatement(sql.toString());
+			
+			pstmt.setString(1, field);
+			pstmt.setInt(2, startRow);
+			pstmt.setInt(3, endRow);
+			
+			rs = pstmt.executeQuery();
+			
+			list= new ArrayList<MemberVO>();
+			MemberVO mVO = null;
+				
+			while(rs.next()) {
+				mVO=new MemberVO();
+				mVO.setUserId(rs.getString("userid"));
+				mVO.setName(rs.getString("name"));
+				mVO.setIsubscribeDate(rs.getDate("isubscribe_date"));
+				list.add(mVO);
+			}//end while
+			
+		}finally {
+			dc.close(rs, pstmt, con);
+		
+		}//end finally
+		
+		return list;
+	
+}//getList
+	
 	
 	public List<MemberVO> selectMember(String id){
 		List<MemberVO> list = new ArrayList<MemberVO>();

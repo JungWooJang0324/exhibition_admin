@@ -1,3 +1,4 @@
+<%@page import="DAO.AdminMemberDAO"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="VO.MemberVO"%>
 <%@page import="java.util.ArrayList"%>
@@ -6,6 +7,7 @@
 <%@ include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,15 +32,54 @@
      
 <style>
         	
-        	hr {width:200px; margin: 0px auto; margin-top:10px;}
-        	#member_tab{ text-align:center;}
+      hr {width:200px; margin: 0px auto; margin-top:10px;}
+      #member_tab{ text-align:center;}
 </style>
     <script type="text/javascript">
-    /* function memberDetailModal(){
- 		$('#myModal').modal('show'); 
-    } */
+  	$(function(){
+  		$("#searchBtn").click(function(){
+  			document.dataSearchFrm.submit();		
+	  			
+  		});
+  	});
     </script>
     </head>
+    <%
+    int pageSize = 10; // 한 페이지에 출력할 레코드 수
+    
+ 	// 페이지 링크를 클릭한 번호 / 현재 페이지
+ 	String pageNum = request.getParameter("pageNum");
+ 	if (pageNum == null){ // 클릭한게 없으면 1번 페이지
+ 		pageNum = "1";
+ 	}
+ 	
+ 	//검색항목 설정
+ 	String query = request.getParameter("dataSearchItem");
+ 	if("".equals(query) || query==null){
+ 		query="userid";
+ 	}//end if
+ 	//검색어 설정
+ 	String field= request.getParameter("dataSearchText");
+ 	if(field==null || "".equals(field)){
+ 		field="";
+ 	}
+ 	// 연산을 하기 위한 pageNum 형변환 / 현재 페이지
+ 	int currentPage = Integer.parseInt(pageNum);
+
+ 	// 해당 페이지에서 시작할 레코드 / 마지막 레코드
+ 	int startRow = (currentPage - 1) * pageSize + 1;
+ 	int endRow = currentPage * pageSize;
+
+ 	int count = 0;
+ 	AdminMemberDAO aDAO = new AdminMemberDAO();
+ 	count = aDAO.getCount(field,query); // 데이터베이스에 저장된 총 갯수
+ 	
+ 	List<MemberVO> list = null;
+ 	if (count > 0) {
+ 		// getList()메서드 호출 / 해당 레코드 반환
+ 		list = aDAO.getList(startRow, endRow, field, query);
+ 	}
+ %>
     
     <body class="sb-nav-fixed">
    
@@ -80,17 +121,17 @@
                         </ol>
                         <!-- 검색창 -->
 							<div id="searchDiv" >
-                            <form class="d-flex" style="float:right">
+                            <form action="http://localhost/exhibition_three_manager/main/admin_member.jsp" name="dataSearchFrm" class="d-flex" style="float:right">
 			                         <div class="input-group mb-3" style="width:300px;">
-											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;">
-											  <option value="" selected="selected">이름</option>
-											  <option value="">아이디</option>
-											  <option value="">가입일</option>
-											</select>
-										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px;height:35px; margin-right:10px;">
-										    <button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
-                                 <i class="fa-solid fa-magnifying-glass"></i>
-                                </button>
+										 <select class="form-select" aria-label=".form-select-sm example" name="dataSearchItem" style="height:35px;">
+											  <option ${(param.dataSearchItem =="name")?"selected":""} value="name">이름</option>
+											  <option ${(param.dataSearchItem =="userid")?"selected":""} value="userid">아이디</option>
+											  <option ${(param.dataSearchItem =="isubscribe_date")?"selected":""} value="isubscribe_date">가입일</option>
+										  </select>
+										  <input type="text" class="form-control" value="${param.dataSearchText}" name="dataSearchText"style="width:100px;height:35px; margin-right:10px;">
+										  <button type="button" class="btn btn-outline-dark btn-sm" id="searchBtn" style="height: 35px;">
+                                 			<i class="fa-solid fa-magnifying-glass"></i>
+                               			  </button>
 									</div>
 							      </form>
                         	</div>
@@ -107,32 +148,80 @@
 						  	</thead> 
 						  	<tbody> 
 						  		 <%
-    						 		AdminMemberDAO amDAO = new AdminMemberDAO();
-    						 		try {
-	    						 		List<MemberVO> list = amDAO.selectAllMember();
-	    						 		for(MemberVO mv: list){
+						  		 
+						  		 if(count > 0 ){
+	    						 	
+	    						 		request.setAttribute("dataList",list);
 	    						 		%>
+	    						 		<c:forEach var="data" items="${dataList}">
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-	    						 			<td><input type="hidden" name="userId" id="userId"  value="<%=mv.getUserId()%>"><%=mv.getUserId()%></td>
-	    						 			<td><%=mv.getName()%></td>
-	    						 			<td><%=mv.getIsubscribeDate()%></td>
+	    						 			<td><input type="hidden" name="userId" id="userId"  value="<c:out value="${data.userId }"/>"><c:out value="${data.userId }"/></td>
+	    						 			<td><c:out value="${data.name}"/></td>
+	    						 			<td><c:out value="${data.isubscribeDate}"/></td>
 	    						 		</tr>
-	    						 		<% }
+	    						 		</c:forEach>
+	    						 		<%
+	    						 		}else{
+											%>
+											<tr>
+											<td colspan="3">조회 데이터가 없습니다.</td>
+											</tr>											
+											<%		    						 		
 	    						 		
-	    						 		}catch(SQLException e) {
-	    									e.printStackTrace();
-	    						 		}%>
+	    						 		}//end else
+	    						 		%>
 						  	</tbody> 
 						  </table>
 						  
                             </div>
                                <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="">이전</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">1</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">2</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">3</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">다음</a></li> 
+								<%
+								if(count > 0){
+									int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1); //레코드 수에 따른 페이지 수 구하기
+									
+									int pageBlock=10; // 한번에 보여질 페이지 번호의 갯수
+									
+									int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;//첫페이지 번호
+									
+									int endPage = startPage + pageBlock - 1;//마지막 페이지 번호
+
+									if(endPage > pageCount){
+										endPage = pageCount;
+									}
+									
+									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
+										%>  
+									<li>
+					<a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+									이전
+									</a>
+									</li> <% 
+										}//end if
+										 for(int i = startPage; i <= endPage; i++){ 
+											 if(i == currentPage){ //현재 페이지인 경우 링크 생략
+										 	%>
+											<li>
+											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="#">
+											<%=i %>
+											</a>
+											</li> 
+											<%  
+											 }//end if
+											 %>
+										<%
+											if(endPage > startPage){
+										%>
+										<li>
+										<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="admin_member.jsp?pageNum=<%=startPage+10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+										다음
+										</a>
+										</li> 
+										 <% 
+											}//end if
+										 }//end for
+								}//end if
+								%>
 								</ul> 
 							</div>
                         </div>
