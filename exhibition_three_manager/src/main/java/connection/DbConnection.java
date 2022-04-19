@@ -34,15 +34,21 @@ public class DbConnection {
 		return dc;
 	}
 	
-	public Connection getConn() throws SQLException, ClassNotFoundException, NamingException{
+	public Connection getConn() throws SQLException{
 		
 		//1. JNDI사용객체 생성
-		Context ctx = new InitialContext();
+		Context ctx;
+		Connection conn = null;
+		try {
+			ctx = new InitialContext();
+			//2. DBCP찾기
+			DataSource ds = (DataSource)ctx.lookup("java:/comp/env/jdbc/manager");
+			conn = ds.getConnection();
+			System.out.println("DB연동 성공");
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
 
-		//2. DBCP찾기
-		DataSource ds = (DataSource)ctx.lookup("java:/comp/env/jdbc/manager");
-		Connection conn = ds.getConnection();
-		System.out.println("DB연동 성공");
 		return conn;
 	}
 	
