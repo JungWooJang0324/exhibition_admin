@@ -180,7 +180,7 @@
 								if(count > 0){
 									int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1); //레코드 수에 따른 페이지 수 구하기
 									
-									int pageBlock=10; // 한번에 보여질 페이지 번호의 갯수
+									int pageBlock=5; // 한번에 보여질 페이지 번호의 갯수
 									
 									int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;//첫페이지 번호
 									
@@ -193,7 +193,7 @@
 									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
 										%>  
 									<li>
-					<a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+					<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 									이전
 									</a>
 									</li> <% 
@@ -202,7 +202,7 @@
 											 if(i == currentPage){ //현재 페이지인 경우 링크 생략
 										 	%>
 											<li>
-											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">
+											<a style="margin-right:10px;"class="text-secondary" href="">
 											<%=i %>
 											</a>
 											</li> 
@@ -210,7 +210,7 @@
 											 }else{ //현재 페이지가 아닌 경우 링크 설정
 												 %>
 											<li>
-											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="admin_member.jsp?pageNum=<%=i%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" id="pNum"href="admin_member.jsp?pageNum=<%=i%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 											<%=i %>
 											</a>
 											</li> 
@@ -222,7 +222,7 @@
 											if(endPage < pageCount){
 										%>
 										<li>
-										<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="admin_member.jsp?pageNum=<%=startPage+10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="admin_member.jsp?pageNum=<%=startPage+5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 										다음
 										</a>
 										</li> 

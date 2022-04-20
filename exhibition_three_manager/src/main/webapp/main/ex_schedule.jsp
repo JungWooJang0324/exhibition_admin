@@ -63,7 +63,7 @@
 	</script>  
     </head>
         <%
-    int pageSize = 1; // 한 페이지에 출력할 레코드 수
+    int pageSize = 5; // 한 페이지에 출력할 레코드 수
     
  	// 페이지 링크를 클릭한 번호 / 현재 페이지
  	String pageNum = request.getParameter("pageNum");
@@ -211,7 +211,7 @@
 									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
 										%>  
 									<li>
-					<a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="ex_schedul.jsp?pageNum=<%=startPage-10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+					<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="ex_schedul.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 									이전
 									</a>
 									</li> <% 
@@ -220,7 +220,7 @@
 											 if(i == currentPage){ //현재 페이지인 경우 링크 생략
 										 	%>
 											<li>
-											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">
+											<a style="margin-right:10px;"class="text-secondary" href="">
 											<%=i %>
 											</a>
 											</li> 
@@ -228,7 +228,8 @@
 											 }else{
 											%>
 											<li>
-											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="ex_schedule.jsp?pageNum=<%=i%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" 
+											href="ex_schedule.jsp?pageNum=<%=i%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 											<%=i %>
 											</a>
 											</li> 
@@ -240,7 +241,7 @@
 											if(endPage < pageCount){//전체 페이지 수가 현재 블록 페이지 수보다 클 경우 다음 버튼
 										%>
 										<li>
-										<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="ex_schedule.jsp?pageNum=<%=startPage+10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="ex_schedule.jsp?pageNum=<%=startPage+5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 										다음
 										</a>
 										</li> 
