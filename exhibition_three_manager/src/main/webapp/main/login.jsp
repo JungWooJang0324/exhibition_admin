@@ -38,11 +38,11 @@
                                     <div class="card-body">
                                         <form action="http://localhost/exhibition_three_manager/main/login_check.jsp" method="post" id="loginForm">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inEmail" type="email" name="admin_id" placeholder="name@example.com" value="admin" />
+                                                <input class="form-control" id="inEmail" type="email" name="admin_id" placeholder="name@example.com" value="exhib" />
                                                 <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inPassword" type="password" name="admin_pw" placeholder="Password" value="asd123"/>
+                                                <input class="form-control" id="inPassword" type="password" name="admin_pw" placeholder="Password" value="asdasd"/>
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="form-check mb-3">
