@@ -4,8 +4,7 @@ import java.sql.Date;
 
 public class ExhibitionVO {
 	private int exNum,totalCount,watchCount,exHallNum;
-	private String exName,exInfo,exIntro,exhibitionPoster,addImg;
-	private char exStatus;
+	private String exName,exInfo,exIntro,exhibitionPoster,addImg,exStatus;
 	private Date exhibitionDate,deadLine,inputDate;
 	
 	
@@ -14,7 +13,7 @@ public class ExhibitionVO {
 	
 	
 	public ExhibitionVO(int exNum, int totalCount, int watchCount, int exHallNum, String exName, String exInfo,
-			String exIntro, String exhibitionPoster, String addImg, char exStatus, Date exhibitionDate, Date deadLine,
+			String exIntro, String exhibitionPoster, String addImg, String exStatus, Date exhibitionDate, Date deadLine,
 			Date inputDate) {
 		this.exNum = exNum;
 		this.totalCount = totalCount;
@@ -86,10 +85,10 @@ public class ExhibitionVO {
 	public void setAddImg(String addImg) {
 		this.addImg = addImg;
 	}
-	public char getExStatus() {
+	public String getExStatus() {
 		return exStatus;
 	}
-	public void setExStatus(char exStatus) {
+	public void setExStatus(String exStatus) {
 		this.exStatus = exStatus;
 	}
 	public Date getExhibitionDate() {

@@ -45,7 +45,7 @@
     </script>
     </head>
     <%
-    int pageSize = 10; // 한 페이지에 출력할 레코드 수
+    int pageSize = 5; // 한 페이지에 출력할 레코드 수
     
  	// 페이지 링크를 클릭한 번호 / 현재 페이지
  	String pageNum = request.getParameter("pageNum");
@@ -77,7 +77,7 @@
  	List<MemberVO> list = null;
  	if (count > 0) {
  		// getList()메서드 호출 / 해당 레코드 반환
- 		list = aDAO.getList(startRow, endRow, field, query);
+ 		list = aDAO.selectMember(startRow, endRow, field, query);
  	}
  %>
     
@@ -202,15 +202,24 @@
 											 if(i == currentPage){ //현재 페이지인 경우 링크 생략
 										 	%>
 											<li>
-											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="#">
+											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">
 											<%=i %>
 											</a>
 											</li> 
 											<%  
-											 }//end if
+											 }else{ //현재 페이지가 아닌 경우 링크 설정
+												 %>
+											<li>
+											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="admin_member.jsp?pageNum=<%=i%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+											<%=i %>
+											</a>
+											</li> 
+												  <% 										
+											 }//end else
 											 %>
 										<%
-											if(endPage > startPage){
+										 }//end for
+											if(endPage < pageCount){
 										%>
 										<li>
 										<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="admin_member.jsp?pageNum=<%=startPage+10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
@@ -219,7 +228,6 @@
 										</li> 
 										 <% 
 											}//end if
-										 }//end for
 								}//end if
 								%>
 								</ul> 

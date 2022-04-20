@@ -69,17 +69,9 @@ public class AdminMemberDAO {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Context ctx = null;
-		DataSource ds = null;
+		DbConnection dc = DbConnection.getInstance();
 		try {
-			ctx = new InitialContext();
-			ds = (DataSource)ctx.lookup("java:comp/env/jdbc/manager");
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			con = ds.getConnection();
+			con = dc.getConn();
 			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, field);
 			rs = pstmt.executeQuery();
@@ -111,7 +103,7 @@ public class AdminMemberDAO {
 	 * @throws SQLException
 	 * @throws NamingException
 	 */
-	public List<MemberVO> getList(int startRow, int endRow, String field,String query) throws SQLException, NamingException{
+	public List<MemberVO> selectMember(int startRow, int endRow, String field,String query) throws SQLException, NamingException{
 		
 		StringBuilder sql = new StringBuilder();
 		sql
@@ -154,16 +146,8 @@ public class AdminMemberDAO {
 		
 		return list;
 	
-}//getList
+}//selectMember
 	
-	
-	public List<MemberVO> selectMember(String id){
-		List<MemberVO> list = new ArrayList<MemberVO>();
-		
-		
-		
-		return list;
-	}
 
 	//index¿ë
 	public int countTodayMem() throws ClassNotFoundException, SQLException, NamingException {

@@ -9,9 +9,12 @@
 <%@include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
+   
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -37,6 +40,10 @@
         </style>
 	<script type="text/javascript">
 	$( function() {
+		$("#searchBtn").click(function(){
+			document.dataSearchFrm.submit();
+		});
+	
 		$( "#startDate" ).datepicker({
 			  dateFormat: "yy-mm-dd",
 			  dayNames: [ "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" ],
@@ -51,24 +58,46 @@
 			  monthNamesShort: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" ],
 			  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
 			});
-	  } );
-	 function exhibitionModalOpen(){
-			$('#showModal').modal('show');	
-		 
-	 }//exhibitionModalOpen
-		$(document).on('hidden.bs.modal', function (event) {
-
-			if ($('.modal:visible').length) {
-
-				$('body').addClass('modal-open');
-
-			}
-
-		});
-
+	  });
 	 
 	</script>  
     </head>
+        <%
+    int pageSize = 1; // 한 페이지에 출력할 레코드 수
+    
+ 	// 페이지 링크를 클릭한 번호 / 현재 페이지
+ 	String pageNum = request.getParameter("pageNum");
+ 	if (pageNum == null){ // 클릭한게 없으면 1번 페이지
+ 		pageNum = "1";
+ 	}
+ 	
+ 	//검색항목 설정
+ 	String query = request.getParameter("dataSearchItem");
+ 	if("".equals(query) || query==null){
+ 		query="ex_name";
+ 	}//end if
+ 	//검색어 설정
+ 	String field= request.getParameter("dataSearchText");
+ 	if(field==null || "".equals(field)){
+ 		field="";
+ 	}
+ 	// 연산을 하기 위한 pageNum 형변환 / 현재 페이지
+ 	int currentPage = Integer.parseInt(pageNum);
+
+ 	// 해당 페이지에서 시작할 레코드 / 마지막 레코드
+ 	int startRow = (currentPage - 1) * pageSize + 1;
+ 	int endRow = currentPage * pageSize;
+
+ 	int count = 0;
+ 	AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
+ 	count = aeDAO.getCount(field,query); // 데이터베이스에 저장된 총 갯수
+ 	
+ 	List<ExhibitionVO> list = null;
+ 	if (count > 0) {
+ 		// getList()메서드 호출 / 해당 레코드 반환
+ 		list = aeDAO.selectEx(startRow, endRow, field, query);
+ 	}
+ %>
     <body class="sb-nav-fixed">
 
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -110,15 +139,15 @@
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
                         <div class="card-body">
-                               <form class="d-flex" style="float:right">
-			                         <div class="input-group mb-3" style="width:300px;">
-											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;" >
-											  <option value="" selected="selected">전시명</option>
-											  <option value="">전시 번호</option>
-											  <option value="">담당자</option>
+                               <form class="d-flex" style="float:right" action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" name="dataSearchFrm">
+			                         <div class="input-group mb-3" style="width:350px;">
+											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;" name="dataSearchItem" >
+											  <option ${(param.dataSearchItem=="ex_name")?"selected":""} value="ex_name">전시명</option>
+											  <option ${(param.dataSearchItem=="ex_num")?"selected":""} value="ex_num">전시번호</option>
+											  <option ${(param.dataSearchItem=="input_date")?"selected":""} value="input_date">입력일</option>
 											</select>
-										  <input type="text" class="form-control" aria-label="전시 검색" style="width:100px;height:35px; margin-right:10px;">
-										      <button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
+										  <input type="text" class="form-control" aria-label="전시 검색" value="${param.dataSearchText}" name="dataSearchText" style="width:100px;height:35px; margin-right:10px;" >
+										      <button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;" id="searchBtn">
                                  			<i class="fa-solid fa-magnifying-glass"></i>
                                  			</button>
 									</div>
@@ -136,28 +165,26 @@
 						  	</thead> 
 						  	<tbody> 
 						  		  <%
-						  		  AdminExhibitionDAO aDAO = new AdminExhibitionDAO();
-						  		  try{
-						  		  List<ExhibitionVO> ev = aDAO.selectExhibition(""); 
-						  
-						  		  for(ExhibitionVO eVO : ev){%>
+						  		 
+						  		 if(count > 0 ){
+	    						 	
+	    						 		request.setAttribute("dataList",list);
+	    						 		%>
+	    						 		<c:forEach var="list" items="${dataList }">
                                     	<tr  style="cursor:pointer" data-bs-target="#showModal" data-bs-toggle="modal">
- 											<td><%=eVO.getExNum()%></td>
- 											<td><%=eVO.getExName()%></td>
- 											<td><%=eVO.getInputDate()%></td>
+ 											<td><c:out value="${list.exNum }"/></td>
+ 											<td><c:out value="${list.exName }"/></td>
+ 											<td><c:out value="${list.inputDate }"/></td>
                                     	</tr>
-                                    	
-                                   <% }//end for
-							  		if(ev == null){
-	                                 %>
+	    						 		</c:forEach>
+                                   <%
+                                   }else{
+	                                %>
 	                                 <tr>
-	                                 	<td colspan="3">조회된 데이터가 없습니다.</td>
+	                                 	<td colspan="3" style="text-align:center">조회된 데이터가 없습니다.</td>
 	                                 </tr>
-	                                 <%    
-	                                }
-						  		  }catch(SQLException e){
-						  			  e.printStackTrace();
-						  		  }//end catch
+	                                <%    
+	                                }//end else
                                     %>
 						  	</tbody> 
 						  </table>
@@ -166,12 +193,61 @@
 						  </div>
 						  <!-- 페이지 -->
 						    <div> 
-								<ul class="pagination justify-content-center"> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">이전</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">1</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">2</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">3</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">다음</a></li> 
+									<ul class="pagination justify-content-center"> 
+								<%
+								if(count > 0){
+									int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1); //레코드 수에 따른 페이지 수 구하기
+									
+									int pageBlock=10; // 한번에 보여질 페이지 번호의 갯수
+									
+									int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;//첫페이지 번호
+									
+									int endPage = startPage + pageBlock - 1;//마지막 페이지 번호
+
+									if(endPage > pageCount){
+										endPage = pageCount;
+									}
+									
+									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
+										%>  
+									<li>
+					<a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="ex_schedul.jsp?pageNum=<%=startPage-10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+									이전
+									</a>
+									</li> <% 
+										}//end if
+										 for(int i = startPage; i <= endPage; i++){ 
+											 if(i == currentPage){ //현재 페이지인 경우 링크 생략
+										 	%>
+											<li>
+											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">
+											<%=i %>
+											</a>
+											</li> 
+											<%  
+											 }else{
+											%>
+											<li>
+											<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="ex_schedule.jsp?pageNum=<%=i%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+											<%=i %>
+											</a>
+											</li> 
+											<% 	 
+											 }
+											 %>
+										<%
+										 }//end for
+											if(endPage < pageCount){//전체 페이지 수가 현재 블록 페이지 수보다 클 경우 다음 버튼
+										%>
+										<li>
+										<a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="ex_schedule.jsp?pageNum=<%=startPage+10%>&field=${param.dataSearchText}&query=${param.dataSearchItem}">
+										다음
+										</a>
+										</li> 
+										 <% 
+											}//end if
+								}//end if
+								%>
 								</ul> 
 						  </div>
 						  <!-- 페이지 끝 -->
@@ -210,7 +286,7 @@
 									  <option selected>전시장과 담당자를 선택해주세요</option>
 									  <%
 									  	try{
-									 	List<ExHallVO> exNameList = aDAO.selectExhibitionHall();
+									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
 									  	for(ExHallVO eVO : exNameList){
 									  %>
 									   <option value='<%=eVO.getExHallNum()%>'><%=eVO.getExName()%> / 담당자 : <%=eVO.getMgrName() %></option>

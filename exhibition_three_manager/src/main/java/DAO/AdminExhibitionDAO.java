@@ -20,6 +20,79 @@ import connection.DbConnection;
 
 public class AdminExhibitionDAO {
 
+	public List<ExhibitionVO> selectEx(int startRow, int endRow, String field,String query) throws SQLException, NamingException{
+			
+			StringBuilder sql = new StringBuilder();
+			sql
+			.append("    select * from     ")
+			.append("    (select rownum rn, ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,     ")
+			.append("     ex_intro,exhibition_poster, add_img, ex_status,exhibit_date,deadline,input_date    ")
+			.append("     from (select * from exhibition where   ").append(query)
+			.append("   like '%'||?||'%' order by input_date)) where rn between ? and ?  ");
+			List<ExhibitionVO> list = null;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			DbConnection dc = DbConnection.getInstance();
+			try {
+				con = dc.getConn();
+				pstmt = con.prepareStatement(sql.toString());
+				
+				pstmt.setString(1, field);
+				pstmt.setInt(2, startRow);
+				pstmt.setInt(3, endRow);
+				
+				rs = pstmt.executeQuery();
+				
+				list= new ArrayList<ExhibitionVO>();
+				ExhibitionVO exVO = null;
+					
+				while(rs.next()) {
+					exVO = new ExhibitionVO();
+					exVO.setExNum(rs.getInt("ex_num"));
+					exVO.setExName(rs.getString("ex_name"));
+					exVO.setInputDate(rs.getDate("input_date"));
+					
+					list.add(exVO);
+				}//end while
+				
+			}finally {
+				dc.close(rs, pstmt, con);
+			
+			}//end finally
+			
+			return list;
+		
+	}//selectMember
+		
+	public int getCount(String field, String query) throws SQLException {
+		int count = 0;
+		StringBuilder sql = new StringBuilder();
+		sql
+		.append("	select count(*) from exhibition where ")
+		.append(query).append("	like '%'||?||'%'	");
+		
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, field);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1);
+				System.out.println("count : "+count);
+			}//end if
+
+		}finally {
+			dc.close(rs, pstmt, con);
+		}
+		
+		return count;
+	}//getCount
 	public List<ExhibitionVO> selectExhibition(String ex_name) throws SQLException, ClassNotFoundException, NamingException{
 		List<ExhibitionVO> ev= new ArrayList<ExhibitionVO>();
 		Connection conn=null;
