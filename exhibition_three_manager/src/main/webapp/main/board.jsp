@@ -5,6 +5,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,10 +88,10 @@ $(function(){
                         <div class="card-body" style="width: 400px; float: right;">
                             <form class="d-flex">
 	                        	 <select class="form-select" aria-label=".form-select-sm example"   >
-									  <option value="" selected="selected">제목 </option>
-									  <option value="">작성자</option>
-									  <option value="">작성일</option>
-									  <option value="">카테고리</option>
+									  <option value="title" selected="selected">제목 </option>
+									  <option value="userId">작성자</option>
+									  <option value="inputDate">작성일</option>
+									  <option value="category">카테고리</option>
 								</select>
 	                        	<input type="text" class="form-control" style="margin-right: 10px">
 	                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
@@ -114,23 +116,24 @@ $(function(){
                                     <tbody>
                                     <%
                                   	BoardManagerDAO bDAO = new BoardManagerDAO(); 
-                                  	List<BoardVO> list = bDAO.selectBoardAdmin("");
-                                  	for(BoardVO bVO: list){
+                                  	List<BoardVO> list = bDAO.selectBoardAdmin("","","","");
+                                  	pageContext.setAttribute("list", list);
                                   	%>
+                                  	<c:forEach var="bVO" items="${list}">
                                          <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#boardDetail">
-                                            <td><%= bVO.getBdId()%></td>
-                                            <td><%=bVO.getTitle() %></td>                                          	
-                                            <td><%=bVO.getUserId() %></td>
-                                            <td><%=bVO.getInputDate() %></td>
-                                            <td><%=bVO.getCatName() %></td>
+                                            <td><c:out value="${bVO.bdId}"/></td>
+                                            <td><c:out value="${bVO.title}"/></td>                                          	
+                                            <td><c:out value="${bVO.userId}"/></td>
+                                            <td><c:out value="${bVO.inputDate}"/></td>
+                                            <td><c:out value="${bVO.catNum}"/></td>
                                    	 		<td><button type="button" class="btn btn-secondary btn-sm">삭제</button></td>
-                                   	 <%}
-                                   	if(list==null){%>
+	                                   	 </tr>
+                                   	</c:forEach>
+                                   	<c:if test="${empty list}">
                               			<tr>
-                              				<td colspan="3">"등록된 글이 없습니다."</td>
-                              				<td><button type="button" class="btn btn-secondary btn-sm">삭제</button></td>
+                              				<td colspan="6">"등록된 글이 없습니다."</td>
                               			</tr>
-                           			<%}%>	 
+                          			</c:if>
                                       </tbody>
                                    </table>
                                  </div>

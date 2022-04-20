@@ -15,7 +15,7 @@ import connection.DbConnection;
 public class BoardManagerDAO {
 	
 	
-	public List<BoardVO> selectBoardAdmin(String search) throws ClassNotFoundException, NamingException {
+	public List<BoardVO> selectBoardAdmin(String title, String userId, String inputDate, String category) throws ClassNotFoundException, NamingException {
 		
 		List<BoardVO> boardList=null;
 		Connection con =null;
@@ -30,18 +30,19 @@ public class BoardManagerDAO {
 			
 			StringBuilder selectBoard = new StringBuilder();
 			selectBoard
-			.append("	SELECT b.bd_id, b.title, b.userid, b.input_date, cat.cat_name							")
-			.append("	from Board b																			")
-			.append("	inner join	category cat																")
-			.append("	on cat.cat_num = b.cat_num																")
-			.append("	where title like '%'||?||'%' or userid like '%'||?||'%' or input_date like '%'||?||'%'")
-			.append("	order by bd_id	desc																		");
+			.append("	SELECT b.bd_id, b.title, b.userid, b.input_date, cat.cat_name															")
+			.append("	from Board b																											")
+			.append("	inner join	category cat																								")
+			.append("	on cat.cat_num = b.cat_num																								")
+			.append("	where title like '%'||?||'%' or userid like '%'||?||'%' or input_date like '%'||?||'%' or	cat_name like '%'||?||'%'	 ")
+			.append("	order by bd_id	desc																									");
 			
 			
 			pstmt = con.prepareStatement(selectBoard.toString());
-			pstmt.setString(1, search);
-			pstmt.setString(2, search);
-			pstmt.setString(3, search);
+			pstmt.setString(1, title);
+			pstmt.setString(2, userId);
+			pstmt.setString(3, inputDate);
+			pstmt.setString(4, category);
 			
 			rs= pstmt.executeQuery();
 			
@@ -126,10 +127,9 @@ public class BoardManagerDAO {
 					= "insert into Board(bd_id, cat_num, title, description) values(bd_seq.nextval, ?,?,?)";
 				pstmt=conn.prepareStatement(insertBoard);
 				
-				pstmt.setInt(1, bVO.getBdId()); 
-				pstmt.setInt(2, bVO.getCatNum()); 
-				pstmt.setString(3, bVO.getTitle()); 
-				pstmt.setString(4, bVO.getDescription()); 
+				pstmt.setInt(1, bVO.getCatNum()); 
+				pstmt.setString(2, bVO.getTitle()); 
+				pstmt.setString(3, bVO.getDescription()); 
 				
 				pstmt.executeUpdate();
 				

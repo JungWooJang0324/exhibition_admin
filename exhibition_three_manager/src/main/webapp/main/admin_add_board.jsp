@@ -54,36 +54,41 @@ $(function(){
 		location.href="board.jsp";
 	});
 	 
+	 $("#addOk").click(function(){
+		$("#postFrm").submit(); 
+	 }); 
 });//ready
+
 
 
 </script>
 </head>
 <body>
 <div id="wrap">
-	<form name= "addBoardAdminFrm" method="post">
-	<% BoardManagerDAO bDAO = new BoardManagerDAO(); 
-		%>
+	<form  action="admin_board_process.jsp" id="postFrm"  name="postFrm" method="post">
 	<div style="color:#D8D8D8 "> 작성자 </div>
-	<div id="name" style="font-size: 20px; margin-top: 5px;"> <%=session.getAttribute("admin_id") %> </div><hr>
+	<div id="userId" style="font-size: 20px; margin-top: 5px;"> <%=session.getAttribute("admin_id") %> </div><hr>
 	<div id="selectDiv">
-		<select id="selectBoard" class="inputBox" style="margin-bottom: 5px; width: 80%">
-			<option></option>
+		<select name="catNum" id="catNum" class="inputBox" style="margin-bottom: 5px; width: 80%">
+			<option value="1">Q&A</option>
+			<option value="2">후기</option>
 		</select>
 		<select id="selecthead" class="inputBox" style="margin-bottom: 5px; width: 19%">
 			<option>말머리 선택</option>
 		</select>
 	</div>
-	<div id="subjectDiv">
-		<input id="subject" class="inputBox" type="text"  style="margin-bottom: 5px; width: 100%"placeholder=" 제목을 입력해주세요."/>
+	<div id="titleDiv">
+		<input id="title" name="title" class="inputBox" type="text"  style="margin-bottom: 5px; width: 100%"placeholder=" 제목을 입력해주세요."/>
 	</div>
-	<div id="summernote" >
-		<p></p>
+	<div>
+		<textarea id="summernote" name="description"></textarea>
 	</div>
 	<div id="btnDiv" style="margin-top: 30px">
 		<button type="button" id="backBtn" class="btn btn-outline-dark" style="float: left;margin-left: 10px">뒤로가기</button> 
 		<button type="button" id = "addBtn" class="btn btn-outline-info" 
-			style="float: right; margin-right: 10px" data-toggle="modal" data-target="#confirmAdd" >게시글 추가</button>
+			style="float: right; margin-right: 10px"  data-toggle="modal" data-target="#confirmAdd">게시글 추가</button>
+			<!--  data-toggle="modal" data-target="#confirmAdd" -->
+			<!-- ajax 배운 후 모달 버튼으로 추가 -->
 	</div>
 	</form>
 <!-- 모달 -->
@@ -99,7 +104,7 @@ $(function(){
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-		        <button type="button" class="btn btn-primary">OK</button>
+		        <button id="addOk" type="button" class="btn btn-primary">OK</button>
 	      </div>
 	    </div>
 	  </div>

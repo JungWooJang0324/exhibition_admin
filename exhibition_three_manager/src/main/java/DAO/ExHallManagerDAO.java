@@ -15,7 +15,7 @@ import connection.DbConnection;
 public class ExHallManagerDAO {
 	
 		
-	public List<ExHallVO> selectExhibitonHall(String exName) throws ClassNotFoundException, NamingException{
+	public List<ExHallVO> selectExhibitonHall(String exNum, String exName, String exLoc) throws ClassNotFoundException, NamingException{
 		
 		List<ExHallVO> hallList=null;
 		Connection con =null;
@@ -29,12 +29,14 @@ public class ExHallManagerDAO {
 			
 			StringBuilder selectExhibitionHall = new StringBuilder();
 			selectExhibitionHall
-			.append("	SELECT ex_hall_num, ex_name, ex_loc	")
-			.append("	from EXHIBITION_HALL				")
-			.append("	where ex_name like '%'||?||'%'		");
+			.append("	SELECT ex_hall_num, ex_name, ex_loc																")
+			.append("	from EXHIBITION_HALL																			")
+			.append("	where ex_hall_num like '%'||?||'%' or ex_name like '%'||?||'%' or ex_loc like '%'||?||'%'		");
 			
 			pstmt = con.prepareStatement(selectExhibitionHall.toString());
-			pstmt.setString(1, exName);
+			pstmt.setString(1, exNum);
+			pstmt.setString(2, exName);
+			pstmt.setString(3, exLoc);
 			
 			rs= pstmt.executeQuery();
 			

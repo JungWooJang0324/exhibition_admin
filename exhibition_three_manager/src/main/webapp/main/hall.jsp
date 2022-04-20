@@ -7,6 +7,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="전시장"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,9 +88,9 @@ $(function({
                          <div  style="width: 400px; float: right; margin-bottom: 10px">
                             <form class="d-flex">
 		                        	 <select class="form-select" aria-label=".form-select-sm example"  >
-										  <option value="" selected="selected">전시장 번호 </option>
-										  <option value="">전시장명</option>
-										  <option value="">전시 위치</option>
+										  <option value="exNum" selected="selected">전시장 번호 </option>
+										  <option value="exName">전시장명</option>
+										  <option value="exLoc">전시 위치</option>
 									</select>
 		                        	<input type="text" class="form-control" style="margin-right: 10px">
 		                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
@@ -111,18 +113,19 @@ $(function({
                                     <tbody>
                                   	<%
                                   	ExHallManagerDAO ehmDAO = new ExHallManagerDAO(); 
-                                  	List<ExHallVO> list = ehmDAO.selectExhibitonHall("");
-                                  	for(ExHallVO ehVO: list){
+                                  	List<ExHallVO> list = ehmDAO.selectExhibitonHall("","","");
+                                	pageContext.setAttribute("list", list);
                                   	%>
+                                  	<c:forEach var="exVO" items="${list}">
                                         <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#hallDetail">
-                                            <td><%=ehVO.getExHallNum()%></td>
-                                            <td><%=ehVO.getExName() %></td>                                          	
-                                            <td><%=ehVO.getExLoc() %></td>
+                                            <td><c:out value="${exVO.exHallNum}"/></td>
+                                            <td><c:out value="${exVO.exName}"/></td>                                          	
+                                            <td><c:out value="${exVO.exLoc}"/></td>
                                         </tr>
-                                   	 <%}
-                                   	if(list==null){%>
+                                     </c:forEach>
+                                   	<c:if test="${empty list}">
                               			<tr><td colspan="3">"저장된 값이 없습니다."</td></tr>
-                           			<%}%>	 
+                           			</c:if>
                                      </tbody>
                                   </table>
                                   </form>
