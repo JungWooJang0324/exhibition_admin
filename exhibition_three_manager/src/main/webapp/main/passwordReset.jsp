@@ -23,10 +23,10 @@
         $(function() {
         	var output="";
         	$("#newPass").focusout(function() {
-	        	if($("#newPass").val().length>5){
+	        	if($("#newPass").val().length>7 && $("#newPass").val().length<17){
 	        		output="";
 	        	}else{
-	        		output="* 비밀번호는 6글자 이상 이어야 합니다.";
+	        		output="* 비밀번호는 8글자~16글자여야 합니다.";
 	        	}
 	        	
 	        	$("#passLenCk").html(output);
@@ -44,11 +44,12 @@
 					return;
 				}
 				
-				if($("#newPass").val().length<6){
-					alert("비밀번호는 6글자 이상이어야 합니다.");
+				if($("#newPass").val().length<8 && $("#newPass").val().length>16){
+					alert("비밀번호는 8글자~16글자여야 합니다.");
 					$("#newPass").focus();
 					return;
 				}
+				
 
 				$("#resetPass").submit();
 			});

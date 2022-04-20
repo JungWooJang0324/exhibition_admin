@@ -42,7 +42,7 @@
                                                 <label for="inputEmail">Email address</label>
                                             </div>
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="inPassword" type="password" name="admin_pw" placeholder="Password" value="asdasd"/>
+                                                <input class="form-control" id="inPassword" type="password" name="admin_pw" placeholder="Password" value="exhibition3"/>
                                                 <label for="inputPassword">Password</label>
                                             </div>
                                             <div class="form-check mb-3">
