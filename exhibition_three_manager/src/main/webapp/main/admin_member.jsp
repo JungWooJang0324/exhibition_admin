@@ -42,6 +42,20 @@
 	  			
   		});
   	});
+  	function detailMember(id,name,date,addr1,addr2,zipcode,tel){
+	  	$("#memberDetail").on('show.bs.modal',function(e){
+	  		var modal= $(this);
+	    	modal.find("#id").text(id);
+	  		modal.find("#memberName").text(name);
+	  		modal.find("#subDate").text(date);
+	  		modal.find("#address1").text(addr1);
+	  		modal.find("#address2").text(addr2);
+	  		modal.find("#zipcode").text(zipcode);
+	  		modal.find("#tel").text(tel);
+	  	});
+	  	$("#memberDetail").modal('show');
+  	}
+  	
     </script>
     </head>
     <%
@@ -154,7 +168,8 @@
 	    						 		request.setAttribute("dataList",list);
 	    						 		%>
 	    						 		<c:forEach var="data" items="${dataList}">
-                                    	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
+                                    	<tr style="cursor:pointer" 
+                                    	onclick="detailMember('${data.userId}','${data.name }','${data.isubscribeDate}','${data.address1}','${data.address2}','${data.zipcode}','${data.tel}')" >
 	    						 			<td><input type="hidden" name="userId" id="userId"  value="<c:out value="${data.userId }"/>"><c:out value="${data.userId }"/></td>
 	    						 			<td><c:out value="${data.name}"/></td>
 	    						 			<td><c:out value="${data.isubscribeDate}"/></td>
@@ -247,7 +262,7 @@
                     </div>
                 </footer>
 	               <!-- 회원 상세 조회 modal  -->
-	                <div class="modal fade" tabindex="-1" id="myModal" role="dialog"aria-hidden="true" aria-labelledby="exampleModalToggleLabel" style=" z-index:1051;">
+	                <div class="modal fade" tabindex="-1" id="memberDetail" role="dialog"aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" style=" z-index:1051;">
 					  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -260,7 +275,7 @@
 					 			<th colspan="2" class="modalTh">ID(Email)</th>
 					 		</tr>
 					 		<tr>
-					 			<td id="id" class="modalTh">ㅑㅇ</td>
+					 			<td class="modalTh" id="id"></td>
 					 		</tr>
 					 		
 					 		<tr>
@@ -317,7 +332,7 @@
 					</div>
 				<!-- modal -->
 	               <!-- 회원 수정 modal  -->
-	                <div class="modal fade" tabindex="-1" id="modifyModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
+	                <div class="modal fade" tabindex="-1" id="modifyModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -366,7 +381,7 @@
 					        <div class="container-fluid">
 					      <div class="row">
 					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-dark" data-bs-target="#myModal" data-bs-toggle="modal" data-bs-dismiss="modal">돌아가기</button>
+					        <button type="button" class="btn btn-outline-dark" data-bs-target="#memberDetail" data-bs-toggle="modal" data-bs-dismiss="modal">돌아가기</button>
 					      	</div>
 					      	<div class="col-6 text-center">
 					        <button type="button" class="btn btn-outline-info" data-bs-target="#confirmModify" data-bs-toggle="modal">회원 수정</button>
@@ -379,7 +394,7 @@
 					</div>
 				<!-- modal -->
 				<!-- 회원삭제 확인 modal -->
-				<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmDelete" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -397,7 +412,7 @@
 				</div>
 				<!-- 회원삭제 확인 modal -->
 				<!-- 회원 수정 확인 modal -->
-				<div class="modal fade" id="confirmModify" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmModify" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">

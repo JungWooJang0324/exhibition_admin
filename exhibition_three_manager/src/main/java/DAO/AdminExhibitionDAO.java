@@ -52,6 +52,8 @@ public class AdminExhibitionDAO {
 					exVO.setExNum(rs.getInt("ex_num"));
 					exVO.setExName(rs.getString("ex_name"));
 					exVO.setInputDate(rs.getDate("input_date"));
+					exVO.setExhibitionDate(rs.getDate("exhibit_date"));
+					exVO.setExhibitionPoster(rs.getString("exhibition_poster"));
 					
 					list.add(exVO);
 				}//end while

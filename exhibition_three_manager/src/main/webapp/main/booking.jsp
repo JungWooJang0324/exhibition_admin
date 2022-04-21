@@ -44,7 +44,7 @@
    
 	
 	$( function() {
- $("#bookingDetail").on("show.bs.modal", function(e) {		
+ 	$("#bookingDetail").on("show.bs.modal", function(e) {		
     	var num= $(e.relatedTarget).data('num');
     	var modal= $(this);
     	modal.find("#resNum").text(num);
@@ -171,7 +171,7 @@
 									
 									<td>
 									 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#confirmCancel">예약 취소</button>
-				        				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
+				        			 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
 				        			</td>
 						  		</tr>
 						  			</c:forEach>
@@ -265,23 +265,23 @@
 				    </div>
 				  </div>
 				</div>
-	<!-- 예약 수정 확인 모달  -->
-	<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body" style="text-align: center">
-	        예약 내용을 수정하시겠습니까?
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary">OK</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+				<!-- 예약 수정 확인 모달  -->
+				<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body" style="text-align: center">
+				        예약 내용을 수정하시겠습니까?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary">OK</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
 				<!-- 회원삭제 확인 modal -->
 				<div class="modal fade" id="confirmCancel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
@@ -301,7 +301,7 @@
 				</div>
 				<!-- 회원삭제 확인 modal -->
 				<!-- 회원 수정 확인 modal -->
-				<div class="modal fade" id="confirmOk tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmOk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">

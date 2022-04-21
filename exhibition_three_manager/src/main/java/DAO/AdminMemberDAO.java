@@ -136,6 +136,10 @@ public class AdminMemberDAO {
 				mVO.setUserId(rs.getString("userid"));
 				mVO.setName(rs.getString("name"));
 				mVO.setIsubscribeDate(rs.getDate("isubscribe_date"));
+				mVO.setTel(rs.getString("tel"));
+				mVO.setZipcode(rs.getString("zipcode"));
+				mVO.setAddress1(rs.getString("address1"));
+				mVO.setAddress2(rs.getString("address2"));
 				list.add(mVO);
 			}//end while
 			

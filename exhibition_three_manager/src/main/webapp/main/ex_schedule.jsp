@@ -43,6 +43,19 @@
 		$("#searchBtn").click(function(){
 			document.dataSearchFrm.submit();
 		});
+		function detailExhibition(id,name,date,addr1,addr2,zipcode,tel){
+		  	$("#myModal").on('show.bs.modal',function(e){
+		  		var modal= $(this);
+		    	modal.find("#id").text(id);
+		  		modal.find("#memberName").text(name);
+		  		modal.find("#subDate").text(date);
+		  		modal.find("#address1").text(addr1);
+		  		modal.find("#address2").text(addr2);
+		  		modal.find("#zipcode").text(zipcode);
+		  		modal.find("#tel").text(tel);
+		  	});
+		  	$("#myModal").modal('show');
+	  	}
 	
 		$( "#startDate" ).datepicker({
 			  dateFormat: "yy-mm-dd",
@@ -171,7 +184,7 @@
 	    						 		request.setAttribute("dataList",list);
 	    						 		%>
 	    						 		<c:forEach var="list" items="${dataList }">
-                                    	<tr  style="cursor:pointer" data-bs-target="#showModal" data-bs-toggle="modal">
+                                    	<tr style="cursor:pointer" data-bs-target="#showModal" data-bs-toggle="modal">
  											<td><c:out value="${list.exNum }"/></td>
  											<td><c:out value="${list.exName }"/></td>
  											<td><c:out value="${list.inputDate }"/></td>
