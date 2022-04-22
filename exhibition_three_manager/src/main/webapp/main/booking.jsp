@@ -28,12 +28,12 @@
  		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
+        <script src="../js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="../assets/demo/chart-area-demo.js"></script>
+        <script src="../assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+        <script src="../js/datatables-simple-demo.js"></script>
      
 <style>
         	
@@ -41,16 +41,35 @@
         	#member_tab{ text-align:center;}
 </style>
     <script type="text/javascript">
-   
-	
-	$( function() {
+   	var errorPage=["404","500","401"];
+    $( function() {		
  	$("#bookingDetail").on("show.bs.modal", function(e) {		
     	var num= $(e.relatedTarget).data('num');
-    	var modal= $(this);
-    	modal.find("#resNum").text(num);
+    	var error="";
+    	$.ajax({
+			url:"http://localhost/exhibition_three_manager/main/ajax/bookingAjax.jsp",
+			data: {"num":num},
+			async:false,
+			type: "get",
+			dataType:"json",
+			error:function(xhr){
+				alert(xhr.status+", "+xhr.statusText);
+			//	location.href="401.html";
+			},
+			success:function(jsonObj){
+				$("#exName").html(jsonObj.exName);				
+				$("#exNum").html(jsonObj.exNum);				
+				$("#userName").html(jsonObj.userName);				
+				$("#rezCount").html(jsonObj.rezCount);				
+				$("#rezDate").html(jsonObj.rezDate);				
+				$("#userId").html(jsonObj.userId);				
+				$("#visitDate").html(jsonObj.visitDate);				
+				$("#price").html(jsonObj.price);				
+			}
+		});//ajax
     	
-    });
-	});  
+    });//bookingDetail
+});  //ready;
 
 		
     $( "#reservationDate" ).datepicker({
@@ -161,8 +180,7 @@
 									pageContext.setAttribute("rezList", rezList);
 									%>
 									<c:forEach var="res" items="${rezList}">
-						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}"
-						  		>
+						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}" class="rezList">
 									<td><c:out value="${res.rezNum}"/></td>
 									<td><c:out value="${res.exName}"/></td>
 									<td><c:out value="${res.userName}"/></td>
@@ -171,7 +189,7 @@
 									
 									<td>
 									 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#confirmCancel">예약 취소</button>
-				        			 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
+				        				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
 				        			</td>
 						  		</tr>
 						  			</c:forEach>
@@ -212,19 +230,15 @@
 				        <h5 class="modal-title" id="staticBackdropLabel">예약 관리 상세</h5>
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
-				      <div class="modal-body">
-					 	<table class="modalTab">
+				      <div class="modal-body" >
+					 	<table class="modalTab" style="width:98%;" cellpadding="5">
 					 		<tr>
 					 			<th colspan="2" class="modalTh">전시명</th>
-					 		</tr>
-					 		<tr>
-					 			<td class="modalTd" id="exName"></td>
-					 		</tr>
-					 		<tr>
 					 			<th colspan="2" class="modalTh">전시 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"></td>
+					 			<td class="modalTd" id="exName"></td>
+					 			<td class="modalTd" id="exNum"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약 번호</th>
@@ -235,53 +249,68 @@
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약자명</th>
 					 		</tr>
+					 		
 					 		<tr>
 					 			<td class="modalTd" id="userName"></td>
+					 		</tr>
+					 		
+					 		<tr>
+					 			<th colspan="2" class="modalTh">예약자 ID</th>
+					 		</tr>
+					 		<tr>
+					 			<td class="modalTd" id="userId"></td>
+					 		</tr>
+					 		
+					 		<tr>
+					 			<th colspan="2" class="modalTh">예약인원</th>
+					 		</tr>
+					 		<tr>
+					 			<td class="modalTd" id="rezCount"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약일자</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"></td>
-					 		</tr>
-					 		<tr>
-					 			<th colspan="2" class="modalTh">예약자 ID</th>
-					 		</tr>
-					 		<tr>
-					 			<td class="modalTd"></td>
+					 			<td class="modalTd" id="rezDate"></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">방문기간</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="rezStatus"></td>
+					 			<td class="modalTd" id="visitDate"></td>
+					 		</tr>
+					 		<tr>
+					 			<th colspan="2" class="modalTh">예약가격</th>
+					 		</tr>
+					 		<tr>
+					 			<td class="modalTd" id="price"></td>
 					 		</tr>
 					 	</table>
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">돌아가기</button>
-				        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModify">예약 수정</button>
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
+				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify">예약 수정</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
-				<!-- 예약 수정 확인 모달  -->
-				<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				      </div>
-				      <div class="modal-body" style="text-align: center">
-				        예약 내용을 수정하시겠습니까?
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">OK</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
+	<!-- 예약 수정 확인 모달  -->
+	<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" style="text-align: center">
+	        예약 내용을 수정하시겠습니까?
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-outline-info">OK</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 				<!-- 회원삭제 확인 modal -->
 				<div class="modal fade" id="confirmCancel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
@@ -293,15 +322,15 @@
 				        예약을 취소하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-outline-info">Ok</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
 				<!-- 회원삭제 확인 modal -->
 				<!-- 회원 수정 확인 modal -->
-				<div class="modal fade" id="confirmOk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmOk tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
