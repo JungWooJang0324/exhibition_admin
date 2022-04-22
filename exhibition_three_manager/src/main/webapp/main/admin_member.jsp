@@ -36,25 +36,59 @@
       #member_tab{ text-align:center;}
 </style>
     <script type="text/javascript">
+  	function detailMember(id,name,date,addr1,addr2,zipcode,tel){
+	  	 $("#memberDetail").on('show.bs.modal',function(e){
+	  		var idServer = id.split('@');
+	  		$("#id").val(idServer[0]);
+	  		$("#server").val(idServer[1]);
+	  		$("#userName").val(name);
+	  		$("#tel").val(tel);
+	  		$("#zipcode").val(zipcode);
+	  		$("#address1").val(addr1);
+	  		$("#address2").val(addr2);
+	  		$("#subDate").val(date);
+	  		
+	  	}); 
+	  	
+	  	$("#memberDetail").modal('show');
+  	}
   	$(function(){
   		$("#searchBtn").click(function(){
   			document.dataSearchFrm.submit();		
 	  			
   		});
-  	});
-  	function detailMember(id,name,date,addr1,addr2,zipcode,tel){
-	  	$("#memberDetail").on('show.bs.modal',function(e){
-	  		var modal= $(this);
-	    	modal.find("#id").text(id);
-	  		modal.find("#memberName").text(name);
-	  		modal.find("#subDate").text(date);
-	  		modal.find("#address1").text(addr1);
-	  		modal.find("#address2").text(addr2);
-	  		modal.find("#zipcode").text(zipcode);
-	  		modal.find("#tel").text(tel);
-	  	});
-	  	$("#memberDetail").modal('show');
-  	}
+  		
+  		$("#modifyOkBtn").click(function(){
+  			var id = $("#id").val()+"@"+$("#server").val();
+  			if($("#server").val()==null && $("#server").val()==""){
+  				id=$("#id").val();
+  			}//end if
+  			
+  			$.ajax({
+  				url:"http://localhost/exhibition_three_manager/ajax_controller/memberController.jsp",
+  				data : {
+  					"id":id,
+  					"tel" : $("#tel").val(),
+  					"zipcode" : $("#zipcode").val(),
+  					"address1" : $("#address1").val(),
+  					"address2" : $("#address2").val(),
+  					"subDate" : $("#subDate").val()
+  				},
+  				dataType:"json",
+  				error : function(xhr){
+  					alert(xhr.status);
+  				},
+  				success : function(jsonObj){
+  					var msg = "실패";
+  					if(jsonObj.updateFlag){
+  						msg="성공";
+  					} 
+  					alert(msg);
+  				}
+  				
+  			});//ajax
+  		});//click
+  	});//ready
   	
     </script>
     </head>
@@ -164,12 +198,12 @@
 						  		 <%
 						  		 
 						  		 if(count > 0 ){
-	    						 	
+	    						 		
 	    						 		request.setAttribute("dataList",list);
 	    						 		%>
 	    						 		<c:forEach var="data" items="${dataList}">
                                     	<tr style="cursor:pointer" 
-                                    	onclick="detailMember('${data.userId}','${data.name }','${data.isubscribeDate}','${data.address1}','${data.address2}','${data.zipcode}','${data.tel}')" >
+                                    	onclick="detailMember('${data.userId}','${data.name }','${data.isubscribeDate}','${data.address1}','${data.address2}','${data.zipcode}','${data.tel}')">
 	    						 			<td><input type="hidden" name="userId" id="userId"  value="<c:out value="${data.userId }"/>"><c:out value="${data.userId }"/></td>
 	    						 			<td><c:out value="${data.name}"/></td>
 	    						 			<td><c:out value="${data.isubscribeDate}"/></td>
@@ -262,7 +296,7 @@
                     </div>
                 </footer>
 	               <!-- 회원 상세 조회 modal  -->
-	                <div class="modal fade" tabindex="-1" id="memberDetail" role="dialog"aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" style=" z-index:1051;">
+	               <!--  <div class="modal fade" tabindex="-1" id="memberDetail" role="dialog"aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" style=" z-index:1051;">
 					  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -329,10 +363,10 @@
 					      </div>
 					    </div>
 					  </div>
-					</div>
+					</div> -->
 				<!-- modal -->
 	               <!-- 회원 수정 modal  -->
-	                <div class="modal fade" tabindex="-1" id="modifyModal" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
+	                <div class="modal fade" tabindex="-1" id="memberDetail" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -341,53 +375,46 @@
 					      </div>
 					      <div class="modal-body">
 					      	<div class="text-secondary">ID(Email)</div>
-					      	<div class="input-group input-group-sm mb-3" style="width:700px">
-							  <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+					      	<div class="input-group input-group-sm mb-3" style="width:450px">
+							  <input type="text" class="form-control" id="id" placeholder="Username" readonly/>
 							  <span class="input-group-text">@</span>
-							  <input type="text" class="form-control" placeholder="Server" aria-label="Server">
-							  <button class="btn btn-outline-info" type="button" id="button-addon2">중복 확인</button>
-							  <div style="color:#FF0000">&nbsp; &nbsp;중복확인 메시지</div>
+							  <input type="text" class="form-control" id="server" placeholder="Server" readonly/>
 							</div>
 					      	<div class="text-secondary">이름</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
+					      	<input type="text" class="form-control" id="userName" placeholder="이름" readonly/>
 							</div>
 					      	<div class="text-secondary">전화번호</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
-							  <input type="text" class="form-control" placeholder="전화번호">
+							  <input type="text" class="form-control" id="tel"placeholder="전화번호"/>
 							</div>
 					      	<div>우편번호</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:250px">
-							  <input type="text" class="form-control" placeholder="우편번호">
-							   <button class="btn btn-outline-info" type="button" id="button-addon2">우편번호검색</button>
+							  <input type="text" class="form-control" id="zipcode" placeholder="우편번호" />
+							   <button class="btn btn-outline-info" type="button" id="searchZipcode">우편번호검색</button>
 							</div>
 					      	<div class="row"><div class="col-6">주소</div> <div class="col-6">상세주소</div></div>
 					      	<div class="row">
 					      	<div class="col-6">
 					      	<div class="input-group input-group-sm mb-3" style="width:250px">
-							  <input type="text" class="form-control" placeholder="주소">
+							  <input type="text" class="form-control" id="address1" placeholder="주소"/>
 							</div>
 					      	 </div>
 					      	<div class="col-6">
 					      	<div class="input-group input-group-sm mb-3" style="width:350px">
-							  <input type="text" class="form-control" placeholder="상세주소">
+							  <input type="text" class="form-control" id="address2" placeholder="상세주소"/>
 							</div>
 					      	</div> 
 					      	 </div>
 					      	<div>가입일</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
+							<input type="text" class="form-control" id="subDate" placeholder="가입일"readonly/>
 							</div>
 					      </div>
 					      <div class="modal-footer">
-					        <div class="container-fluid">
-					      <div class="row">
-					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-dark" data-bs-target="#memberDetail" data-bs-toggle="modal" data-bs-dismiss="modal">돌아가기</button>
-					      	</div>
-					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-info" data-bs-target="#confirmModify" data-bs-toggle="modal">회원 수정</button>
-					      	</div>
-					      </div>
-					      </div>
+							        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
+							        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#confirmDelete">회원 삭제</button>
+							        <button type="button" class="btn btn-outline-info" id="modifyOkBtn">회원 수정</button>
 					      </div>
 					    </div>
 					  </div>
@@ -404,7 +431,7 @@
 				        회원을 삭제하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-secondary" data-bs-target="#memberDetail" data-bs-toggle="modal">Cancel</button>
 				        <button type="button" class="btn btn-primary">Ok</button>
 				      </div>
 				    </div>
@@ -412,7 +439,7 @@
 				</div>
 				<!-- 회원삭제 확인 modal -->
 				<!-- 회원 수정 확인 modal -->
-				<div class="modal fade" id="confirmModify" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+		<!-- 		<div class="modal fade" id="confirmModify" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -422,12 +449,12 @@
 				        회원을 수정하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-secondary" data-bs-target="#memberDetail" data-bs-toggle="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary" id="modifyOkBtn">Ok</button>
 				      </div>
 				    </div>
 				  </div>
-				</div>
+				</div> -->
 				<!--  -->
             </div>
         </div>

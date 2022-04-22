@@ -63,7 +63,7 @@ public class AdminMemberDAO {
 		int count = 0;
 		StringBuilder sql = new StringBuilder();
 		sql
-		.append("	select count(*) from member where ")
+		.append("	select count(*) from member where isdeleted='f' and ")
 		.append(query).append("	like '%'||?||'%'	");
 		
 		Connection con = null;
@@ -109,7 +109,7 @@ public class AdminMemberDAO {
 		sql
 		.append("	select * from	")
 		.append("	(select rownum rn, userid, name, tel,zipcode, address1, address2, isdeleted, isubscribe_date	")
-		.append("	from (select * from member where	")
+		.append("	from (select * from member where isdeleted='f' and	")
 		.append(query).append(" like '%'||?||'%' ").append("	order by userid))	")
 		.append("	where rn between ? and ?	");
 		
@@ -152,6 +152,32 @@ public class AdminMemberDAO {
 	
 }//selectMember
 	
+	public boolean updateMember(MemberVO mVO) throws SQLException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		String updateQuery="update member set tel=?, zipcode=?, address1=?, address2=?, isdeleted=? where userid=?";
+		DbConnection dc = DbConnection.getInstance();
+		boolean updateFlag=false;
+		try {
+			con = dc.getConn();
+			pstmt = con.prepareStatement(updateQuery);
+			pstmt.setString(1,mVO.getTel());
+			pstmt.setString(2, mVO.getZipcode());
+			pstmt.setString(3,mVO.getAddress1());
+			pstmt.setString(4,mVO.getAddress2());
+			pstmt.setString(5,mVO.getIsDeleted());
+			pstmt.setString(6,mVO.getUserId());
+			
+			if(pstmt.executeUpdate()==1) {
+				updateFlag=true;
+			};
+			
+			System.out.println("update °á°ú : "+updateFlag);
+		}finally {
+			dc.close(null, pstmt, con);
+		}//end finally
+		return updateFlag;
+	}//updateMember
 
 	//index¿ë
 	public int countTodayMem() throws ClassNotFoundException, SQLException, NamingException {
