@@ -15,7 +15,6 @@ import connection.DbConnection;
 public class ReservationManagerDAO {
 	
 	
-	
 	public List<ReservationManagerVO> selectReservation() throws SQLException, ClassNotFoundException, NamingException{
 		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
 		Connection con = null;
@@ -63,10 +62,13 @@ public class ReservationManagerDAO {
 		try{
 			con=dc.getConn();
 			StringBuilder selectQuery = new StringBuilder();
+			
 			selectQuery
-			.append("	select ex.ex_name,m.name, visit_date, rez_status 	")
-			.append("	from reservation rez, member m,exhibition ex	")
-			.append("	where rez.userid=m.userid and rez.ex_num = ?");
+			.append("				SELECT ex.ex_name, ex.ex_num, ex.rez_num, ex.name, ex.rez_count, ex.rez_date,ex.userid, ex.visit_date, (p.adult * ex.rez_count) as price  ")
+			.append("				FROM price p, (SELECT ex.ex_name, ex.ex_num, rez.rez_num, m.name, rez.rez_count, rez.rez_date,m.userid, rez.visit_date ")
+			.append("			    FROM reservation rez, member m,exhibition ex 	")
+			.append("			    WHERE rez.userid=m.userid and rez.ex_num =ex.ex_num) ex	")
+			.append("	WHERE ex.rez_num=? and ex.ex_num=p.ex_num");
 
 			pstmt = con.prepareStatement(selectQuery.toString());
 			pstmt.setInt(1, rezNum);
@@ -74,11 +76,15 @@ public class ReservationManagerDAO {
 
 			if(rs.next()) {
 				rVO = new ReservationManagerVO();
-				rVO.setRezNum(rs.getInt("rez_num"));
 				rVO.setExName(rs.getString("ex_name"));
+				rVO.setExNum(rs.getInt("ex_num"));
+				rVO.setRezNum(rs.getInt("rez_num"));
 				rVO.setUserName(rs.getString("name"));
+				rVO.setRezCount(rs.getInt("rez_count"));
+				rVO.setRezData(rs.getDate("rez_date"));
+				rVO.setUserId(rs.getString("userid"));
 				rVO.setVisitData(rs.getDate("visit_date"));
-				rVO.setRezStatus(rs.getString("rez_status"));
+				rVO.setPrice(rs.getInt("price"));
 			}//end while
 			
 		}finally {

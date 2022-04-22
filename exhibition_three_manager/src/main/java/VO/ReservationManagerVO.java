@@ -3,10 +3,11 @@ package VO;
 import java.sql.Date;
 
 public class ReservationManagerVO {
-	private int rezNum,rezCount,exNum;
+	private int rezNum,rezCount,exNum, price;
 	private Date visitData,rezData;
 	private String userName,exName;
-	private String rezStatus;
+	private String rezStatus, userId;
+	
 	public ReservationManagerVO() {
 	}
 	public ReservationManagerVO(int rezNum, int rezCount, int exNum, Date visitData, Date rezData, String userName,
@@ -19,6 +20,19 @@ public class ReservationManagerVO {
 		this.userName = userName;
 		this.exName = exName;
 		this.rezStatus = rezStatus;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	public int getRezNum() {
 		return rezNum;
