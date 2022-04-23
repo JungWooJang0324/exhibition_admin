@@ -44,7 +44,7 @@
    	var errorPage=["404","500","401"];
     $( function() {		
  	$("#bookingDetail").on("show.bs.modal", function(e) {		
-    	var num= $(e.relatedTarget).data('num');
+	   	var num= $(e.relatedTarget).data('num');
     	var error="";
     	$.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/bookingAjax.jsp",
@@ -59,14 +59,35 @@
 			success:function(jsonObj){
 				$("#exName").html(jsonObj.exName);				
 				$("#exNum").html(jsonObj.exNum);				
+				$("#resNum").html(num);				
 				$("#userName").html(jsonObj.userName);				
-				$("#rezCount").html(jsonObj.rezCount);				
+				$("#rezCount").val(jsonObj.rezCount);				
 				$("#rezDate").html(jsonObj.rezDate);				
 				$("#userId").html(jsonObj.userId);				
-				$("#visitDate").html(jsonObj.visitDate);				
+				$("#visitDate").val(jsonObj.visitDate);				
 				$("#price").html(jsonObj.price);				
 			}
 		});//ajax
+		
+    	$("#confirmModify").click(function() {
+    		var rezCount=$("#rezCount").val();
+    		var visitDate=$("#visitCount").val();
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/bookingModifyAjax.jsp",
+				data: {"rezCount":rezCount, "visitDate":visitDate},
+				async:false,
+				type: "get",
+				dataType:"json",
+				error:function(xhr){
+					alert(xhr.status+", "+xhr.statusText);
+				//	location.href="401.html";
+				},
+				success:function(jsonObj){
+							
+				}
+			});
+		});
+    	
     	
     });//bookingDetail
 });  //ready;
@@ -265,7 +286,7 @@
 					 			<th colspan="2" class="modalTh">예약인원</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="rezCount"></td>
+					 			<td class="modalTd"><input id="rezCount" type="text" class="inputBox"/></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약일자</th>
@@ -277,7 +298,7 @@
 					 			<th colspan="2" class="modalTh">방문기간</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="visitDate"></td>
+					 			<td class="modalTd"><input id="visitDate" type="text" class="inputBox"/></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약가격</th>
@@ -289,7 +310,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
-				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify">예약 수정</button>
+				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify" id="confirmModify">예약 수정</button>
 				      </div>
 				    </div>
 				  </div>
