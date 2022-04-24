@@ -2,7 +2,7 @@
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
 <%@page import="DAO.BoardManagerDAO"%>
-<%@include file="admin_id_session.jsp" %>
+<%@include file="admin_id_session.jsp" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판 글 추가 process"%>
@@ -22,14 +22,18 @@
 <jsp:getProperty property="description" name="bVO"/>
 
 <%
-	System.out.println(bVO.getTitle());
+	bVO.setAdminId((String)session.getAttribute("admin_id"));
+	bVO.setDescription(bVO.getDescription().replace("<p>", ""));
+	bVO.setDescription(bVO.getDescription().replace("</p>", ""));
+	
+	//확인
+	/* System.out.println(bVO.getTitle());
 	System.out.println(bVO.getCatNum());
 	System.out.println(bVO.getDescription());
-
-	//admin 테이블과 연결?
-	bVO.setUserId("");
+	System.out.println(bVO.getAdminId()); */
+	
 	BoardManagerDAO bDAO = new BoardManagerDAO(); 
-	//bDAO.insertBoardAdmin(bVO);
+	bDAO.insertBoardAdmin(bVO);
 	response.sendRedirect("board.jsp");
 %>
 </body>

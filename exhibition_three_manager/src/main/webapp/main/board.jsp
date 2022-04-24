@@ -1,7 +1,8 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="DAO.BoardManagerDAO"%>
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
-<%@page import="DAO.BoardManagerDAO"%>
-<%@include file="admin_id_session.jsp" %> 
+<%@include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -11,7 +12,7 @@
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Board</title>
@@ -42,11 +43,118 @@ $(function(){
 	$("#btnAdd").click(function(){
 		location.href="admin_add_board.jsp";
 	});
+	
+	//게시글 상세보기 
+	$(".trDetail").click(function(){
+			
+		//게시글 넘버(bd_id) 받기
+		var bdId = $(this).children().find("input:hidden[name=bdId]").val();//클릭된 rnum 번호
+		
+		//게시글 넘버(bd_id) 확인
+		console.log(bdId);
+		
+		//게시글 상세 모달 show
+		$("#boardDetail").modal('show'); 
+		
+		//값 받아오기
+		$.ajax({
+			url:"http://localhost/exhibition_three_manager/main/boardData_detail.jsp",
+			type:"post",
+			data:{ "bdId":bdId	},
+			dataType:"json",
+			error:function(xhr){
+				alert("※에러"+xhr.status);
+			},
+			success:function(jsonObj){
+				$("#bdId_de").html(jsonObj.bdId);
+				$("#inputDate_de").val(jsonObj.inputDate);
+				$("#title_de").val(jsonObj.title);
+				$("#userId_de").val(jsonObj.userId);
+				$("#catNum_de").val(jsonObj.catNum);
+				$("#catName_de").val(jsonObj.catName); 
+				$("#description_de").val(jsonObj.description.replaceAll("br", "\n"));
+				$("#imgFile_de").vals(jsonObj.imgFile);
+			}
+		}); 
+	});
+	
+	 
+	//게시글 수정 버튼 클릭 시 
+	 $("#modifyBtn").click(function(){
+		 
+		 //게시글 상세 모달 사라지고 
+		 $("#boardDetail").modal('hide');
+		//수정 확인 모달 show
+		 $("#confirmModify").modal('show');
+		 
+		 $("#modifyOk").click(function(){
+			 $("#confirmModify").modal('hide');
+			 
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/boardData_update.jsp",
+				type:"post",
+				data:{
+					"bdId" : $("#bdId_de").text(),
+					"catNum" : $("#catNum_de").val(),
+					"title": $("#title_de").val(),
+					"description": $("#description_de").val(),
+					"inputDate_de": $("#inputDate_de").val(),
+					"adminId_de" : $("#adminId_de").val(),
+					"imgFile_de" : $("#imgFile_de").val(),
+					"catName_de" : $("#catName_de").val(),
+				},
+				datatype:"json",
+				error:function(xhr){
+					alert("※에러"+xhr.status);
+				},
+				success:function(jsonObj){
+					if(jsonObj.updateFlag){
+						alert("업데이트 실패!")
+						return;
+					}	
+						alert("성공!");
+					
+				}
+			}); 
+			location.reload();
+		});// $("#modifyOk") .click 
+	});// $("#modifyBtn").click
+	 
+	 
+	//게시글 삭제
+	$("#deleteBtn").click(function(){
+		 
+		//삭제 확인 모달 show
+		 $("#confirmDelete").modal('show');
+		 
+		 $("#deleteOk").click(function(){
+			$("#confirmDelete").modal('hide');
+			 
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/boardData_delete.jsp",
+				type:"get",
+				data:{ "bdId_de": $("#bdId_de").text()},
+				error:function(xhr){
+					alert("※에러"+xhr.status);
+				},
+				datatype : "json",
+				success:function(jsonObj){
+					if(jsonObj.deleteFlag){
+						alert("삭제 실패")
+						return;
+					}	
+						alert("성공");
+				}
+			}); 
+			location.reload();
+		});// $("#modifyOk") .click 
+	});// $("#modifyBtn").click 
+	
 });
 
 
 </script> 
-        </head>
+ </head>
  <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -114,24 +222,27 @@ $(function(){
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <%
-                                  	BoardManagerDAO bDAO = new BoardManagerDAO(); 
-                                  	List<BoardVO> list = bDAO.selectBoardAdmin("","","","");
-                                  	pageContext.setAttribute("list", list);
+                                   	<jsp:useBean id="bDAO" class="DAO.BoardManagerDAO" scope="page"/> 
+                                   <%
+                                  	List<BoardVO> dList = bDAO.selectAllBoard(0,10);
+                                  	pageContext.setAttribute("list", dList);
                                   	%>
                                   	<c:forEach var="bVO" items="${list}">
-                                         <tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#boardDetail">
-                                            <td><c:out value="${bVO.bdId}"/></td>
+                                         <tr class="trDetail" style="cursor:pointer">
+                                            <td><c:out value="${bVO.rnum}"/></td>
                                             <td><c:out value="${bVO.title}"/></td>                                          	
                                             <td><c:out value="${bVO.userId}"/></td>
                                             <td><c:out value="${bVO.inputDate}"/></td>
-                                            <td><c:out value="${bVO.catNum}"/></td>
-                                   	 		<td><button type="button" class="btn btn-secondary btn-sm">삭제</button></td>
+                                            <td><c:out value="${bVO.catName}"/></td>
+                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm">삭제</button></td>
+	                                   	 	<td id="hiddenTd" style="padding: 0px;">
+                                        		<input id="bdId" class="bdId" name="bdId" type="hidden" value="${bVO.bdId}"/>
+                                        	</td>
 	                                   	 </tr>
                                    	</c:forEach>
                                    	<c:if test="${empty list}">
                               			<tr>
-                              				<td colspan="6">"등록된 글이 없습니다."</td>
+                              				<td colspan="6">등록된 글이 없습니다</td>
                               			</tr>
                           			</c:if>
                                       </tbody>
@@ -142,17 +253,11 @@ $(function(){
 						  			<button type="button" class="btn btn-dark" style="float:right;" id="btnAdd" data-bs-target="#addModal" data-bs-toggle="modal">글쓰기</button>
 						  		</div>
                                </div>
-                               <!-- 페이지 이동 -->
-	                            <div> 
-								<ul class="pagination justify-content-center"> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">이전</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">1</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">2</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">3</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">다음</a></li> 
-								</ul> 
-						  </div>
-                    </div>
+               		 <!-- 페이지 이동 -->
+                   	 <div id="pageNavigation">
+							<ul class="pagination justify-content-center"> 
+							</ul>
+               		</div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
@@ -166,7 +271,7 @@ $(function(){
                         </div>
                     </div>
                 </footer>
-                <!-- 게시글 내용 Modal -->
+                <!-- 게시글 상세 Modal -->
 				<div class="modal fade" id="boardDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 				    <div class="modal-content">
@@ -175,7 +280,7 @@ $(function(){
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-					 	<table id="modalTab" style="width: 98%">
+					 	<table id="modalTab">
 					 	<thead>
 					 		<tr>
 					 			<th style="width: 300px">글 번호</th>
@@ -184,51 +289,62 @@ $(function(){
 				 		</thead>
 				 		<tbody>
 					 		<tr>
-					 		<% BoardVO bVO= bDAO.selectBoardDetail(1); %>
-					 			<td><%=bVO.getBdId()%></td>
-					 			<td><%=bVO.getInputDate()%></td>
+					 			<td id="bdId_de" style="padding-bottom: 10px"></td>
+					 			<td style="padding-bottom: 10px"><input type="date" id="inputDate_de" /></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2">제목</th>
-					 		</tr>
-					 		<tr>
-					 			<td  colspan="2"><%=bVO.getTitle()%></td>
-					 		</tr>
-					 		<tr>
-					 			<th colspan="2">작성자</th>
-					 		</tr>
-					 		<tr>
-					 			<td colspan="2"><%=bVO.getUserId()%></td>
-					 		</tr>
-					 		<tr>
+					 			<th >제목</th>
 					 			<th>카테고리</th>
-					 			<th>카테고리 번호</th>
+					 			
 					 		</tr>
 					 		<tr>
-					 			<td>
-									<select>
-						 			<% switch(bVO.getCatNum()){
-					 					case 1 : %>	
-											<option value="Q&A" selected>QnA</option>
-										<% case 2 : %>
-											<option>후기</option>
-					 				<%} %>
+					 			<td style="padding-bottom: 10px" >
+					 				<input type="text" id="title_de" />
+				 				</td>
+					 			<td style="padding-bottom: 10px"> 
+									<select id="catName_de" name="catName_de">
+										<jsp:useBean id="bVO" class="VO.BoardVO" scope="page"/> 
+										<% List<BoardVO> list = new ArrayList<BoardVO>();
+											list=bDAO.selectCategory();
+											pageContext.setAttribute("list", list);
+										%>
+										<c:forEach var = "bVO" items="${list}">
+											<option value="${bVO.catName}"><c:out value="${bVO.catName}"/></option>
+										</c:forEach>
 									</select>
+									<input type="hidden" id="catNum_de" />
 								</td>
-								<td><%=bVO.getCatNum()%></td>
+					 		</tr>
+					 		<tr>
+					 			<th>작성자</th>
+					 			<th>이미지</th>
+					 		</tr>
+					 		<tr>
+					 			<td style="padding-bottom: 10px">
+					 				<input type="text" id="userId_de" />
+				 				</td>
+								<td style="padding-bottom: 10px" >
+									<input type="text" id="imgFile_de"/>
+								</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2">글 내용</th>
 					 		</tr>
 					 		<tr>
-					 			<td colspan="2"><textarea style="overflow-y:scroll;width: 760px; height: 200px "><%=bVO.getDescription().replaceAll("br", "\n")%></textarea></td>
+					 			<td style="padding-bottom: 10px" colspan="2">
+					 				<textarea id="description_de" style="overflow-y:scroll;width: 760px; height: 200px ">
+					 				</textarea>
+				 				</td>
+					 		</tr>
+					 		<tr>
+					 			<th colspan="2"></th>
 					 		</tr>
 					 		</tbody>
 					 	</table>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"  >돌아가기</button>
-				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify">게시글 수정</button>
+				        <button id="modifyBtn" type="button" class="btn btn-outline-info">게시글 수정</button>
 				      </div>
 				    </div>
 				  </div>
@@ -245,7 +361,24 @@ $(function(){
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button id="modifyOk" type="button" class="btn btn-primary">Ok</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- 게시글 삭제 확인 모달  -->
+				<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        게시글을 삭제하시겠습니까?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button id="deleteOk" type="button" class="btn btn-primary">Ok</button>
 				      </div>
 				    </div>
 				  </div>
