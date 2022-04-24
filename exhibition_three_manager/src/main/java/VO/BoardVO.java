@@ -2,8 +2,8 @@ package VO;
 
 public class BoardVO {
 
-	int bdId, catNum;
-	String title, userId, inputDate, catName, description;
+	int bdId, catNum, rnum;
+	String title, userId, inputDate, catName, description, adminId, imgFile;
 	char isdeleted;
 	
 	
@@ -12,18 +12,64 @@ public class BoardVO {
 	}
 
 
-	public BoardVO(int bdId, String title, String userId, String inputDate, int catNum, String catName,
-			String description, char isdeleted) {
+	
+
+	
+	
+	public BoardVO(int bdId, int catNum, int rnum, String title, String userId, String inputDate, String catName,
+			String description, String adminId, String imgFile, char isdeleted) {
 		super();
 		this.bdId = bdId;
+		this.catNum = catNum;
+		this.rnum = rnum;
 		this.title = title;
 		this.userId = userId;
 		this.inputDate = inputDate;
-		this.catNum = catNum;
 		this.catName = catName;
 		this.description = description;
+		this.adminId = adminId;
+		this.imgFile = imgFile;
 		this.isdeleted = isdeleted;
 	}
+
+
+
+
+
+
+	public String getImgFile() {
+		return imgFile;
+	}
+
+
+	public void setImgFile(String imgFile) {
+		this.imgFile = imgFile;
+	}
+
+
+	public int getRnum() {
+		return rnum;
+	}
+
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+
+
+	public String getAdminId() {
+		return adminId;
+	}
+	
+	
+	
+	
+	
+	public void setAdminId(String adminId) {
+		this.adminId = adminId;
+	}
+
+
 
 
 	public int getBdId() {

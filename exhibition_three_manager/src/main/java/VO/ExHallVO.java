@@ -1,20 +1,22 @@
 package VO;
 
 public class ExHallVO {
-	int exHallNum;
+	int exHallNum, rnum;
 	String exName, address1, address2, mgrName, mgrTel, exTel, zipcode, inputDate, exLoc;
-	double latitude, longtitude; 
+	double latitude, longitude; 
 	char hallDeleted;
 	
 	public ExHallVO() {
 		super();
 	}
 
-	public ExHallVO(int exHallNum, String exName, String address1, String address2, String mgrName,
+	
+	public ExHallVO(int exHallNum, int rnum, String exName, String address1, String address2, String mgrName,
 			String mgrTel, String exTel, String zipcode, String inputDate, String exLoc, double latitude,
-			double longtitude, char hallDeleted) {
+			double longitude, char hallDeleted) {
 		super();
 		this.exHallNum = exHallNum;
+		this.rnum = rnum;
 		this.exName = exName;
 		this.address1 = address1;
 		this.address2 = address2;
@@ -25,9 +27,19 @@ public class ExHallVO {
 		this.inputDate = inputDate;
 		this.exLoc = exLoc;
 		this.latitude = latitude;
-		this.longtitude = longtitude;
+		this.longitude = longitude;
 		this.hallDeleted = hallDeleted;
 	}
+
+	public int getRnum() {
+		return rnum;
+	}
+
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+
 
 	public int getExHallNum() {
 		return exHallNum;
@@ -117,12 +129,12 @@ public class ExHallVO {
 		this.latitude = latitude;
 	}
 
-	public double getLongtitude() {
-		return longtitude;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setLongtitude(double longtitude) {
-		this.longtitude = longtitude;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	public char getHallDeleted() {
@@ -138,7 +150,7 @@ public class ExHallVO {
 		return "ExhibitionHallVO [exHallNum=" + exHallNum + ", exName=" + exName + ", address1=" + address1
 				+ ", address2=" + address2 + ", mgrName=" + mgrName + ", mgrTel=" + mgrTel + ", exTel=" + exTel
 				+ ", zipcode=" + zipcode + ", inputDate=" + inputDate + ", exLoc=" + exLoc + ", latitude=" + latitude
-				+ ", longtitude=" + longtitude + ", hallDeleted=" + hallDeleted + "]";
+				+ ", longitude=" + longitude + ", hallDeleted=" + hallDeleted + "]";
 	}
 	
 	
