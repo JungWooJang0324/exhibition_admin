@@ -31,11 +31,11 @@
         <script src="js/datatables-simple-demo.js"></script>
      
 <style>
-        	
       hr {width:200px; margin: 0px auto; margin-top:10px;}
       #member_tab{ text-align:center;}
 </style>
-    <script type="text/javascript">
+<script type="text/javascript">
+     
   	function detailMember(id,name,date,addr1,addr2,zipcode,tel){
 	  	 $("#memberDetail").on('show.bs.modal',function(e){
 	  		var idServer = id.split('@');
@@ -47,50 +47,83 @@
 	  		$("#address1").val(addr1);
 	  		$("#address2").val(addr2);
 	  		$("#subDate").val(date);
-	  		
-	  	}); 
-	  	
-	  	$("#memberDetail").modal('show');
+	  	}).modal('show');
   	}
+  	function modifyMember(){
+			$("#confirm").modal("hide");
+	  		$("#memberDetail").modal('hide');
+			
+	  		let name=$("#userName").val();
+			let tel=$("#tel").val();
+			let zipcode=$("#zipcode").val();
+			let address1=$("#address1").val();
+			let address2=$("#address2").val();
+			let isDeleted="f";
+			
+	  		if($("#confirmHid").val()=="delete"){
+				name="-"; tel="-"; zipcode="-"; address1="-"; address2="-"; isDeleted="t";
+			}
+			var id = $("#id").val()+"@"+$("#server").val();
+			if($("#server").val()==""){
+				id=$("#id").val();
+			}//end if
+			
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/member_ajax.jsp",
+				data : {
+					"id":id,
+					"name" : name,
+					"tel" : tel,
+					"zipcode" : zipcode,
+					"address1" : address1,
+					"address2" : address2,
+					"isDeleted" : isDeleted
+				},
+				dataType:"json",
+				error : function(xhr){
+					alert(xhr.status);
+				},
+				success : function(jsonObj){
+					var msg = "실패";
+					if(jsonObj.updateFlag){
+						msg="성공";
+					}//end if
+					alert(msg);
+					location.reload();
+				}
+		});//ajax  
+	}
   	$(function(){
   		$("#searchBtn").click(function(){
+  			//검색어 submit
   			document.dataSearchFrm.submit();		
-	  			
-  		});
+  		});//click
   		
-  		$("#modifyOkBtn").click(function(){
-  			var id = $("#id").val()+"@"+$("#server").val();
-  			if($("#server").val()==null && $("#server").val()==""){
-  				id=$("#id").val();
-  			}//end if
+  		$("#modifyBtn").click(function(){
+  			var title = ["이름","전화번호","우편번호","주소","상세주소"];
+  			var data = [$("#userName"),$("#tel"),$("#zipcode"),$("#address1"),$("#address2")];
+  			for(var i = 0; i < data.length; i++){//유효성 검사
+  				if(data[i].val()==""){
+  					alert(title[i]+"을(를) 입력해주세요");
+  					data[i].focus();
+  					return;
+  				}//end if
+  			}//end for
+  			$("#confirm").on('show.bs.modal',function(){
+  				$("#confirmMsg").text("회원을 수정하시겠습니까?");
+  				$("#confirmHid").val("modify");
+  			}).modal("show");
+  		});//click	
   			
-  			$.ajax({
-  				url:"http://localhost/exhibition_three_manager/ajax_controller/memberController.jsp",
-  				data : {
-  					"id":id,
-  					"tel" : $("#tel").val(),
-  					"zipcode" : $("#zipcode").val(),
-  					"address1" : $("#address1").val(),
-  					"address2" : $("#address2").val(),
-  					"subDate" : $("#subDate").val()
-  				},
-  				dataType:"json",
-  				error : function(xhr){
-  					alert(xhr.status);
-  				},
-  				success : function(jsonObj){
-  					var msg = "실패";
-  					if(jsonObj.updateFlag){
-  						msg="성공";
-  					} 
-  					alert(msg);
-  				}
-  				
-  			});//ajax
+  		$("#deleteBtn").click(function(){
+  			$("#confirm").on('show.bs.modal',function(){
+  				$("#confirmMsg").text("회원을 삭제하시겠습니까?");
+  				$("#confirmHid").val("delete");
+  			}).modal("show");
   		});//click
   	});//ready
   	
-    </script>
+</script>
     </head>
     <%
     int pageSize = 5; // 한 페이지에 출력할 레코드 수
@@ -295,76 +328,6 @@
                         </div>
                     </div>
                 </footer>
-	               <!-- 회원 상세 조회 modal  -->
-	               <!--  <div class="modal fade" tabindex="-1" id="memberDetail" role="dialog"aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" style=" z-index:1051;">
-					  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h5 class="modal-title">회원 상세 정보</h5>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					      </div>
-					      <div class="modal-body">
-					    <table class="modalTab" style="width: 98%; ">
-					 		<tr>
-					 			<th colspan="2" class="modalTh">ID(Email)</th>
-					 		</tr>
-					 		<tr>
-					 			<td class="modalTh" id="id"></td>
-					 		</tr>
-					 		
-					 		<tr>
-					 			<th colspan="2" class="modalTh">회원명</th>
-					 		</tr>
-				 			<tr>
-					 			<td id="memberName" class="modalTh">이름</td>
-					 		</tr>
-					 		
-					 		<tr>
-					 			<th class="modalTh" colspan="2" >상세주소</th>
-					 		</tr>
-					 		<tr>
-					 			<td id="address1" class="modalTh">서울시 강남구</td>
-					 		</tr>
-							<tr>
-					 			<td id="address2" class="modalTh">역삼동...</td>
-							</tr>
-					 		<tr>
-					 			<th class="modalTh">우편번호</th>
-					 		</tr>
-							<tr>
-					 			<td id="zipcode" class="modalTh">zipcode</td>
-							</tr>
-					 		<tr>
-					 			<th colspan="2" class="modalTh">전화번호</th>
-					 		</tr>
-					 		<tr>
-					 			<td id="tel" class="modalTh">Tel</td>
-					 		</tr>
-					 		<tr>
-					 			<th colspan="2" class="modalTh">가입일</th>
-					 		</tr>
-					 		<tr>
-					 			<td id="subDate" class="modalTh">subscribe Date</td>
-					 		</tr>
-					 	</table>
-					      	
-					      </div>
-					      <div class="modal-footer">
-					        <div class="container-fluid">
-					      <div class="row">
-					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-danger" data-bs-target="#confirmDelete" data-bs-toggle="modal">회원 삭제</button>
-					      	</div>
-					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-info" data-bs-target="#modifyModal" data-bs-toggle="modal" >회원 수정</button>
-					      	</div>
-					      </div>
-					      </div>
-					      </div>
-					    </div>
-					  </div>
-					</div> -->
-				<!-- modal -->
 	               <!-- 회원 수정 modal  -->
 	                <div class="modal fade" tabindex="-1" id="memberDetail" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -413,48 +376,31 @@
 					      </div>
 					      <div class="modal-footer">
 							        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
-							        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#confirmDelete">회원 삭제</button>
-							        <button type="button" class="btn btn-outline-info" id="modifyOkBtn">회원 수정</button>
+							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">회원 삭제</button>
+							        <button type="button" class="btn btn-outline-info" id="modifyBtn">회원 수정</button>
 					      </div>
 					    </div>
 					  </div>
 					</div>
 				<!-- modal -->
-				<!-- 회원삭제 확인 modal -->
-				<div class="modal fade" id="confirmDelete" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+				<!-- 확인 modal -->
+		 		<div class="modal fade" id="confirm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-				        회원을 삭제하시겠습니까?
+				        <span id="confirmMsg"></span>
+				        <input type="hidden" id="confirmHid" value=""/>
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-target="#memberDetail" data-bs-toggle="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary" id="modifyOkBtn" onclick="modifyMember()">Ok</button>
 				      </div>
 				    </div>
 				  </div>
-				</div>
-				<!-- 회원삭제 확인 modal -->
-				<!-- 회원 수정 확인 modal -->
-		<!-- 		<div class="modal fade" id="confirmModify" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				      </div>
-				      <div class="modal-body">
-				        회원을 수정하시겠습니까?
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-target="#memberDetail" data-bs-toggle="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary" id="modifyOkBtn">Ok</button>
-				      </div>
-				    </div>
-				  </div>
-				</div> -->
+				</div> 
 				<!--  -->
             </div>
         </div>

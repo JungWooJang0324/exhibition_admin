@@ -155,18 +155,19 @@ public class AdminMemberDAO {
 	public boolean updateMember(MemberVO mVO) throws SQLException{
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		String updateQuery="update member set tel=?, zipcode=?, address1=?, address2=?, isdeleted=? where userid=?";
+		String updateQuery="update member set name=?, tel=?, zipcode=?, address1=?, address2=?, isdeleted=? where userid=?";
 		DbConnection dc = DbConnection.getInstance();
 		boolean updateFlag=false;
 		try {
 			con = dc.getConn();
 			pstmt = con.prepareStatement(updateQuery);
-			pstmt.setString(1,mVO.getTel());
-			pstmt.setString(2, mVO.getZipcode());
-			pstmt.setString(3,mVO.getAddress1());
-			pstmt.setString(4,mVO.getAddress2());
-			pstmt.setString(5,mVO.getIsDeleted());
-			pstmt.setString(6,mVO.getUserId());
+			pstmt.setString(1,mVO.getName());
+			pstmt.setString(2,mVO.getTel());
+			pstmt.setString(3, mVO.getZipcode());
+			pstmt.setString(4,mVO.getAddress1());
+			pstmt.setString(5,mVO.getAddress2());
+			pstmt.setString(6,mVO.getIsDeleted());
+			pstmt.setString(7,mVO.getUserId());
 			
 			if(pstmt.executeUpdate()==1) {
 				updateFlag=true;
