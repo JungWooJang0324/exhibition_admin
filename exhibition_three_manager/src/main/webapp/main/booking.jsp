@@ -41,20 +41,21 @@
         	#member_tab{ text-align:center;}
 </style>
     <script type="text/javascript">
-   	var errorPage=["404","500","401"];
+   	
+    var errorPage=["404","500","401"];
     $( function() {		
  	$("#bookingDetail").on("show.bs.modal", function(e) {		
 	   	var num= $(e.relatedTarget).data('num');
     	var error="";
     	$.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/bookingAjax.jsp",
-			data: {"num":num},
+			data: {"rezNum":num},
 			async:false,
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				alert(xhr.status+", "+xhr.statusText);
-			//	location.href="401.html";
+				alert("bookingDetail "+xhr.status+", "+xhr.statusText);
+				//location.href="401.html";
 			},
 			success:function(jsonObj){
 				$("#exName").html(jsonObj.exName);				
@@ -69,27 +70,8 @@
 			}
 		});//ajax
 		
-    	$("#confirmModify").click(function() {
-    		var rezCount=$("#rezCount").val();
-    		var visitDate=$("#visitCount").val();
-			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/bookingModifyAjax.jsp",
-				data: {"rezCount":rezCount, "visitDate":visitDate},
-				async:false,
-				type: "get",
-				dataType:"json",
-				error:function(xhr){
-					alert(xhr.status+", "+xhr.statusText);
-				//	location.href="401.html";
-				},
-				success:function(jsonObj){
-							
-				}
-			});
-		});
-    	
-    	
     });//bookingDetail
+  
 });  //ready;
 
 		
@@ -100,7 +82,75 @@
 		  monthNamesShort: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" ],
 		  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
 		});
-    
+   
+    function confirmModify() {
+    	var num= $("#resNum").text();
+ 		var rezCount=$("#rezCount").val();
+		var visitDate=$("#visitDate").val();
+		
+		 $.ajax({
+			url:"http://localhost/exhibition_three_manager/main/ajax/bookingModifyAjax.jsp",
+			data: {"rezCount":rezCount, "visitDate":visitDate, "rezNum":num},
+			async:false,
+			type: "get",
+			dataType:"json",
+			error:function(xhr){
+				alert("confirmModify : "+xhr.status+", "+xhr.statusText);
+			//	location.href="401.html";
+			},
+			success:function(jsonObj){
+				if(jsonObj.cnt > 0){
+					alert("수정되었습니다.")
+					location.href="booking.jsp";
+				} else{
+					location.href="401.html";
+				}
+			}  
+		}); //ajax
+	} //confirmModify
+	
+	function cancelRez() {
+		var num= $("#mainRezNum").text();
+		 $.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/bookingCancelAjax.jsp",
+				data: {"rezNum":num},
+				async:false,
+				type: "get",
+				dataType:"json",
+				error:function(xhr){
+					alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
+				//	location.href="401.html";
+				},
+				success:function(jsonObj){
+					if(jsonObj.cnt > 0){
+						alert("예약이 취소되었습니다.")
+						location.href="booking.jsp";
+					}
+				}  
+			}); //ajax
+	}//cancelRez
+	
+	//예약 확인
+	function rezConfirm() {
+		var num= $("#mainRezNum").text();
+		 $.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/bookingConfirmAjax.jsp",
+				data: {"rezNum":num},
+				async:false,
+				type: "get",
+				dataType:"json",
+				error:function(xhr){
+					alert("confirmAjax : "+xhr.status+", "+xhr.statusText);
+				//	location.href="401.html";
+				},
+				success:function(jsonObj){
+					if(jsonObj.cnt > 0){
+						alert("예약이 확인되었습니다.")
+						location.href="booking.jsp";
+					}
+				}  
+			}); //ajax
+	}
 	
     </script>
     </head>
@@ -201,15 +251,15 @@
 									pageContext.setAttribute("rezList", rezList);
 									%>
 									<c:forEach var="res" items="${rezList}">
-						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}" class="rezList">
-									<td><c:out value="${res.rezNum}"/></td>
+						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}"  class="rezList">
+									<td id="mainRezNum"><c:out value="${res.rezNum}"/></td>
 									<td><c:out value="${res.exName}"/></td>
 									<td><c:out value="${res.userName}"/></td>
 									<td><c:out value="${res.visitData}"/></td>
-									<td><c:out value="${res.rezStatus}"/></td>
+									<td id="rezStatus"><c:out value="${res.rezStatus}"/></td>
 									
 									<td>
-									 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#confirmCancel">예약 취소</button>
+									 	<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#confirmCancel" >예약 취소</button>
 				        				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
 				        			</td>
 						  		</tr>
@@ -309,30 +359,14 @@
 					 	</table>
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
-				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify" id="confirmModify">예약 수정</button>
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button><!-- id="confirmModify"  -->
+				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify" onclick="confirmModify(${res.rezNum})">예약 수정</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
-	<!-- 예약 수정 확인 모달  -->
-	<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body" style="text-align: center">
-	        예약 내용을 수정하시겠습니까?
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-outline-info">OK</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-				<!-- 회원삭제 확인 modal -->
+	
+				<!-- 예약취소 확인 modal -->
 				<div class="modal fade" id="confirmCancel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
@@ -344,14 +378,13 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-outline-info">Ok</button>
+				        <button type="button" class="btn btn-outline-info" onclick="cancelRez(${res.rezNum})">Ok</button>
 				      </div>
 				    </div>
 				  </div>
 				</div>
-				<!-- 회원삭제 확인 modal -->
-				<!-- 회원 수정 확인 modal -->
-				<div class="modal fade" id="confirmOk tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<!-- 예약 확인 modal -->
+				<div class="modal fade" id="confirmOk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -361,8 +394,8 @@
 				        예약을 확인하시겠습니까?
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-outline-info" onclick="rezConfirm(${res.rezNum})">Ok</button>
 				      </div>
 				    </div>
 				  </div>

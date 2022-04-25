@@ -6,10 +6,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces="true"
-    info="게시판 ajax처리"
+    info="예약 ajax처리"
     %>
 <%
-int num=Integer.parseInt(request.getParameter("num"));
+int num=Integer.parseInt(request.getParameter("rezNum"));
 
 ReservationManagerDAO rmDAO=new ReservationManagerDAO();
 ReservationManagerVO rVO=rmDAO.selectOneReservation(num);
@@ -22,10 +22,9 @@ jsonObj.put("userName", rVO.getUserName());
 jsonObj.put("rezCount", rVO.getRezCount());
 jsonObj.put("rezDate",new SimpleDateFormat("yyyy-MM-dd").format( rVO.getRezData()));
 jsonObj.put("userId", rVO.getUserId());
+
 jsonObj.put("visitDate", new SimpleDateFormat("yyyy-MM-dd").format(rVO.getVisitData()) );
 jsonObj.put("price", rVO.getPrice());
-
-System.out.println(rVO.getPrice());
 
 out.println(jsonObj.toJSONString());
 System.out.println("-------------"+num);

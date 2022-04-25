@@ -1,9 +1,12 @@
 package DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +98,69 @@ public class ReservationManagerDAO {
 		return rVO;
 		
 	}//selectReservation
+	
+	//updateReservation
+	public int updateReservation(int rezCount, String visitDate, int rezNum) throws SQLException, ParseException {
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		DbConnection dc=DbConnection.getInstance();
+		int cnt=0;
+		try {
+			conn=dc.getConn();
+			String updateRez="UPDATE reservation SET visit_date=to_date(?,'yyyy-mm-dd'),rez_count=? WHERE rez_num=?";
+			pstmt = conn.prepareStatement(updateRez.toString());
+			pstmt.setString(1, visitDate);
+			pstmt.setInt(2, rezCount);
+			pstmt.setInt(3, rezNum);
+			cnt=pstmt.executeUpdate();
+		}finally {
+			dc.close(null, pstmt, conn);
+		}
+		
+		return cnt;
+	}
+	
+	
+	//cancelReservation
+	public int cancelReservation(int rezNum) throws SQLException, ParseException {
+			Connection conn=null;
+			PreparedStatement pstmt=null;
+			DbConnection dc=DbConnection.getInstance();
+			int cnt=0;
+			try {
+				conn=dc.getConn();
+				String updateRez="UPDATE RESERVATION SET REZ_STATUS='f' WHERE REZ_NUM=?";
+				pstmt = conn.prepareStatement(updateRez.toString());
+				
+				pstmt.setInt(1, rezNum);
+				cnt=pstmt.executeUpdate();
+			}finally {
+				dc.close(null, pstmt, conn);
+			}
+			
+			return cnt;
+		}
+	
+		//confirmReservation
+		public int confirmReservation(int rezNum) throws SQLException, ParseException {
+				Connection conn=null;
+				PreparedStatement pstmt=null;
+				DbConnection dc=DbConnection.getInstance();
+				int cnt=0;
+				try {
+					conn=dc.getConn();
+					String updateRez="UPDATE RESERVATION SET REZ_STATUS='t' WHERE REZ_NUM=?";
+					pstmt = conn.prepareStatement(updateRez.toString());
+					
+					pstmt.setInt(1, rezNum);
+					cnt=pstmt.executeUpdate();
+				}finally {
+					dc.close(null, pstmt, conn);
+				}
+				
+				return cnt;
+			}
+		
 	
 	//index¿ë - reservation¼ö;
 	public int countReservation() throws SQLException, ClassNotFoundException, NamingException{
