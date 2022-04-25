@@ -27,7 +27,7 @@ public class ReservationManagerDAO {
 		
 		try{
 			con=dc.getConn();
-			StringBuilder selectQuery = new StringBuilder();
+			StringBuilder selectQuery = new StringBuilder();			
 			selectQuery
 			.append("	select rez_num,ex.ex_name,m.name, visit_date, rez_status 	")
 			.append("	from reservation rez,member m,exhibition ex	")
@@ -53,6 +53,58 @@ public class ReservationManagerDAO {
 		return list;
 		
 	}//selectReservation
+	
+	
+	public List<ReservationManagerVO> selectReservation2(String nameSel, String rezDate, String findCatName) throws SQLException, ClassNotFoundException, NamingException{
+		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		ResultSet rs = null;
+		
+		try{
+			con=dc.getConn();
+			StringBuilder selectQuery = new StringBuilder();
+			if(nameSel.equals("findExName")) {
+				selectQuery.append(" select rez_num, ex_name, name, visit_date, rez_status	")
+				.append("from (select rez.rez_num,ex.ex_name,m.name, rez.visit_date, rez_status		")
+				.append("	from reservation rez,member m,exhibition ex		")
+				.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num)	")
+				.append("	where to_char(visit_date, 'yyyy-MM-dd') like '%'||?||'%' and ex_name like'%'||?||'%'");
+			
+			}else{
+				selectQuery.append(" select rez_num, ex_name, name, visit_date, rez_status	")
+				.append("from (select rez.rez_num,ex.ex_name,m.name, rez.visit_date, rez_status		")
+				.append("	from reservation rez,member m,exhibition ex		")
+				.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num)	")
+				.append("	where to_char(visit_date, 'yyyy-MM-dd') like '%'||?||'%' and name like'%'||?||'%'");
+			}
+			
+			pstmt = con.prepareStatement(selectQuery.toString());
+			pstmt.setString(1, rezDate);
+			pstmt.setString(2, findCatName);
+
+			rs = pstmt.executeQuery();
+			ReservationManagerVO rVO = null;
+			while(rs.next()) {
+				rVO = new ReservationManagerVO();
+				rVO.setRezNum(rs.getInt("rez_num"));
+				rVO.setExName(rs.getString("ex_name"));
+				rVO.setUserName(rs.getString("name"));
+				rVO.setVisitData(rs.getDate("visit_date"));
+				rVO.setRezStatus(rs.getString("rez_status"));
+				list.add(rVO);
+			}//end while
+			
+		}finally {
+			dc.close(rs, pstmt, con);
+			
+		}
+		
+		return list;
+		
+	}//selectReservation2
+	
 	
 	
 	public ReservationManagerVO selectOneReservation(int rezNum) throws SQLException, ClassNotFoundException, NamingException{
@@ -100,16 +152,16 @@ public class ReservationManagerDAO {
 	}//selectReservation
 	
 	//updateReservation
-	public int updateReservation(int rezCount, String visitDate, int rezNum) throws SQLException, ParseException {
+	public int updateReservation(int rezCount, String rezDate, int rezNum) throws SQLException, ParseException {
 		Connection conn=null;
 		PreparedStatement pstmt=null;
 		DbConnection dc=DbConnection.getInstance();
 		int cnt=0;
 		try {
 			conn=dc.getConn();
-			String updateRez="UPDATE reservation SET visit_date=to_date(?,'yyyy-mm-dd'),rez_count=? WHERE rez_num=?";
+			String updateRez="UPDATE reservation SET rez_date=to_date(?,'yyyy-mm-dd'),rez_count=? WHERE rez_num=?";
 			pstmt = conn.prepareStatement(updateRez.toString());
-			pstmt.setString(1, visitDate);
+			pstmt.setString(1, rezDate);
 			pstmt.setInt(2, rezCount);
 			pstmt.setInt(3, rezNum);
 			cnt=pstmt.executeUpdate();

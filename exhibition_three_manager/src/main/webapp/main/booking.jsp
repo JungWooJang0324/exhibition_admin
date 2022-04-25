@@ -43,7 +43,46 @@
     <script type="text/javascript">
    	
     var errorPage=["404","500","401"];
-    $( function() {		
+    $( function() {	
+    $("#findNamesBtn").click(function() {
+    	var nameSelection= $("#nameSelection option:selected").val()
+    	//예약날짜 검색 내역
+    	var reservationDate = $("#reservationDate").val();
+    	//사용자 이름 검색 내역
+		var findCatName=$("#findCatName").val();
+   		$.ajax({
+   			url:"http://localhost/exhibition_three_manager/main/ajax/bookingFindAjax.jsp",
+   			data: {"nameSel":nameSelection, "rezDate":reservationDate, "findCatName":findCatName},
+   			async:false,
+   			type: "get",
+   			dataType:"json",
+   			error:function(xhr){
+   				alert("bookingFind:"+xhr.status+", "+xhr.statusText);
+   				//location.href="401.html";
+   			},
+   			success:function(jsonObj){
+				var output="";
+				
+				if(!jsonObj.dateFlag){
+					output+= "조회결과 없음";
+				}
+				else{
+					$.each(jsonObj.list, function(i, jsonObj) {
+						output+="<tr style='cursor:pointer' data-bs-toggle='modal' data-bs-target='#bookingDetail' data-num='"+jsonObj.rezNum+"' class='rezList'>";
+						output+= "<td id='mainRezNum'>"+jsonObj.rezNum+"</td>";
+						output+= "<td>"+jsonObj.exName+"</td>";
+						output+= "<td>"+jsonObj.userName+"</td>";
+						output+= "<td>"+jsonObj.visitDate+"</td>";
+						output+= "<td id='rezStatus'>"+jsonObj.rezStatus+"</td></tr>";
+					});
+				}
+			
+				$("#bookingTBody").html(output);
+   			}
+   		});//ajax
+	});//findNamesBtn
+    	
+    	
  	$("#bookingDetail").on("show.bs.modal", function(e) {		
 	   	var num= $(e.relatedTarget).data('num');
     	var error="";
@@ -152,6 +191,8 @@
 			}); //ajax
 	}
 	
+	
+	
     </script>
     </head>
     
@@ -198,18 +239,19 @@
                         <!-- 검색창 -->
 							<div id="searchDiv" >
                             <div class="input-group flex-nowrap" style="width:300px;">
-								  <span class="input-group-text" id="addon-wrapping">예약날짜</span>
-					      		<input type="text" id="reservationDate" class="form-control" placeholder="예약 일자" style="width:200px">
+								  <span class="input-group-text" id="addon-wrapping">방문날짜</span>
+					      		<input type="text" id="reservationDate" class="form-control" placeholder="방문 일자" style="width:200px">
 								</div>
 								
                             <form class="d-flex" >
 			                         <div class="input-group mb-3" style="width:500px;margin-top:10px;">
 								  		<span class="input-group-text" id="addon-wrapping">항목검색</span>
-											 <select class="form-select" aria-label=".form-select-sm example" >
-											  <option value="" selected="selected">사용자 이름</option>
-											  <option value="">전시 이름</option>
+											 <select class="form-select" aria-label=".form-select-sm example" id="nameSelection">
+											  <option value="findUserName" selected="selected">사용자 이름</option>
+											  <option value="findExName">전시 이름</option>
 											</select>
-										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px">
+										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px" id="findCatName">
+										  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" id="findNamesBtn">검색</button>
 									</div>
 							      </form>
                         	</div>
@@ -224,10 +266,6 @@
 							</div>
 							<div class="form-check form-check-inline">
 							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" >
-							  <label class="form-check-label" for="inlineRadio3">예약대기</label>
-							</div>
-							<div class="form-check form-check-inline">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" >
 							  <label class="form-check-label" for="inlineRadio4">예약취소</label>
 							</div>
 						<div class="card-body">
@@ -238,13 +276,13 @@
                                     	<th>예약번호</th>
                                     	<th>전시명</th>
                                     	<th>예약자</th>
-                                    	<th>예약일시</th>
+                                    	<th>방문일시</th>
                                     	<th>처리현황</th>
                                     	<th>관리</th>
-                                    </tr>
+                                   </tr>
 						  	</thead> 
-						  	<tbody> 
-									<%
+						  	<tbody id="bookingTBody"> 
+								 <%
 									ReservationManagerDAO rDAO = new ReservationManagerDAO();
 									List<ReservationManagerVO> rezList = rDAO.selectReservation();
 										
@@ -255,7 +293,7 @@
 									<td id="mainRezNum"><c:out value="${res.rezNum}"/></td>
 									<td><c:out value="${res.exName}"/></td>
 									<td><c:out value="${res.userName}"/></td>
-									<td><c:out value="${res.visitData}"/></td>
+									<td><c:out value="${res.rezData}"/></td>
 									<td id="rezStatus"><c:out value="${res.rezStatus}"/></td>
 									
 									<td>
@@ -263,8 +301,9 @@
 				        				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmOk">예약 확인</button>
 				        			</td>
 						  		</tr>
-						  			</c:forEach>
-						  	
+						  			</c:forEach> 
+						  	 <%--<jsp:include page="bookingTbodyList.jsp"/>
+						  	  --%>
 						  	</tbody> 
 						  </table>
 						  
