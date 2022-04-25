@@ -58,7 +58,7 @@ $(function(){
 		
 		//값 받아오기
 		$.ajax({
-			url:"http://localhost/exhibition_three_manager/main/boardData_detail.jsp",
+			url:"http://localhost/exhibition_three_manager/main/ajax/boardDetailAjax.jsp",
 			type:"post",
 			data:{ "bdId":bdId	},
 			dataType:"json",
@@ -91,7 +91,7 @@ $(function(){
 			 $("#confirmModify").modal('hide');
 			 
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/boardData_update.jsp",
+				url:"http://localhost/exhibition_three_manager/main/ajax/boardUpdateAjax.jsp",
 				type:"post",
 				data:{
 					"bdId" : $("#bdId_de").text(),
@@ -131,7 +131,7 @@ $(function(){
 			$("#confirmDelete").modal('hide');
 			 
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/boardData_delete.jsp",
+				url:"http://localhost/exhibition_three_manager/main/ajax/boardDeleteAjax.jsp",
 				type:"get",
 				data:{ "bdId_de": $("#bdId_de").text()},
 				error:function(xhr){

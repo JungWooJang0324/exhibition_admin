@@ -53,7 +53,7 @@ $(function(){
 		
 		//값 받아오기
 		$.ajax({
-			url:"http://localhost/exhibition_three_manager/main/hallData_detail.jsp",
+			url:"http://localhost/exhibition_three_manager/main/ajax/hallDetailAjax.jsp",
 			type:"post",
 			data:{ "hallNum":hallNum	},
 			dataType:"json",
@@ -101,7 +101,7 @@ $(function(){
 			$("#addOk").click(function(){
 				$("#confirmAdd").modal('hide'); //추가 확인 모달 사라지고
 				$.ajax({
-					url:"http://localhost/exhibition_three_manager/main/hallData_insert.jsp",
+					url:"http://localhost/exhibition_three_manager/main/ajax/hallInsertAjax.jsp",
 					type:"post",
 					data:{
 						exName_add : $("#exName_add").val(), 
@@ -148,7 +148,7 @@ $(function(){
 			 $("#confirmModify").modal('hide');
 			 
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/hallData_update.jsp",
+				url:"http://localhost/exhibition_three_manager/main/ajax/hallUpdateAjax.jsp",
 				type:"post",
 				data:{
 					"exName_de" : $("#exName_de").val(),
@@ -192,7 +192,7 @@ $(function(){
 			$("#confirmDelete").modal('hide');
 			 
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/hallData_delete.jsp",
+				url:"http://localhost/exhibition_three_manager/main/ajax/hallDeleteAjax.jsp",
 				type:"get",
 				data:{ "hallNum_de": $("#exNum_de").text()},
 				error:function(xhr){
