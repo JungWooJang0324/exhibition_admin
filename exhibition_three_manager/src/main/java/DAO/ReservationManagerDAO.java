@@ -16,8 +16,7 @@ import VO.ReservationManagerVO;
 import connection.DbConnection;
 
 public class ReservationManagerDAO {
-	
-	
+	//메인 ReservationList
 	public List<ReservationManagerVO> selectReservation() throws SQLException, ClassNotFoundException, NamingException{
 		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
 		Connection con = null;
@@ -54,7 +53,7 @@ public class ReservationManagerDAO {
 		
 	}//selectReservation
 	
-	
+	//검색후 변경될 List
 	public List<ReservationManagerVO> selectReservation2(String nameSel, String rezDate, String findCatName) throws SQLException, ClassNotFoundException, NamingException{
 		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
 		Connection con = null;

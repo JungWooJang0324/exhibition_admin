@@ -45,7 +45,7 @@
     var errorPage=["404","500","401"];
     $( function() {	
     $("#findNamesBtn").click(function() {
-    	var nameSelection= $("#nameSelection option:selected").val()
+    	var nameSelection= $("#nameSelection option:selected").val();
     	//예약날짜 검색 내역
     	var reservationDate = $("#reservationDate").val();
     	//사용자 이름 검색 내역
@@ -78,6 +78,8 @@
 				}
 			
 				$("#bookingTBody").html(output);
+				$("#reservationDate").val("");
+				$("#findCatName").val("");
    			}
    		});//ajax
 	});//findNamesBtn
