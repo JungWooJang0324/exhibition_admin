@@ -39,40 +39,173 @@
 	     	hr {width:200px; margin: 0px auto; margin-top:10px;}
         </style>
 	<script type="text/javascript">
-	$( function() {
-		$("#searchBtn").click(function(){
+	$(function(){
+		/* $("#searchBtn").click(function(){
 			document.dataSearchFrm.submit();
+		}); */
+		$("#modifyModal").on('show.bs.modal', function(e) {
+			var exNum = $(e.relatedTarget).data('num');
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_detail.jsp",
+				data:{"exNum": exNum},
+				dataType:"json",
+				error : function(xhr){
+					alert(xhr.status+" / "+xhr.statusText);
+				},
+				success : function(jsonObj){
+					$("#exNum").text(exNum);
+				 	$("#startDate"). val(jsonObj.exhibitDate);
+					$("#endDate").val(jsonObj.deadline); 
+					$("#exPoster").text(jsonObj.exPoster); 
+					$("#exIntro").val(jsonObj.exIntro);
+					$("#exName").val(jsonObj.exName);
+					$("#addImg").text(jsonObj.addImg);
+					$("#exInfo").val(jsonObj.exInfo);
+					$("#totalCount").val(jsonObj.totalCount);
+					$("#watchCount").val(jsonObj.watchCount); 
+					$("#adult").val(jsonObj.adult); 
+					$("#teen").val(jsonObj.teen); 
+					$("#child").val(jsonObj.child); 
+					$("#mgrName").val(jsonObj.mgrName); 
+				} })//ajax;
 		});
-		function detailExhibition(id,name,date,addr1,addr2,zipcode,tel){
-		  	$("#myModal").on('show.bs.modal',function(e){
-		  		var modal= $(this);
-		    	modal.find("#id").text(id);
-		  		modal.find("#memberName").text(name);
-		  		modal.find("#subDate").text(date);
-		  		modal.find("#address1").text(addr1);
-		  		modal.find("#address2").text(addr2);
-		  		modal.find("#zipcode").text(zipcode);
-		  		modal.find("#tel").text(tel);
-		  	});
-		  	$("#myModal").modal('show');
-	  	}
-	
-		$( "#startDate" ).datepicker({
-			  dateFormat: "yy-mm-dd",
-			  dayNames: [ "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" ],
-			  dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-			  monthNamesShort: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" ],
-			  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
-			});
-		$( "#endDate" ).datepicker({
-			  dateFormat: "yy-mm-dd",
-			  dayNames: [ "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" ],
-			  dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-			  monthNamesShort: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" ],
-			  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
-			});
-	  });
-	 
+		$("#statusBtn").click(function(){
+			$("#confirmRelease").modal('show');
+		});//click
+		$("#deleteBtn").click(function(){
+			$("#confirmDelete").modal('show');
+		});//click
+		$("#modifyBtn").click(function(){
+			$("#confirmModify").modal('show');
+		})//click
+	  })//ready;
+		function releaseExhibition(){
+			var exNum = $("#exNum").text();
+			$("#confirmRelease").modal('hide');
+			$("#modifyModal").modal('hide');
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_release.jsp",
+				data:{"exNum":exNum},
+				type:"get",
+				dataType:"json",
+				async:"false",
+				error:function(xhr){
+					alert(xhr.status+" / "+xhr.statusText);
+				},//error
+				success:function(jsonObj){
+					if(jsonObj.cnt > 0){
+						alert("사용자 페이지에 업데이트 되었습니다.");
+					}else{
+						alert("실패");
+					}				
+				}//success
+			}) 
+		}//releaseExhibition
+		function deleteExhibition(){
+			var exNum = $("#exNum").text();
+			$("#confirmDelete").modal('hide');
+			$("#modifyModal").modal('hide');
+			alert(exNum);
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_delete.jsp",
+				data:{"exNum":exNum},
+				type:"post",
+				dataType:"json",
+				error:function(request,status,error){
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				},//error
+				success:function(jsonObj){
+					alert(jsonObj);
+					if(jsonObj.cnt > 0){
+						alert("삭제가 완료 되었습니다.");
+					}else{
+						alert("실패확인용");
+					}				
+				}//success
+			});//ajax 
+			
+		}
+		function updateExhibition(){
+			$("#confirmModify").modal('hide');
+			$("#modifyModal").modal('hide');
+			$("#exNum").text();
+		 	/* $("#startDate"). val(jsonObj.exhibitDate);
+			$("#endDate").val(jsonObj.deadline);  
+			$("#exPoster").text(jsonObj.exPoster);*/ 
+			//$("#addImg").text(jsonObj.addImg);
+			let exIntro = $("#exIntro").val();
+			let exName = $("#exName").val();
+			let exInfo = $("#exInfo").val();
+			$("#totalCount").val();
+			$("#watchCount").val(); 
+			$("#adult").val(); 
+			$("#teen").val(); 
+			$("#child").val(); 
+			$("#mgrName").val(); 
+		}
+		function compareExt(file){
+			var compareExt="png,jpg,gif,bmp".split(",");
+			var fileExt = file.toLowerCase().substring(file.lastIndexOf(".")+1);
+			
+			var flag=false;
+			
+			for(var i = 0; i < compareExt.length; i++){
+				if(compareExt[i] == fileExt){
+					flag=true;
+					break;
+				}//end if
+			}//end for
+			
+			if(!flag){
+					alert(file+"은 업로드 불가능합니다.\n"
+							+"이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
+				$("#confirmAdd").modal('hide');
+					return;
+			}//end if	
+		}
+		function addExhibition(){
+			var inputPoster = $("#addExPoster").val();
+			compareExt(inputPoster);// 포스터 유효성
+			var posterPath = "C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/poster/"+inputPoster.substring(inputPoster.lastIndexOf("\\")+1);
+			var addImg = $("#addAddImg").val();
+			compareExt(addImg);//추가이미지 유효성
+			var addImgPath = "C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/add img/"+addImg.substring(addImg.lastIndexOf("\\")+1);
+			var exName = $("#addExName").val(),exHall = $("#addExHall").val();
+			var startDate = $("#addStartDate").val(),endDate = $("#addEndDate").val();
+			var intro = $("#addIntro").val(),info =$("#addInfo").val();
+			var totalNum = $("#addTotalNum").val(),watchNum = $("#addWatchNum").val();
+		
+			//alert(posterPath+"\n"+exName+"\n"+exHall+"\n"+startDate+"\n"+endDate+"\n"+intro+"\n"+info+"\n"+totalNum+"\n"+watchNum+"\n"+addImgPath);
+			
+			 $.ajax({
+				url : "http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp",
+				data:{
+					"poster":posterPath,
+					"exName":exName,
+					"exHall":exHall,
+					"startDate":startDate,
+					"endDate":endDate,
+					"intro":intro,
+					"info":info,
+					"totalCount":totalNum,
+					"watchCount":watchNum,
+					"addImg" : addImgPath
+				},
+				dataType:"json",
+				error:function(request,status,error){
+					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				},//error
+				success:function(jsonObj){
+					if(jsonObj.cnt==1){
+						alert("성공");
+					}else{
+						alert("실패");
+					}
+				}
+			})
+			 
+			
+		}
 	</script>  
     </head>
         <%
@@ -184,7 +317,7 @@
 	    						 		request.setAttribute("dataList",list);
 	    						 		%>
 	    						 		<c:forEach var="list" items="${dataList }">
-                                    	<tr style="cursor:pointer" data-bs-target="#showModal" data-bs-toggle="modal">
+                                    	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${list.exNum }">
  											<td><c:out value="${list.exNum }"/></td>
  											<td><c:out value="${list.exName }"/></td>
  											<td><c:out value="${list.inputDate }"/></td>
@@ -292,7 +425,7 @@
 					      <form action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" id="addFrm">
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
-								  <input type="email" class="form-control" id="exName" name="exName" placeholder="전시명"  style="width:200px">
+								  <input type="email" class="form-control" id="addExName" name="exName" placeholder="전시명"  style="width:200px">
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시장 / 담당자</label>
@@ -316,44 +449,44 @@
 					      	<label class="form-label">전시 기간</label>
 					      	<div class="row">
 					      	<div class="col-6">
-					      	<input type="text" id="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
+					      	<input type="date" id="addStartDate" class="form-control" placeholder="시작 일자" style="width:200px">
 					      	</div>
 					      	<div class="col-6">
-					      	<input type="text" id="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
+					      	<input type="date" id="addEndDate" class="form-control" placeholder="마감 일자" style="width:200px">
 					      	</div>
 					      	</div>
 					      	</div>
 					      	<div class="mb-3" >
 						      	<label class="form-label">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="exPoster">
+								  <input type="file" class="form-control" id="addExPoster">
 								</div>
 						      	<div style="width:200px; height:200px;">
-						      		<img src="images/adult.png" class="rounded float-start" alt="...">
+						      		<img src="" class="rounded float-start">
 						      	</div>	
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
-								  <textarea class="form-control" id="simpleIntroduce" rows="3" style="width:500px"></textarea>
+								  <textarea class="form-control" id="addIntro" rows="3" style="width:500px"></textarea>
 							</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addImg">
+								  <input type="file" class="form-control" id="addAddImg">
 								</div>
 							</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
-								  <textarea class="form-control" id="detailIntroduce" rows="10"></textarea>
+								  <textarea class="form-control" id="addInfo" rows="10"></textarea>
 								</div>
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
-								<input type="text" class="form-control" id="totalNum" placeholder="100"  style="width:100px">
+								<input type="text" class="form-control" id="addTotalNum" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
-								<input type="text" class="form-control" id="watchNum" placeholder="0"  style="width:100px">
+								<input type="text" class="form-control" id="addWatchNum" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
 							
@@ -361,22 +494,22 @@
 							<label class="form-label">전시 가격</label>
 						    <div class="mb-3 col-4">
 						    	<label>성인</label>
-								<div class="input-group" id="adult"style="width:150px">
-								  <input type="text" class="form-control" aria-label="성인" id="adult">
+								<div class="input-group" style="width:150px">
+								  <input type="text" class="form-control" aria-label="성인" id="addAdult">
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>청소년</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="청소년" id="teen">
+								  <input type="text" class="form-control" aria-label="청소년" id="addTeen">
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상"id="child" >
+								  <input type="text" class="form-control" aria-label="유아/65세 이상"id="addChild" >
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
@@ -400,8 +533,8 @@
 					  </div>
 					</div>
 				<!-- modal -->
-                 <!-- 전시 조회 modal  -->
-	                <div class="modal fade" tabindex="-1" id="showModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
+                 <!-- 전시 수정&상세 modal  -->
+	                <div class="modal fade" tabindex="-1" id="modifyModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -409,81 +542,13 @@
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
+					      <label class="form-label">전시 번호 : </label>
+						      	<span id="exNum">
+						      		
+								</span>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
-								</div>
-						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시장</label>
-								</div>
-					      	<div class="mb-3">
-					      	<label class="form-label">전시 기간</label>
-					      	</div>
-					      	<div class="mb-3" >
-						      	<label class="form-label">전시 포스터</label>
-						      	<div style="width:200px; height:200px;">
-						      		<img src="images/adult.png" class="rounded float-start" alt="...">
-						      	</div>	
-					      	</div>
-						    <div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
-							</div>
-						    <div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
-							</div>
-						      	<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
-								</div>
-					      	<div class="row">
-						      	<div class="mb-3 col-6">
-								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
-								
-								</div>
-						      	<div class="mb-3 col-6">
-								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
-								
-								</div>
-					      	</div>
-						    <div class="mb-3">
-								<label for="exampleFormControlTextarea1" class="form-label">담당자 이름</label>
-							</div>
-							
-							<div class="row">
-							<label class="form-label">전시 가격</label>
-						    
-							</div>
-								
-					      </div>
-					      <div class="modal-footer">
-					        <div class="container-fluid">
-					      <div class="row">
-					      	<div class="col-4 text-center">
-					        <button type="button" class="btn btn-outline-danger"data-bs-target="#confirmDelete" data-bs-toggle="modal" >전시 삭제</button>
-					      	</div>
-					      	<div class="col-4 text-center">
-					        <button type="button" class="btn btn-outline-info" data-bs-target="#modifyModal" data-bs-toggle="modal">전시 수정</button>
-					      	</div>
-					      	<div class="col-4 text-center">
-					        <button type="button" class="btn btn-outline-success" data-bs-target="#confirmShow" data-bs-toggle="modal">전시 노출</button>
-					      	</div>
-					      </div>
-					      </div>
-					      </div>
-					    </div>
-					  </div>
-					</div>
-				<!-- modal -->
-                 <!-- 전시 수정 modal  -->
-	                <div class="modal fade" tabindex="-1" id="modifyModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" >
-					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-					    <div class="modal-content">
-					      <div class="modal-header">
-					        <h5 class="modal-title">전시 조회</h5>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					      </div>
-					      <div class="modal-body">
-						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
-								  <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="전시명"  style="width:200px">
+								  <label for="전시명" class="form-label">전시명</label>
+								  <input type="text" class="form-control" id="exName" style="width:200px"/>
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시장</label>
@@ -498,49 +563,49 @@
 					      	<label class="form-label">전시 기간</label>
 					      	<div class="row">
 					      	<div class="col-6">
-					      	<input type="text" id="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
+					      	<input type="date" id="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
 					      	</div>
 					      	<div class="col-6">
-					      	<input type="text" id="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
+					      	<input type="date" id="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
 					      	</div>
 					      	</div>
 					      	</div>
 					      	<div class="mb-3" >
 						      	<label class="form-label">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="inputGroupFile02">
+								  <span id="exPoster"></span> 
 								</div>
 						      	<div style="width:200px; height:200px;">
-						      		<img src="images/adult.png" class="rounded float-start" alt="...">
+						      		<!-- <img src="images/adult.png" class="rounded float-start" alt="..."> -->
 						      	</div>	
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
-								  <textarea class="form-control" id="simpleIntroduce" rows="3" style="width:500px"></textarea>
+								  <textarea class="form-control" id="exIntro" rows="3" style="width:500px"></textarea>
 							</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="inputGroupFile02">
+								  <span id="addImg"></span>
 								</div>
 							</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
-								  <textarea class="form-control" id="detailIntroduce" rows="10"></textarea>
+								  <textarea class="form-control" id="exInfo" rows="10"></textarea>
 								</div>
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
-								<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="100"  style="width:100px">
+								<input type="text" class="form-control" id="totalCount" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
-								<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="0"  style="width:100px">
+								<input type="text" class="form-control" id="watchCount" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlTextarea1" class="form-label">담당자 이름</label>
-								<input type="text" class="form-control" id="exampleFormControlInput1" placeholder="김전시"  style="width:100px">
+								<input type="text" class="form-control" id="mgrName" placeholder="김전시"  style="width:100px">
 							</div>
 							
 							<div class="row">
@@ -548,21 +613,21 @@
 						    <div class="mb-3 col-4">
 						    	<label>성인</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상" >
+								  <input type="text" class="form-control" id="adult">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>청소년</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상" >
+								  <input type="text" class="form-control" id="teen">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상" >
+								  <input type="text" class="form-control"id="child">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
@@ -570,16 +635,10 @@
 								
 					      </div>
 					      <div class="modal-footer">
-					        <div class="container-fluid">
-					      <div class="row">
-					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-dark"  data-bs-target="#showModal" data-bs-toggle="modal" >돌아가기</button>
-					      	</div>
-					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-info" data-bs-target="#confirmModify" data-bs-toggle="modal">전시 수정</button>
-					      	</div>
-					      </div>
-					      </div>
+					      			<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
+							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">전시 삭제</button>
+							        <button type="button" class="btn btn-outline-info" id="modifyBtn">전시 수정</button>
+							        <button type="button" class="btn btn-outline-success" id="statusBtn">전시 노출</button>
 					      </div>
 					    </div>
 					  </div>
@@ -596,7 +655,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-primary" onclick="updateExhibition()">Ok</button>
 				      </div>
 				    </div>
 				  </div>
@@ -615,7 +674,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-primary" id="confirmDeleteOk" onclick="deleteExhibition()">Ok</button>
 				      </div>
 				    </div>
 				  </div>
@@ -633,7 +692,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
+				        <button type="button" class="btn btn-primary" onclick="addExhibition()">Ok</button>
 				      </div>
 				    </div>
 				  </div>
@@ -641,7 +700,7 @@
 				<!-- modal -->
 				
 				<!-- 전시 노출 확인 modal -->
-				<div class="modal fade" id="confirmShow" tabindex="-1"data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="confirmRelease" tabindex="-1"data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -652,7 +711,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary">Ok</button>
+				        <button type="button" class="btn btn-primary" onclick="releaseExhibition()">Ok</button>
 				      </div>
 				    </div>
 				  </div>

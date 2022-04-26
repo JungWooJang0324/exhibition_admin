@@ -1,6 +1,10 @@
 package DAO;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -95,78 +99,131 @@ public class AdminExhibitionDAO {
 		
 		return count;
 	}//getCount
-	public List<ExhibitionVO> selectExhibition(String ex_name) throws SQLException, ClassNotFoundException, NamingException{
-		List<ExhibitionVO> ev= new ArrayList<ExhibitionVO>();
-		Connection conn=null;
-		PreparedStatement pstmt=null;
-		ResultSet rs =null;
-		DbConnection dc= DbConnection.getInstance();
-
-		try {
-			conn=dc.getConn();
-			StringBuilder selectMember = new StringBuilder();
-			selectMember
-			.append("	SELECT  ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,	")
-			.append("	ex_intro,exhibition_poster, add_img, ex_status,exhibit_date,deadline,input_date 	")
-			.append("	FROM exhibition")
-			.append("	WHERE ex_name like ?" );
-			
-			
-			pstmt=conn.prepareStatement(selectMember.toString());
-			pstmt.setString(1, "%"+ex_name+"%");
-			
-			rs=pstmt.executeQuery();			
-			ExhibitionVO eVO=null;
-			while(rs.next()) {
-				eVO = new ExhibitionVO();
-				eVO.setExNum(rs.getInt("ex_num"));
-				eVO.setTotalCount(rs.getInt("total_count"));
-				eVO.setWatchCount(rs.getInt("watch_count"));
-				eVO.setExHallNum(rs.getInt("ex_hall_num"));
-				eVO.setExIntro(rs.getString("ex_intro"));
-				eVO.setExName(rs.getString("ex_name"));
-				eVO.setInputDate(rs.getDate("input_date"));
-				ev.add(eVO);
-			}//end while
-			
-		}finally {
-			dc.close(rs, pstmt, conn);
-		}
-		return ev;
-	}
-	
-	public void insertExhibition(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
+	public int deleteEx(String exNum) throws SQLException{
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
+		int cnt=0;
+		try {
+			con = dc.getConn();
+			String delete = "	UPDATE EXHIBITION SET EX_STATUS='f' WHERE EX_NUM=?	";
+			pstmt = con.prepareStatement(delete);
+			pstmt.setString(1, exNum);
+			cnt =pstmt.executeUpdate();
+			
+		}finally{
+			dc.close(null, pstmt, con);
+		}
+		return cnt;
+	}
+	
+	public int releaseEx(String exNum) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		int cnt = 0;
 		
 		try {
 			con = dc.getConn();
-			StringBuilder insertQuery = new StringBuilder();
-			insertQuery
-			.append(" INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,")
-			.append(" ex_intro,exhibition_poster, add_img,exhibit_date,deadline)		")	
-			.append(" VALUES(ex_seq.nextval,?,?,?,?,?,?,?,?,?,?,?);		");	
-			pstmt = con.prepareStatement(insertQuery.toString());
+			String releaseQuery = " UPDATE EXHIBITION SET EX_STATUS='t' WHERE EX_NUM= ? ";
+			pstmt= con.prepareStatement(releaseQuery);
+			pstmt.setString(1, exNum);
+			
+			 cnt = pstmt.executeUpdate();
+			
+			System.out.println(cnt);
+		}finally {
+			dc.close(null, pstmt, con);
+		}//end finally
+		return cnt;
+	}//deleteEx
+	/**
+	 * 전시일정 상세 뷰 조회
+	 * @param exNum
+	 * @return
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	public ExhibitionVO selectExDetail(int exNum) throws SQLException, IOException {
+		ExhibitionVO eVO = null;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DbConnection dc = DbConnection.getInstance();
+		BufferedReader br = null;
+		try {
+			con = dc.getConn();
+			String selectQuery ="select * from exhibition_detail where ex_num = ?";
+			pstmt = con.prepareStatement(selectQuery);
+			pstmt.setInt(1, exNum);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				eVO = new ExhibitionVO();
+				br = new BufferedReader(rs.getClob("ex_info").getCharacterStream());
+				String data ="";
+				StringBuilder exInfo = new StringBuilder();
+				while((data=br.readLine()) != null) {
+					exInfo.append(data+"\n");
+				}
+				eVO.setExName(rs.getString("ex_name"));
+				eVO.setExIntro(rs.getString("ex_intro"));
+				eVO.setTotalCount(rs.getInt("total_count"));
+				eVO.setWatchCount(rs.getInt("watch_count"));
+				eVO.setExhibitDateText(rs.getString("exhibit_date"));
+				eVO.setDeadLineText(rs.getString("deadline"));
+				eVO.setExInfo(exInfo.toString());
+				eVO.setAdult(rs.getInt("adult"));
+				eVO.setExhibitionPoster(rs.getString("exhibition_poster"));
+				eVO.setAddImg(rs.getString("add_img"));
+				eVO.setTeen(rs.getInt("teen"));
+				eVO.setChild(rs.getInt("child"));
+				eVO.setMgrName(rs.getString("mgr_name"));
+				
+			}//end if
+			
+		}finally {
+			dc.close(rs, pstmt, con);
+			br.close();
+		}
+		
+		return eVO;
+	}//selectExDetail
+	
+	public int insertExhibition(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		int cnt = 0;
+		try {
+			con = dc.getConn();
+//			StringBuilder insertQuery = new StringBuilder();
+//			insertQuery
+//			.append(" 	INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,	")
+//			.append(" 	ex_intro,exhibition_poster, add_img,exhibit_date,deadline)		")	
+//			.append(" 	VALUES(13,?,?,?,?,?,?,?,?,?,?);		");	
+			String insertQuery =
+		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster, add_img,exhibit_date,deadline) VALUES(16,?,?,?,?,?,?,?,?,?,?)";
+			
+			pstmt = con.prepareStatement(insertQuery);
 			
 			pstmt.setInt(1, eVO.getTotalCount());
 			pstmt.setInt(2, eVO.getWatchCount());
 			pstmt.setInt(3, eVO.getExHallNum());
 			pstmt.setString(4, eVO.getExName());
 			pstmt.setString(5, eVO.getExInfo());
-			pstmt.setString(6, eVO.getExInfo());
+			pstmt.setString(6, eVO.getExIntro());
 			pstmt.setString(7, eVO.getExhibitionPoster());
 			pstmt.setString(8, eVO.getAddImg());
-			pstmt.setDate(9, eVO.getExhibitionDate());
-			pstmt.setDate(10, eVO.getDeadLine());
+			pstmt.setString(9, eVO.getExhibitDateText());
+			pstmt.setString(10, eVO.getDeadLineText());
 			
-			pstmt.executeUpdate();
+			cnt = pstmt.executeUpdate();
 			
 		}finally{
 			dc.close(null, pstmt, con);
 			
 		}//end finally
-		
+		return cnt;
 	}//insertExhibition
 	
 	public void insertPrice(PriceVO pVO,int exNum) throws SQLException, ClassNotFoundException, NamingException {
@@ -194,6 +251,13 @@ public class AdminExhibitionDAO {
 		
 	}//insertExhibition
 	
+	/**
+	 * 전시장 목록
+	 * @return
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 * @throws NamingException
+	 */
 	public List<ExHallVO> selectExhibitionHall() throws SQLException, ClassNotFoundException, NamingException{
 		List<ExHallVO> exNameList = new ArrayList<ExHallVO>();
 		Connection con = null;
@@ -202,14 +266,14 @@ public class AdminExhibitionDAO {
 		DbConnection dc = DbConnection.getInstance();
 		try {
 			con = dc.getConn();
-			String selectQuery = "select ex_name,ex_hall_num,mgr_name from exhibition_hall";
+			String selectQuery = "select ex_hall_name,ex_hall_num,mgr_name from exhibition_hall";
 			pstmt = con.prepareStatement(selectQuery);
 			rs = pstmt.executeQuery();
 			ExHallVO eVO =  null;
 			while(rs.next()) {
 				eVO = new ExHallVO();
 				eVO.setExHallNum(rs.getInt("ex_hall_num"));
-				eVO.setExName(rs.getString("ex_name"));
+				eVO.setExName(rs.getString("ex_hall_name"));
 				eVO.setMgrName(rs.getString("mgr_name"));
 				exNameList.add(eVO);
 			}//end while
@@ -217,6 +281,7 @@ public class AdminExhibitionDAO {
 		}finally {
 			
 			dc.close(rs, pstmt, con);
+				
 		}//end finally
 		
 		return exNameList;
