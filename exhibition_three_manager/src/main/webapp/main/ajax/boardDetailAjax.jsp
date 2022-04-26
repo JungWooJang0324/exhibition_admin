@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="VO.BoardVO"%>
 <%@page import="DAO.BoardManagerDAO"%>
 <%@page import="java.util.List"%>
@@ -17,9 +18,10 @@ BoardVO bVO = bDAO.selectBoardDetail(bdId);
 //게시글 상세 jsonObj 
 JSONObject jsonObj = new JSONObject();
 jsonObj.put("bdId", bVO.getBdId());
-jsonObj.put("inputDate", bVO.getInputDate());
+jsonObj.put("inputDate",new SimpleDateFormat("yyyy-MM-dd").format( bVO.getInputDate()));
 jsonObj.put("title", bVO.getTitle());
 jsonObj.put("userId", bVO.getUserId());
+jsonObj.put("adminId", bVO.getAdminId());
 jsonObj.put("catNum", bVO.getCatNum());
 jsonObj.put("catName", bVO.getCatName());
 jsonObj.put("description", bVO.getDescription());

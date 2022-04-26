@@ -9,13 +9,13 @@
 
 try{
 	//전시장 삭제
-	String hallNum_de = request.getParameter("hallNum_de");
+	String hallNum = request.getParameter("hallNum");
 	
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-	boolean deleteFlag = ehmDAO.deleteExhibitonHall(Integer.parseInt(hallNum_de)); 
+	int cnt = ehmDAO.deleteExhibitonHall(Integer.parseInt(hallNum)); 
 	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("deleteFlag", deleteFlag);
+	jsonObj.put("cnt", cnt);
 	
 }catch(NumberFormatException e){
 	e.printStackTrace();

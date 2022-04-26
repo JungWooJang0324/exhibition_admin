@@ -20,6 +20,7 @@
 <jsp:getProperty property="title" name="bVO"/>
 <jsp:getProperty property="catNum" name="bVO"/>
 <jsp:getProperty property="description" name="bVO"/>
+<jsp:getProperty property="imgFile" name="bVO"/>
 
 <%
 	bVO.setAdminId((String)session.getAttribute("admin_id"));

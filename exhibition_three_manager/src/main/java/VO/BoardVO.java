@@ -1,22 +1,21 @@
 package VO;
 
+import java.sql.Date;
+
 public class BoardVO {
 
 	int bdId, catNum, rnum;
-	String title, userId, inputDate, catName, description, adminId, imgFile;
+	String title, userId,  catName, description, adminId, imgFile;
 	char isdeleted;
+	Date inputDate;
 	
 	
 	public BoardVO() {
 		super();
 	}
 
-
 	
-
-	
-	
-	public BoardVO(int bdId, int catNum, int rnum, String title, String userId, String inputDate, String catName,
+	public BoardVO(int bdId, int catNum, int rnum, String title, String userId, Date inputDate, String catName,
 			String description, String adminId, String imgFile, char isdeleted) {
 		super();
 		this.bdId = bdId;
@@ -102,12 +101,12 @@ public class BoardVO {
 	}
 
 
-	public String getInputDate() {
+	public Date getInputDate() {
 		return inputDate;
 	}
 
 
-	public void setInputDate(String inputDate) {
+	public void setInputDate(Date inputDate) {
 		this.inputDate = inputDate;
 	}
 

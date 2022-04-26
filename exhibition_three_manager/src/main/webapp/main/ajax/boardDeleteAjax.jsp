@@ -13,10 +13,10 @@ try{
 	int bdId = Integer.parseInt(request.getParameter("bdId_de")) ;
 	
 	BoardManagerDAO bDAO = new BoardManagerDAO();
-	boolean deleteFlag =bDAO.deleteBoardAdmin(bdId);; 
+	int cnt =bDAO.deleteBoardAdmin(bdId);; 
 	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("deleteFlag", deleteFlag);
+	jsonObj.put("cnt", cnt);
 	
 }catch(NumberFormatException e){
 	e.printStackTrace();

@@ -9,36 +9,36 @@
 <%
 
 //전시장 수정
-String exName_de = request.getParameter("exName_de");
-String hallNum_de = request.getParameter("hallNum_de");
-String addr1_de = request.getParameter("addr1_de");
-String addr2_de = request.getParameter("addr2_de");
-String zipcode_de = request.getParameter("zipcode_de");
-String lat_de = request.getParameter("lat_de");
-String long_de = request.getParameter("long_de");
-String mgrName_de = request.getParameter("mgrName_de");
-String mgrTel_de = request.getParameter("mgrTel_de");
-String exTel_de = request.getParameter("exTe_de");
+String hallNum = request.getParameter("hallNum");
+String exName = request.getParameter("exName");
+String addr1 = request.getParameter("addr1");
+String addr2 = request.getParameter("addr2");
+String zipcode = request.getParameter("zipcode");
+String lat = request.getParameter("lat");
+String longi = request.getParameter("lat");
+String mgrName = request.getParameter("mgrName");
+String mgrTel = request.getParameter("mgrTel");
+String exTel = request.getParameter("exTel");
 
 //vo 넣기
 try{
-	ExHallVO ehVO2 = new ExHallVO();
-	ehVO2.setExHallNum(Integer.parseInt(hallNum_de));
-	ehVO2.setExName(exName_de);
-	ehVO2.setAddress1(addr1_de);
-	ehVO2.setAddress2(addr2_de);
-	ehVO2.setZipcode(zipcode_de);
-	ehVO2.setLongitude(Double.parseDouble(long_de));
-	ehVO2.setLatitude(Double.parseDouble(lat_de));
-	ehVO2.setMgrName(mgrName_de);
-	ehVO2.setMgrTel(mgrTel_de);
-	ehVO2.setExTel(exTel_de);
+	ExHallVO ehVO = new ExHallVO();
+	ehVO.setExHallNum(Integer.parseInt(hallNum));
+	ehVO.setExName(exName);
+	ehVO.setAddress1(addr1);
+	ehVO.setAddress2(addr2);
+	ehVO.setZipcode(zipcode);
+	ehVO.setLongitude(Double.parseDouble(longi));
+	ehVO.setLatitude(Double.parseDouble(lat));
+	ehVO.setMgrName(mgrName);
+	ehVO.setMgrTel(mgrTel);
+	ehVO.setExTel(exTel);
 	
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-	boolean updateFlag = ehmDAO.upadateExhibitonHall(ehVO2); 
+	int cnt = ehmDAO.upadateExhibitonHall(ehVO); 
 	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("updateFlag", updateFlag);
+	jsonObj.put("cnt", cnt);
 }catch(NumberFormatException e){
 	e.printStackTrace();
 } 

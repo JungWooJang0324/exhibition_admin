@@ -59,8 +59,7 @@ $(function(){
 	 
 	 
 	 $("#addBtn").click(function(){
-		 filechk();//파일 확장자 확인
-		 checkNull();//빈칸 확인 
+		 checkNull();//빈칸, 파일 확장자 확인
 
 		 $("#addOk").click(function(){//모달ok 버튼이 눌리면
 			$("#postFrm").submit();  //데이터 전송
@@ -90,12 +89,11 @@ function checkNull(){
 		 return;
 	 } 
 	
-	$('#confirmAdd').modal('show');
+	fileChk();
 }
 
-
-function filechk(){
-	 var fileName = $("#upFile").val();
+function fileChk(){
+	 var fileName = $("#imgFile").val();
 	 var ext = fileName.toLowerCase().substring(fileName.lastIndexOf(".")+1);
 	 var compareExt ="png,jpg,gif,bmp".split(",");
 	 var flag=false;
@@ -105,11 +103,13 @@ function filechk(){
 			break;
 		}
 	 }
-		
-	if(!flag){
+	 
+	if(!flag && fileName!=null && fileName!="" ){
 		alert(fileName + "은 업로드 불가능합니다.\n이미지만 업로드 가능합니다.\n가능 확장자: png, jpg, gif, bmp");
-		return; 
+		return;
 	}
+	
+	$('#confirmAdd').modal('show');
 }
 
 
@@ -140,7 +140,7 @@ function filechk(){
 		<textarea id="summernote" name="description"></textarea>
 	</div>
 	<div>
-		<input type="file" id="upFile" name="upFile"  />
+		<input type="file" id="imgFile" name="imgFile"  placeholder=""/>
 	</div>
 	<div id="btnDiv" style="margin-top: 30px">
 		<button type="button" id="backBtn" class="btn btn-outline-dark" style="float: left;margin-left: 10px">뒤로가기</button> 

@@ -2,7 +2,7 @@
 <%@page import="DAO.BoardManagerDAO"%>
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
-<%@include file="admin_id_session.jsp" %>
+<%-- <%@include file="admin_id_session.jsp" %> --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -40,6 +40,7 @@
         
 <script type="text/javascript">
 $(function(){
+	//글쓰기버튼 클릭
 	$("#btnAdd").click(function(){
 		location.href="admin_add_board.jsp";
 	});
@@ -67,13 +68,12 @@ $(function(){
 			},
 			success:function(jsonObj){
 				$("#bdId_de").html(jsonObj.bdId);
-				$("#inputDate_de").val(jsonObj.inputDate);
+				$("#inputDate_de").html(jsonObj.inputDate);
 				$("#title_de").val(jsonObj.title);
-				$("#userId_de").val(jsonObj.userId);
-				$("#catNum_de").val(jsonObj.catNum);
-				$("#catName_de").val(jsonObj.catName); 
+				$("#id_de").html((jsonObj.userId==""||jsonObj.userId==null)? jsonObj.adminId:jsonObj.userId );
+				$("#catName_de").val(jsonObj.catNum); 
 				$("#description_de").val(jsonObj.description.replaceAll("br", "\n"));
-				$("#imgFile_de").vals(jsonObj.imgFile);
+				$("#imgFile_de").html(jsonObj.imgFile);
 			}
 		}); 
 	});
@@ -89,70 +89,88 @@ $(function(){
 		 
 		 $("#modifyOk").click(function(){
 			 $("#confirmModify").modal('hide');
-			 
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/boardUpdateAjax.jsp",
 				type:"post",
 				data:{
-					"bdId" : $("#bdId_de").text(),
-					"catNum" : $("#catNum_de").val(),
+					"catNum" : $("#catName_de").val(),
 					"title": $("#title_de").val(),
 					"description": $("#description_de").val(),
-					"inputDate_de": $("#inputDate_de").val(),
-					"adminId_de" : $("#adminId_de").val(),
-					"imgFile_de" : $("#imgFile_de").val(),
-					"catName_de" : $("#catName_de").val(),
+					"bdId" : $("#bdId_de").text()
 				},
 				datatype:"json",
 				error:function(xhr){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(jsonObj.updateFlag){
-						alert("업데이트 실패!")
-						return;
+					if(jsonObj.cnt>0){
+						alert("업데이트 성공!")
 					}	
-						alert("성공!");
-					
 				}
 			}); 
 			location.reload();
 		});// $("#modifyOk") .click 
-	});// $("#modifyBtn").click
+	});// $("#").click
 	 
-	 
-	//게시글 삭제
-	$("#deleteBtn").click(function(){
-		 
-		//삭제 확인 모달 show
-		 $("#confirmDelete").modal('show');
-		 
-		 $("#deleteOk").click(function(){
-			$("#confirmDelete").modal('hide');
-			 
-			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/boardDeleteAjax.jsp",
-				type:"get",
-				data:{ "bdId_de": $("#bdId_de").text()},
-				error:function(xhr){
-					alert("※에러"+xhr.status);
-				},
-				datatype : "json",
-				success:function(jsonObj){
-					if(jsonObj.deleteFlag){
-						alert("삭제 실패")
-						return;
-					}	
-						alert("성공");
-				}
-			}); 
-			location.reload();
-		});// $("#modifyOk") .click 
-	});// $("#modifyBtn").click 
 	
 });
 
+//게시글 삭제
+function deletePost(){
+	//tr클릭 게시글 상세 팝업 막기
+	event.stopPropagation(); 
+	//삭제 확인 모달 show
+	 $("#confirmDelete").modal('show');
+	 
+	 $("#deleteOk").click(function(){
+		$("#confirmDelete").modal('hide');
+		 
+		$.ajax({
+			url:"http://localhost/exhibition_three_manager/main/ajax/boardDeleteAjax.jsp",
+			type:"get",
+			data:{ "bdId_de": $("#bdId_de").text()},
+			error:function(xhr){
+				alert("※에러"+xhr.status);
+			},
+			datatype : "json",
+			success:function(jsonObj){
+				if(jsonObj.cnt){
+					alert("삭제 성공");
+				}	
+			}
+		}); 
+			location.reload();
+	});// $("#modifyOk") .click 
+}
+<%
+BoardManagerDAO bDAO = new BoardManagerDAO();
+String option  = request.getParameter("option"); //검색 조건 
+if(option==null||"".equals(option)){  
+	option = "title";
+}
+String keyword  = request.getParameter("keyword");//검색 단어
+if(keyword==null||"".equals(keyword)){ 
+	keyword = "";
+}
 
+//전시장 총 개수
+int cnt = bDAO.getTotalRows(option, keyword);
+
+//한 페이지 출력 글 수
+int pageSize = 3;
+
+//한 페이지 정보 설정
+String pageNum = request.getParameter("pageNum"); 
+if(pageNum == null){
+	pageNum = "1";
+}
+
+//각 페이지의 첫 행 번호 // 마지막 번호
+int currentPage = Integer.parseInt(pageNum);
+int startRow = (currentPage-1)*pageSize+1; 
+int endRow = currentPage * pageSize;
+
+%>
 </script> 
  </head>
  <body class="sb-nav-fixed">
@@ -195,11 +213,11 @@ $(function(){
                         <!-- 검색 div -->
                         <div class="card-body" style="width: 400px; float: right;">
                             <form class="d-flex">
-	                        	 <select class="form-select" aria-label=".form-select-sm example"   >
-									  <option value="title" selected="selected">제목 </option>
-									  <option value="userId">작성자</option>
-									  <option value="inputDate">작성일</option>
-									  <option value="category">카테고리</option>
+	                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"   >
+									  <option  ${param.option =="title"? "selected":""} value="title">제목 </option>
+									  <option ${param.option =="user_id"? "selected":""} value="user_id">작성자</option>
+									  <option ${param.option =="input_date"? "selected":""} value="input_date">작성일</option>
+									  <option ${param.option =="category"? "selected":""} value="category">카테고리</option>
 								</select>
 	                        	<input type="text" class="form-control" style="margin-right: 10px">
 	                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
@@ -207,6 +225,7 @@ $(function(){
 	                       		</button>
 						      </form>
                         </div>
+                       
                         <!-- 전시장 테이블 -->
                         <div class="card-content" style=" margin: 0px auto; clear:both;">
                             <div class="table-responsive">
@@ -222,19 +241,27 @@ $(function(){
                                         </tr>
                                     </thead>
                                     <tbody>
-                                   	<jsp:useBean id="bDAO" class="DAO.BoardManagerDAO" scope="page"/> 
                                    <%
-                                  	List<BoardVO> dList = bDAO.selectAllBoard(0,10);
+                                  	List<BoardVO> dList = bDAO.selectSearchBoard(startRow, pageSize, option, keyword);
                                   	pageContext.setAttribute("list", dList);
                                   	%>
                                   	<c:forEach var="bVO" items="${list}">
                                          <tr class="trDetail" style="cursor:pointer">
                                             <td><c:out value="${bVO.rnum}"/></td>
                                             <td><c:out value="${bVO.title}"/></td>                                          	
-                                            <td><c:out value="${bVO.userId}"/></td>
+                                            <td>
+                                            	<c:choose>
+                                            	<c:when test="${bVO.userId !=null }">
+                                           			 <c:out value="${bVO.userId}"/>
+												</c:when>
+                                            	<c:when test="${bVO.adminId !=null}">
+                                           			 <c:out value="${bVO.adminId}"/>
+												</c:when>
+                                            	</c:choose>
+                                           	</td>
                                             <td><c:out value="${bVO.inputDate}"/></td>
                                             <td><c:out value="${bVO.catName}"/></td>
-                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm">삭제</button></td>
+                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost()">삭제</button></td>
 	                                   	 	<td id="hiddenTd" style="padding: 0px;">
                                         		<input id="bdId" class="bdId" name="bdId" type="hidden" value="${bVO.bdId}"/>
                                         	</td>
@@ -256,6 +283,48 @@ $(function(){
                		 <!-- 페이지 이동 -->
                    	 <div id="pageNavigation">
 							<ul class="pagination justify-content-center"> 
+								<%
+									if(cnt>0){
+										
+										//전체 페이지 수
+										int pageCount = cnt / pageSize + (cnt%pageSize == 0 ? 0:1);
+										
+										//한 페이지에 보여질 페이지 개수
+										int pageBlock = 5; 
+										
+										//한 페이지에 보여줄 페이지 블럭 시작 번호
+										int startPage = ((currentPage-1)/pageBlock)*pageBlock+1; 
+										
+										//한 페이지에 보여줄 페이지 블럭 끝 번호 
+										int endPage = startPage + pageBlock-1; 
+										if(endPage > pageCount){
+											endPage = pageCount; 
+										}
+									
+								%>
+								<%if(startPage>pageBlock){ %>
+									<li>
+										<a  href="hall.jsp?pageNum=<%=startPage - pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">이전</a>
+									</li>
+								<%}
+								  for(int i=startPage; i<=endPage; i++){
+								  	if(i==currentPage){%>
+										<li><a style="margin-right:10px;"class="text-secondary">
+											<%=i %>
+										</a></li>
+									<%}else{%>
+										<li><a href="hall.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary">
+											<%=i %>
+										</a></li>
+								<%		}
+							  		}
+							  		
+							  		if(endPage<pageCount){%>	
+							  			<li>
+										<a  href="hall.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">다음</a>
+										</li>
+								<%	}
+						  		}%>
 							</ul>
                		</div>
                 </main>
@@ -289,8 +358,8 @@ $(function(){
 				 		</thead>
 				 		<tbody>
 					 		<tr>
-					 			<td id="bdId_de" style="padding-bottom: 10px"></td>
-					 			<td style="padding-bottom: 10px"><input type="date" id="inputDate_de" /></td>
+					 			<td id="bdId_de" style="padding-bottom: 10px" ></td>
+					 			<td style="padding-bottom: 10px" id="inputDate_de"></td>
 					 		</tr>
 					 		<tr>
 					 			<th >제목</th>
@@ -309,10 +378,9 @@ $(function(){
 											pageContext.setAttribute("list", list);
 										%>
 										<c:forEach var = "bVO" items="${list}">
-											<option value="${bVO.catName}"><c:out value="${bVO.catName}"/></option>
+											<option value="${bVO.catNum}"><c:out value="${bVO.catName}"/></option>
 										</c:forEach>
 									</select>
-									<input type="hidden" id="catNum_de" />
 								</td>
 					 		</tr>
 					 		<tr>
@@ -320,11 +388,9 @@ $(function(){
 					 			<th>이미지</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="userId_de" />
+					 			<td style="padding-bottom: 10px" id="id_de">
 				 				</td>
-								<td style="padding-bottom: 10px" >
-									<input type="text" id="imgFile_de"/>
+								<td style="padding-bottom: 10px" id="imgFile_de" >
 								</td>
 					 		</tr>
 					 		<tr>
@@ -343,7 +409,7 @@ $(function(){
 					 	</table>
 				      </div>
 				      <div class="modal-footer">
-				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"  >돌아가기</button>
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" >돌아가기</button>
 				        <button id="modifyBtn" type="button" class="btn btn-outline-info">게시글 수정</button>
 				      </div>
 				    </div>

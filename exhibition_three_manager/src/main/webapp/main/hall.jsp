@@ -4,7 +4,7 @@
 <%@page import="org.apache.catalina.mbeans.UserMBean"%>
 <%@page import="java.util.List"%>
 <%@page import="VO.ExHallVO"%>
-<%@include file="admin_id_session.jsp" %> 
+<%-- <%@include file="admin_id_session.jsp" %>  --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="전시장"%>
@@ -55,7 +55,7 @@ $(function(){
 		$.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/hallDetailAjax.jsp",
 			type:"post",
-			data:{ "hallNum":hallNum	},
+			data:{ "hallNum":hallNum},
 			dataType:"json",
 			error:function(xhr){
 				alert("※에러"+xhr.status);
@@ -63,8 +63,8 @@ $(function(){
 			success:function(jsonObj){
 				$("#exName_de").val(jsonObj.exName);
 				$("#exNum_de").html(jsonObj.exNum);
-				$("#addr_de").val(jsonObj.addr1);
-				$("#addr_de").val(jsonObj.addr2);
+				$("#addr1_de").val(jsonObj.addr1);
+				$("#addr2_de").val(jsonObj.addr2);
 				$("#zipcode_de").val(jsonObj.zipcode);
 				$("#lat_de").val(jsonObj.latitude);
 				$("#long_de").val(jsonObj.longitude);
@@ -104,16 +104,16 @@ $(function(){
 					url:"http://localhost/exhibition_three_manager/main/ajax/hallInsertAjax.jsp",
 					type:"post",
 					data:{
-						exName_add : $("#exName_add").val(), 
-						exLoc_add : $("#exLoc_add").val(), 
-						addr1_add : $("#addr1_add").val(),
-						addr2_add : $("#addr2_add").val(),
-						zipcode_add : $("#zipcode_add").val(),
-						lat_add : $("#lat_add").val(),
-						long_add : $("#long_add").val(),
-						mgrName_add : $("#mgrName_add").val(),
-						mgrTel_add : $("#mgrTel_add").val(),
-						exTel_add : $("#exTel_add").val()
+						exName : $("#exName_add").val(), 
+						exLoc : $("#exLoc_add").val(), 
+						addr1 : $("#addr1_add").val(),
+						addr2 : $("#addr2_add").val(),
+						zipcode : $("#zipcode_add").val(),
+						lat : $("#lat_add").val(),
+						longi : $("#long_add").val(),
+						mgrName: $("#mgrName_add").val(),
+						mgrTel : $("#mgrTel_add").val(),
+						exTel : $("#exTel_add").val()
 					},
 					error:function(xhr){
 						alert("에러"+xhr.status);
@@ -151,28 +151,25 @@ $(function(){
 				url:"http://localhost/exhibition_three_manager/main/ajax/hallUpdateAjax.jsp",
 				type:"post",
 				data:{
-					"exName_de" : $("#exName_de").val(),
-					"hallNum_de": $("#exNum_de").text(),
-					"addr1_de": $("#addr1_de").val(),
-					"addr2_de": $("#addr2_de").val(),
-					"zipcode_de" : $("#zipcode_de").val(),
-					"lat_de" : $("#lat_de").val(),
-					"long_de" : $("#long_de").val(),
-					"mgrName_de" : $("#mgrName_de").val(),
-					"mgrTel_de" : $("#mgrTel_de").val(),
-					"exTel_de" : $("#exTel_de").val()				
+					"exName" : $("#exName_de").val(),
+					"hallNum": $("#exNum_de").text(),
+					"addr1": $("#addr1_de").val(),
+					"addr2": $("#addr2_de").val(),
+					"zipcode" : $("#zipcode_de").val(),
+					"lat" : $("#lat_de").val(),
+					"lat" : $("#long_de").val(),
+					"mgrName" : $("#mgrName_de").val(),
+					"mgrTel" : $("#mgrTel_de").val(),
+					"exTel" : $("#exTel_de").val()				
 				},
 				datatype:"json",
 				error:function(xhr){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(jsonObj.updateFlag){
-						alert("업데이트 실패!")
-						return;
+					if(jsonObj.cnt>0){
+						alert("전시장 수정 성공");
 					}	
-						alert("성공!");
-					
 				}
 			}); 
 			location.reload();
@@ -194,17 +191,15 @@ $(function(){
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/hallDeleteAjax.jsp",
 				type:"get",
-				data:{ "hallNum_de": $("#exNum_de").text()},
+				data:{ "hallNum": $("#exNum_de").text()},
 				error:function(xhr){
 					alert("※에러"+xhr.status);
 				},
 				datatype : "json",
 				success:function(jsonObj){
-					if(jsonObj.deleteFlag){
-						alert("삭제 실패")
-						return;
+					if(jsonObj.cnt>0){
+						alert("전시장 삭제 성공");
 					}	
-						alert("성공");
 				}
 			}); 
 			location.reload();
@@ -213,29 +208,71 @@ $(function(){
 	
 	
 	
-	//주소 찾기 (daum 주소찾기 api)
+	//전시장 추가 팝업에서 주소 찾기 (daum 주소찾기 api)
 	$("#addr1_add").click(function(){
-	   findAddr();
+		 new daum.Postcode({
+		        oncomplete: function(data) {
+		        	 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	 			$('#zipcode_add').val(data.zonecode);      // 우편번호(5자리)
+	 			$('#addr1_add').val(data.address);       // 기본주소 
+		        }
+	    }).open();
 	});
-	//주소 찾기 (daum 주소찾기 api)
-	$("#addr2_de").click(function(){
-	   findAddr();
+	
+	//전시장 상세 팝업에서 주소 찾기 (daum 주소찾기 api)
+	$("#addr1_de").click(function(){
+		 new daum.Postcode({
+		        oncomplete: function(data) {
+		        	 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+	 			$('#zipcode_de').val(data.zonecode);      // 우편번호(5자리)
+	 			$('#addr1_de').val(data.address);       // 기본주소 
+		        }
+	    }).open();
 	});
+	
+	$("#searchBtn").click(function(){
+		document.searchFrm.submit();		
+	});//click
+	
+	$.ajax({
+		
+	})
 });//ready
 
-function findAddr(){
-	 new daum.Postcode({
-	        oncomplete: function(data) {
-	        	 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
- 			$('#zipcode_add').val(data.zonecode);      // 우편번호(5자리)
- 			$('#addr1_add').val(data.address);       // 기본주소 
-	        }
-	    }).open();
+<%
+ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
+
+String option  = request.getParameter("option"); //검색 조건 
+if(option==null||"".equals(option)){  
+	option = "ex_hall_name";
 }
+String keyword  = request.getParameter("keyword");//검색 단어
+if(keyword==null||"".equals(keyword)){ 
+	keyword = "";
+}
+
+//전시장 총 개수
+int cnt = ehmDAO.getTotalRows(option, keyword);
+
+//한 페이지 출력 글 수
+int pageSize = 3;
+
+//한 페이지 정보 설정
+String pageNum = request.getParameter("pageNum"); 
+if(pageNum == null){
+	pageNum = "1";
+}
+
+//각 페이지의 첫 행 번호 // 마지막 번호
+int currentPage = Integer.parseInt(pageNum);
+int startRow = (currentPage-1)*pageSize+1; 
+int endRow = currentPage * pageSize;
+
+
+%>
 </script> 
  </head>
   <body class="sb-nav-fixed">
-   
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
@@ -274,13 +311,12 @@ function findAddr(){
                         </ol>
                         <!-- 검색 div -->
                          <div  style="width: 400px; float: right; margin-bottom: 10px">
-                            <form class="d-flex" id="searchFrm" action="http://localhost/local_prj2/main/hall2.jsp">
-		                        	 <select name = "search" class="form-select" aria-label=".form-select-sm example"  >
-										  <option value="exNum">전시장 번호 </option>
-										  <option value="exName">전시장명</option>
-										  <option value="exLoc">전시 위치</option>
+                            <form class="d-flex" id="searchFrm" action="http://localhost/exhibition_three_manager/main/hall.jsp">
+		                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"  >
+										  <option ${param.option =="ex_hall_name"? "selected":""} value="ex_hall_name">전시장명</option>
+										  <option ${param.option =="ex_loc"? "selected":""} value="ex_loc">전시 위치</option>
 									</select>
-		                        	<input type="text" class="form-control" style="margin-right: 10px">
+		                        	<input type="text" name="keyword" value="${param.keyword}" class="form-control" style="margin-right: 10px">
 		                        	<button type="button" id="searchBtn" class="btn btn-outline-dark btn-sm" style="height: 35px;">
 		                        		<i class="fa-solid fa-magnifying-glass"></i>
 		                       		</button>
@@ -300,8 +336,7 @@ function findAddr(){
                                     </thead>
                                     <tbody>
                                   	<%
-  	    						 		ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-  	                                  	List<ExHallVO> dlist = ehmDAO.selectAllExHall(0,10);
+  	                                  	List<ExHallVO> dlist = ehmDAO.selectSearchExHall(currentPage, pageSize, option, keyword);
   	                                	pageContext.setAttribute("list", dlist);
                                   	%>
                                   	<c:forEach var="exVO" items="${list}">
@@ -319,6 +354,8 @@ function findAddr(){
                            			</c:if>
                                      </tbody>
                                   </table>
+                                  <div>
+                                  </div>
                                   </form>
                                 </div>
                               	<!-- 버튼 Div -->
@@ -326,9 +363,51 @@ function findAddr(){
 						  			<input type="button" id="btnAdd" class="btn btn-dark" style="float:right;" value="전시장 추가"/>
 						  		</div>
                             </div>
-                            <!-- 페이지 이동 -->                            
+                            <!-- 페이지 이동 -->    
                             <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
+								<%
+									if(cnt>0){
+										
+										//전체 페이지 수
+										int pageCount = cnt / pageSize + (cnt%pageSize == 0 ? 0:1);
+										
+										//한 페이지에 보여질 페이지 개수
+										int pageBlock = 5; 
+										
+										//한 페이지에 보여줄 페이지 블럭 시작 번호
+										int startPage = ((currentPage-1)/pageBlock)*pageBlock+1; 
+										
+										//한 페이지에 보여줄 페이지 블럭 끝 번호 
+										int endPage = startPage + pageBlock-1; 
+										if(endPage > pageCount){
+											endPage = pageCount; 
+										}
+									
+								%>
+								<%if(startPage>pageBlock){ %>
+									<li>
+										<a  href="hall.jsp?pageNum=<%=startPage - pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">이전</a>
+									</li>
+								<%}
+								  for(int i=startPage; i<=endPage; i++){
+								  	if(i==currentPage){%>
+										<li><a style="margin-right:10px;"class="text-secondary">
+											<%=i %>
+										</a></li>
+									<%}else{%>
+										<li><a href="hall.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary">
+											<%=i %>
+										</a></li>
+								<%		}
+							  		}
+							  		
+							  		if(endPage<pageCount){%>	
+							  			<li>
+										<a  href="hall.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">다음</a>
+										</li>
+								<%	}
+						  		}%>
 							</ul>
 							</div>
                    	 </div>

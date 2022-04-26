@@ -7,30 +7,30 @@
      
 <%
 //전시장 추가
-String exName_add = request.getParameter("exName_add");
-String exLoc_add = request.getParameter("exLoc_add");
-String addr1_add = request.getParameter("addr1_add");
-String addr2_add = request.getParameter("addr2_add");
-String zipcode_add = request.getParameter("zipcode_add");
-String lat_add = request.getParameter("lat_add");
-String long_add = request.getParameter("long_add");
-String mgrName_add = request.getParameter("mgrName_add");
-String mgrTel_add = request.getParameter("mgrTel_add");
-String exTel_add = request.getParameter("exTe_add");
+String exName = request.getParameter("exName");
+String exLoc = request.getParameter("exLoc");
+String addr1 = request.getParameter("addr1");
+String addr2 = request.getParameter("addr2");
+String zipcode = request.getParameter("zipcode");
+String lat = request.getParameter("lat");
+String longi = request.getParameter("longi");
+String mgrName = request.getParameter("mgrName");
+String mgrTel = request.getParameter("mgrTel");
+String exTel = request.getParameter("exTel");
 
 //vo 넣기
 try{
 	ExHallVO ehVO = new ExHallVO();
-	ehVO.setExName(exName_add);
-	ehVO.setExLoc(exLoc_add);
-	ehVO.setAddress1(addr1_add);
-	ehVO.setAddress2(addr2_add);
-	ehVO.setZipcode(zipcode_add);
-	ehVO.setLongitude(Double.parseDouble(long_add));
-	ehVO.setLatitude(Double.parseDouble(lat_add));
-	ehVO.setMgrName(mgrName_add);
-	ehVO.setMgrTel(mgrTel_add);
-	ehVO.setExTel(exTel_add);
+	ehVO.setExName(exName);
+	ehVO.setExLoc(exLoc);
+	ehVO.setAddress1(addr1);
+	ehVO.setAddress2(addr2);
+	ehVO.setZipcode(zipcode);
+	ehVO.setLongitude(Double.parseDouble(longi));
+	ehVO.setLatitude(Double.parseDouble(lat));
+	ehVO.setMgrName(mgrName);
+	ehVO.setMgrTel(mgrTel);
+	ehVO.setExTel(exTel);
 	
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
 	ehmDAO.insertExhibitonHall(ehVO); 
