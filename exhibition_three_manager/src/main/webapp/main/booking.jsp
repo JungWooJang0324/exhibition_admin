@@ -126,7 +126,7 @@
     	var num= $("#resNum").text();
  		var rezCount=$("#rezCount").val();
 		var visitDate=$("#visitDate").val();
-		
+				
 		 $.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/bookingModifyAjax.jsp",
 			data: {"rezCount":rezCount, "visitDate":visitDate, "rezNum":num},
@@ -143,7 +143,7 @@
 					location.href="booking.jsp";
 				} else{
 					location.href="401.html";
-				}
+				} 
 			}  
 		}); //ajax
 	} //confirmModify
@@ -240,7 +240,7 @@
 							<div id="searchDiv" >
                             <div class="input-group flex-nowrap" style="width:300px;">
 								  <span class="input-group-text" id="addon-wrapping">방문날짜</span>
-					      		<input type="text" id="reservationDate" class="form-control" placeholder="방문 일자" style="width:200px">
+					      		<input type="date" id="reservationDate" class="form-control" placeholder="방문 일자" style="width:200px">
 								</div>
 								
                             <form class="d-flex" >
@@ -250,23 +250,14 @@
 											  <option value="findUserName" selected="selected">사용자 이름</option>
 											  <option value="findExName">전시 이름</option>
 											</select>
-										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px" id="findCatName">
+										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px" id="findCatName" onkeyup="">
 										  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" id="findNamesBtn">검색</button>
 									</div>
 							      </form>
                         	</div>
                         	
                         	<div class="form-check form-check-inline">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-							  <label class="form-check-label" for="inlineRadio1">전체선택</label>
-							</div>
-							<div class="form-check form-check-inline">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-							  <label class="form-check-label" for="inlineRadio2">예약완료</label>
-							</div>
-							<div class="form-check form-check-inline">
-							  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" >
-							  <label class="form-check-label" for="inlineRadio4">예약취소</label>
+							  
 							</div>
 						<div class="card-body">
                             <!-- 테이블 정의 -->
@@ -293,7 +284,7 @@
 									<td id="mainRezNum"><c:out value="${res.rezNum}"/></td>
 									<td><c:out value="${res.exName}"/></td>
 									<td><c:out value="${res.userName}"/></td>
-									<td><c:out value="${res.rezData}"/></td>
+									<td><c:out value="${res.visitData}"/></td>
 									<td id="rezStatus"><c:out value="${res.rezStatus}"/></td>
 									
 									<td>
@@ -302,8 +293,7 @@
 				        			</td>
 						  		</tr>
 						  			</c:forEach> 
-						  	 <%--<jsp:include page="bookingTbodyList.jsp"/>
-						  	  --%>
+						  	
 						  	</tbody> 
 						  </table>
 						  
@@ -375,7 +365,8 @@
 					 			<th colspan="2" class="modalTh">예약인원</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"><input id="rezCount" type="text" class="inputBox"/></td>
+					 			<td class="modalTd"><input id="rezCount" type="number" class="inputBox"/>
+					 			<span id="countWarning" style="font-size:10px; color:#ff0000;"></span></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약일자</th>
@@ -387,7 +378,8 @@
 					 			<th colspan="2" class="modalTh">방문기간</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd"><input id="visitDate" type="text" class="inputBox"/></td>
+					 			<td class="modalTd"><input id="visitDate" type="date" class="inputBox"/>
+					 			<span id="visitWarning" style="font-size:10px; color:#ff0000;"></span></td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" class="modalTh">예약가격</th>

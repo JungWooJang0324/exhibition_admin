@@ -159,7 +159,7 @@ public class ReservationManagerDAO {
 		int cnt=0;
 		try {
 			conn=dc.getConn();
-			String updateRez="UPDATE reservation SET rez_date=to_date(?,'yyyy-mm-dd'),rez_count=? WHERE rez_num=?";
+			String updateRez="UPDATE reservation SET visit_date=to_date(?,'yyyy-mm-dd'),rez_count=? WHERE rez_num=?";
 			pstmt = conn.prepareStatement(updateRez.toString());
 			pstmt.setString(1, rezDate);
 			pstmt.setInt(2, rezCount);

@@ -18,6 +18,6 @@
 	JSONObject jsonObj = new JSONObject();
 	
 	jsonObj.put("cnt", cnt);
-	
+	System.out.println(cnt);
 	out.println(jsonObj.toJSONString());
 %>
