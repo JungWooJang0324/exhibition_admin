@@ -77,71 +77,62 @@ public class BoardManagerDAO {
 	 * @return
 	 * @throws ClassNotFoundException
 	 * @throws NamingException
-	 */
-	public List<BoardVO> selectAllBoard(int start, int end) throws ClassNotFoundException, NamingException {
-		List<BoardVO> boardList = null;
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-
-		DbConnection dc = DbConnection.getInstance();
-
-		try {
-			con = dc.getConn();
-
-			StringBuilder selectBoard = new StringBuilder();
-
-			selectBoard.append(
-					"	select f.rnum, f.bd_id, f.title, f.userid, f.input_date, f.cat_name	, f.cat_num, f.admin_id					")
-					.append("	from(select rownum as rnum, e.bd_id, e.title, e.userid, e.input_date, e.cat_name, e.cat_num, e.admin_id 	")
-					.append("	from(SELECT b.bd_id, b.title, b.userid, b.input_date, cat.cat_name, b.cat_num, b.admin_id					")
-					.append("		from Board b																							")
-					.append("		inner join	category cat																				")
-					.append("		on cat.cat_num = b.cat_num 																				")
-					.append("		order by bd_id) e 																						")
-					.append("	where rownum < ?) f 																						")
-					.append("	where rnum > ?  																							")
-					.append("	order by rnum desc																							");
-
-			pstmt = con.prepareStatement(selectBoard.toString());
-			pstmt.setInt(1, end);
-			pstmt.setInt(2, start);
-
-			System.out.println(end + " / " + start);
-
-			rs = pstmt.executeQuery();
-
-			boardList = new ArrayList<BoardVO>();
-			BoardVO bVO = null;
-
-			while (rs.next()) {
-				bVO = new BoardVO();
-				bVO.setRnum(rs.getInt("rnum"));
-				bVO.setBdId(rs.getInt("bd_id"));
-				bVO.setCatNum(rs.getInt("cat_num"));
-				bVO.setTitle(rs.getString("title"));
-				bVO.setUserId(rs.getString("userid"));
-				bVO.setAdminId(rs.getString("admin_id"));
-				bVO.setInputDate(rs.getDate("input_date"));
-				bVO.setCatName(rs.getString("cat_name"));
-				boardList.add(bVO);
-			}
-
-			System.out.println("게시글 목록 select 성공");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-
-			try {
-				dc.close(rs, pstmt, con);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return boardList;
-	}// selectBoardAdmin
-
+	 *//*
+		 * public List<BoardVO> selectAllBoard(int start, int end) throws
+		 * ClassNotFoundException, NamingException { List<BoardVO> boardList = null;
+		 * Connection con = null; PreparedStatement pstmt = null; ResultSet rs = null;
+		 * 
+		 * DbConnection dc = DbConnection.getInstance();
+		 * 
+		 * try { con = dc.getConn();
+		 * 
+		 * StringBuilder selectBoard = new StringBuilder();
+		 * 
+		 * selectBoard.append(
+		 * "	select f.rnum, f.bd_id, f.title, f.userid, f.input_date, f.cat_name	, f.cat_num, f.admin_id					"
+		 * )
+		 * .append("	from(select rownum as rnum, e.bd_id, e.title, e.userid, e.input_date, e.cat_name, e.cat_num, e.admin_id 	"
+		 * )
+		 * .append("	from(SELECT b.bd_id, b.title, b.userid, b.input_date, cat.cat_name, b.cat_num, b.admin_id					"
+		 * )
+		 * .append("		from Board b																							"
+		 * )
+		 * .append("		inner join	category cat																				"
+		 * )
+		 * .append("		on cat.cat_num = b.cat_num 																				"
+		 * )
+		 * .append("		order by bd_id) e 																						"
+		 * )
+		 * .append("	where rownum < ?) f 																						"
+		 * )
+		 * .append("	where rnum > ?  																							"
+		 * )
+		 * .append("	order by rnum desc																							"
+		 * );
+		 * 
+		 * pstmt = con.prepareStatement(selectBoard.toString()); pstmt.setInt(1, end);
+		 * pstmt.setInt(2, start);
+		 * 
+		 * System.out.println(end + " / " + start);
+		 * 
+		 * rs = pstmt.executeQuery();
+		 * 
+		 * boardList = new ArrayList<BoardVO>(); BoardVO bVO = null;
+		 * 
+		 * while (rs.next()) { bVO = new BoardVO(); bVO.setRnum(rs.getInt("rnum"));
+		 * bVO.setBdId(rs.getInt("bd_id")); bVO.setCatNum(rs.getInt("cat_num"));
+		 * bVO.setTitle(rs.getString("title")); bVO.setUserId(rs.getString("userid"));
+		 * bVO.setAdminId(rs.getString("admin_id"));
+		 * bVO.setInputDate(rs.getDate("input_date"));
+		 * bVO.setCatName(rs.getString("cat_name")); boardList.add(bVO); }
+		 * 
+		 * System.out.println("게시글 목록 select 성공");
+		 * 
+		 * } catch (SQLException e) { e.printStackTrace(); } finally {
+		 * 
+		 * try { dc.close(rs, pstmt, con); } catch (SQLException e) {
+		 * e.printStackTrace(); } } return boardList; }// selectBoardAdmin
+		 */
 	/**
 	 * 검색한 값 select 함수
 	 * 
@@ -169,36 +160,22 @@ public class BoardManagerDAO {
 			StringBuilder selectBoard = new StringBuilder();
 
 			selectBoard
-					.append("	select f.rnum, f.bd_id, f.title, f.userid, f.input_date, f.cat_name					")
-					.append("	from(select rownum as rnum, e.bd_id, e.title, e.userid, e.input_date, e.cat_name 	")
-					.append("	from(SELECT b.bd_id, b.title, b.userid, b.input_date, cat.cat_name 					")
-					.append("		from Board	b																")
-					.append("		inner join	category cat														")
-					.append("		on cat.cat_num = b.cat_num 														")
-					.append("		where ").append(option).append(" like '%'||?||'%' 		")
-					.append("		order by bd_id) e ) f																")
-					.append("	where rnum > ? and rnum <= ?  order by rnum desc	");
-			
-			System.out.println(selectBoard);
-			/*
-			 * .append("	where rownum < ?) f 																"
-			 * ) .append("	where rnum > ?  and ").append(category).
-			 * append(" like '%'||?||'%'					") //
-			 * .append("	order by rnum desc																	"
-			 * );
-			 */
+					.append("	select f.rnum, f.bd_id, f.title, f.userid, f.input_date, f.cat_name, f.admin_id					")
+					.append("	from(select rownum as rnum, e.bd_id, e.title, e.userid, e.input_date, e.cat_name, e.admin_id 	")
+					.append("	from(SELECT b.bd_id, b.title, b.userid, b.input_date, b.admin_id, cat.cat_name 					")
+					.append("		from Board	b																				")
+					.append("		right outer join	category cat																	")
+					.append("		on cat.cat_num = b.cat_num 																	")
+					.append("		where ").append(option).append(" like '%'||?||'%' 											")
+					.append("		order by input_date) e where rownum <= ? ) f														")
+					.append("	where rnum > ?  order by rnum desc																");
 
-//			.append("	select * 		")
-//			.append(" 	from (select rownum as rnum, ex_hall_name, ex_loc, ex_hall_num  ")
-//			.append("		from( select *	from EXHIBITION_HALL					")
-//			.append("				where ").append(option)
-//			.append(" like '%'||?||'%' ") order by ex_hall_num	) )	")
-//			.append("	where rnum > ? and rnum <= ?  order by rnum desc	");
+			
 
 			pstmt = con.prepareStatement(selectBoard.toString());
 			pstmt.setString(1, keyword.trim());
-			pstmt.setInt(2, (pageNum - 1) * amount);
-			pstmt.setInt(3, pageNum * amount);
+			pstmt.setInt(2, pageNum * amount);
+			pstmt.setInt(3, (pageNum - 1) * amount);
 
 			rs = pstmt.executeQuery();
 
@@ -211,6 +188,7 @@ public class BoardManagerDAO {
 				bVO.setBdId(rs.getInt("BD_ID"));
 				bVO.setTitle(rs.getString("TITLE"));
 				bVO.setUserId(rs.getString("USERID"));
+				bVO.setAdminId(rs.getString("admin_id"));
 				bVO.setInputDate(rs.getDate("INPUT_DATE"));
 				bVO.setCatName(rs.getString("CAT_NAME"));
 				boardList.add(bVO);
@@ -231,7 +209,8 @@ public class BoardManagerDAO {
 		return boardList;
 	}// selectBoardAdmin
 
-	public int upadateBoard(BoardVO bVO) throws ClassNotFoundException, NamingException {
+	public boolean updateBoard(BoardVO bVO) throws ClassNotFoundException, NamingException {
+		boolean flag = false;
 		int cnt = 0;
 
 		Connection con = null;
@@ -261,8 +240,7 @@ public class BoardManagerDAO {
 
 			cnt = pstmt.executeUpdate();
 
-			System.out.println("게시글 update 성공");
-
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -273,10 +251,15 @@ public class BoardManagerDAO {
 			}
 		}
 
-		return cnt;
+		if(cnt>0) {
+			flag = true; 
+			System.out.println("게시글 update 성공");
+		}
+		return flag;
 	}// upadateExhibitonHall
 
 	public int deleteBoardAdmin(int bdId) throws ClassNotFoundException, NamingException {
+		boolean flag = false;
 		int cnt = 0;
 
 		Connection con = null;
@@ -287,7 +270,7 @@ public class BoardManagerDAO {
 		try {
 			con = dc.getConn();
 
-			String deleteBoard = "delete from Board where bd_id=?";
+			String deleteBoard = "delete from BOARD  where bd_id= ?";
 
 			pstmt = con.prepareStatement(deleteBoard);
 
@@ -296,7 +279,7 @@ public class BoardManagerDAO {
 			cnt = pstmt.executeUpdate();
 
 			System.out.println("게시글 delete 성공");
-
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -306,7 +289,9 @@ public class BoardManagerDAO {
 				e.printStackTrace();
 			}
 		}
-
+		if(cnt>0) {
+			flag = true; 
+		}
 		return cnt;
 	}// deleteBoardAdmin
 

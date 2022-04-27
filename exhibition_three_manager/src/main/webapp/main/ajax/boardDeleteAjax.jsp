@@ -9,14 +9,19 @@
 <%
 
 try{
+	//로그인 후 세션에 관리자 아이디를 받아와서
+	// 아이디가 존재하는 경우에만 삭제 작업을 진행행합니다. 
 	//전시장 삭제
 	int bdId = Integer.parseInt(request.getParameter("bdId_de")) ;
 	
+	System.out.println( "------bdId ----"+bdId );
+	
 	BoardManagerDAO bDAO = new BoardManagerDAO();
-	int cnt =bDAO.deleteBoardAdmin(bdId);; 
+	//boolean deleteFlag =bDAO.deleteBoardAdmin(30);; 
+	int deleteFlag =bDAO.deleteBoardAdmin(bdId);; 
 	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("cnt", cnt);
+	jsonObj.put("deleteFlag", deleteFlag);
 	
 }catch(NumberFormatException e){
 	e.printStackTrace();

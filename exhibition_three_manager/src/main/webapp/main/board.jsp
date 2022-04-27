@@ -2,7 +2,7 @@
 <%@page import="DAO.BoardManagerDAO"%>
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
-<%-- <%@include file="admin_id_session.jsp" %> --%>
+<%@include file="admin_id_session.jsp" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -103,12 +103,14 @@ $(function(){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(jsonObj.cnt>0){
-						alert("업데이트 성공!")
+					if(!jsonObj.updateFlag){
+						alert("업데이트 성공!");
+						location.reload();
+					}else{
+						alert("업데이트 실패!");
 					}	
 				}
 			}); 
-			location.reload();
 		});// $("#modifyOk") .click 
 	});// $("#").click
 	 
@@ -116,7 +118,7 @@ $(function(){
 });
 
 //게시글 삭제
-function deletePost(){
+function deletePost( dbId ){
 	//tr클릭 게시글 상세 팝업 막기
 	event.stopPropagation(); 
 	//삭제 확인 모달 show
@@ -124,22 +126,23 @@ function deletePost(){
 	 
 	 $("#deleteOk").click(function(){
 		$("#confirmDelete").modal('hide');
-		 
 		$.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/boardDeleteAjax.jsp",
-			type:"get",
-			data:{ "bdId_de": $("#bdId_de").text()},
+			type:"post",
+			data:{ "bdId_de": dbId },
 			error:function(xhr){
 				alert("※에러"+xhr.status);
 			},
 			datatype : "json",
 			success:function(jsonObj){
-				if(jsonObj.cnt){
-					alert("삭제 성공");
-				}	
+				if(!jsonObj.deleteFlag){
+					alert("삭제 성공!");
+					location.reload();
+				}else{
+					alert("삭제 실패!");
+				}	 
 			}
 		}); 
-			location.reload();
 	});// $("#modifyOk") .click 
 }
 <%
@@ -157,7 +160,7 @@ if(keyword==null||"".equals(keyword)){
 int cnt = bDAO.getTotalRows(option, keyword);
 
 //한 페이지 출력 글 수
-int pageSize = 3;
+int pageSize = 5;
 
 //한 페이지 정보 설정
 String pageNum = request.getParameter("pageNum"); 
@@ -169,6 +172,8 @@ if(pageNum == null){
 int currentPage = Integer.parseInt(pageNum);
 int startRow = (currentPage-1)*pageSize+1; 
 int endRow = currentPage * pageSize;
+//최신순 넘버링
+int number = cnt - ((currentPage - 1) * pageSize);
 
 %>
 </script> 
@@ -214,7 +219,7 @@ int endRow = currentPage * pageSize;
                         <div class="card-body" style="width: 400px; float: right;">
                             <form class="d-flex">
 	                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"   >
-									  <option  ${param.option =="title"? "selected":""} value="title">제목 </option>
+									  <option ${param.option =="title"? "selected":""} value="title">제목 </option>
 									  <option ${param.option =="user_id"? "selected":""} value="user_id">작성자</option>
 									  <option ${param.option =="input_date"? "selected":""} value="input_date">작성일</option>
 									  <option ${param.option =="category"? "selected":""} value="category">카테고리</option>
@@ -242,12 +247,13 @@ int endRow = currentPage * pageSize;
                                     </thead>
                                     <tbody>
                                    <%
-                                  	List<BoardVO> dList = bDAO.selectSearchBoard(startRow, pageSize, option, keyword);
+                                  	List<BoardVO> dList = bDAO.selectSearchBoard(currentPage, pageSize, option, keyword);
                                   	pageContext.setAttribute("list", dList);
                                   	%>
                                   	<c:forEach var="bVO" items="${list}">
                                          <tr class="trDetail" style="cursor:pointer">
-                                            <td><c:out value="${bVO.rnum}"/></td>
+                                            <%-- <td><c:out value="${bVO.rnum}"/></td> --%>
+                                            <td><%=number-- %></td>
                                             <td><c:out value="${bVO.title}"/></td>                                          	
                                             <td>
                                             	<c:choose>
@@ -261,7 +267,7 @@ int endRow = currentPage * pageSize;
                                            	</td>
                                             <td><c:out value="${bVO.inputDate}"/></td>
                                             <td><c:out value="${bVO.catName}"/></td>
-                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost()">삭제</button></td>
+                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost(${bVO.bdId})">삭제</button></td>
 	                                   	 	<td id="hiddenTd" style="padding: 0px;">
                                         		<input id="bdId" class="bdId" name="bdId" type="hidden" value="${bVO.bdId}"/>
                                         	</td>
@@ -304,7 +310,7 @@ int endRow = currentPage * pageSize;
 								%>
 								<%if(startPage>pageBlock){ %>
 									<li>
-										<a  href="hall.jsp?pageNum=<%=startPage - pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">이전</a>
+										<a  href="board.jsp?pageNum=<%=startPage - pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">이전</a>
 									</li>
 								<%}
 								  for(int i=startPage; i<=endPage; i++){
@@ -313,7 +319,7 @@ int endRow = currentPage * pageSize;
 											<%=i %>
 										</a></li>
 									<%}else{%>
-										<li><a href="hall.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary">
+										<li><a href="board.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary">
 											<%=i %>
 										</a></li>
 								<%		}
@@ -321,7 +327,7 @@ int endRow = currentPage * pageSize;
 							  		
 							  		if(endPage<pageCount){%>	
 							  			<li>
-										<a  href="hall.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">다음</a>
+										<a  href="board.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">다음</a>
 										</li>
 								<%	}
 						  		}%>

@@ -4,7 +4,7 @@
 <%@page import="org.apache.catalina.mbeans.UserMBean"%>
 <%@page import="java.util.List"%>
 <%@page import="VO.ExHallVO"%>
-<%-- <%@include file="admin_id_session.jsp" %>  --%>
+<%@include file="admin_id_session.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="전시장"%>
@@ -167,12 +167,12 @@ $(function(){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(jsonObj.cnt>0){
+					if(!jsonObj.updateFlag){
 						alert("전시장 수정 성공");
+						location.reload();
 					}	
 				}
 			}); 
-			location.reload();
 		});// $("#modifyOk") .click 
 	});// $("#modifyBtn").click
 	 
@@ -190,19 +190,20 @@ $(function(){
 			 
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/hallDeleteAjax.jsp",
-				type:"get",
+				type:"post",
 				data:{ "hallNum": $("#exNum_de").text()},
 				error:function(xhr){
 					alert("※에러"+xhr.status);
 				},
 				datatype : "json",
 				success:function(jsonObj){
-					if(jsonObj.cnt>0){
+					alert($("#exNum_de").text());
+					if(!jsonObj.deleteFlag){
 						alert("전시장 삭제 성공");
-					}	
+						location.reload();
+					}		
 				}
 			}); 
-			location.reload();
 		});// $("#modifyOk") .click 
 	});// $("#modifyBtn").click
 	
@@ -234,9 +235,7 @@ $(function(){
 		document.searchFrm.submit();		
 	});//click
 	
-	$.ajax({
-		
-	})
+	
 });//ready
 
 <%
@@ -255,7 +254,7 @@ if(keyword==null||"".equals(keyword)){
 int cnt = ehmDAO.getTotalRows(option, keyword);
 
 //한 페이지 출력 글 수
-int pageSize = 3;
+int pageSize = 5;
 
 //한 페이지 정보 설정
 String pageNum = request.getParameter("pageNum"); 
@@ -267,7 +266,8 @@ if(pageNum == null){
 int currentPage = Integer.parseInt(pageNum);
 int startRow = (currentPage-1)*pageSize+1; 
 int endRow = currentPage * pageSize;
-
+//최신순 넘버링
+int number = cnt - ((currentPage - 1) * pageSize);
 
 %>
 </script> 
@@ -341,7 +341,8 @@ int endRow = currentPage * pageSize;
                                   	%>
                                   	<c:forEach var="exVO" items="${list}">
                                         <tr style="cursor:pointer" class = "trDetail" >
-                                            <td><c:out value="${exVO.rnum}"/></td>
+                                            <%-- <td><c:out value="${exVO.rnum}"/></td> --%>
+                                            <td><%=number-- %></td>
                                             <td><c:out value="${exVO.exName}"/></td>                                          	
                                             <td><c:out value="${exVO.exLoc}"/></td>
                                             <td id="hiddenTd" style="padding: 0px;">

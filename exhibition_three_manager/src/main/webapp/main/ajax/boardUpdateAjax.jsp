@@ -27,13 +27,15 @@ try{
 	bVO.setBdId(bdId);
 	
 	BoardManagerDAO bDAO = new BoardManagerDAO();
-	int cnt = bDAO.upadateBoard(bVO); 
-	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("updateFlag", cnt);
+
+	boolean updateFlag = bDAO.updateBoard(bVO); 
+	jsonObj.put("updateFlag", updateFlag);
+	
 }catch(NumberFormatException e){
 	e.printStackTrace();
 } 
 
-
 %>
+out.pirnt(jsonObj.flag);
+

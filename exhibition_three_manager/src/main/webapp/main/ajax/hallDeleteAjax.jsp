@@ -2,27 +2,21 @@
 <%@page import="VO.ExHallVO"%>
 <%@page import="DAO.ExHallManagerDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"
-    trimDirectiveWhitespaces="true"%>
-     
-<%
+	pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 
-try{
+<%
+try {
 	//전시장 삭제
-	String hallNum = request.getParameter("hallNum");
+	int hallNum = Integer.parseInt(request.getParameter("hallNum")) ;
 	
+	int cnt = 20;
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-	int cnt = ehmDAO.deleteExhibitonHall(Integer.parseInt(hallNum)); 
-	
+	boolean deleteFlag = ehmDAO.deleteExhibitonHall(hallNum);
+
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("cnt", cnt);
+	jsonObj.put("deleteFlag", deleteFlag);
 	
-}catch(NumberFormatException e){
+} catch (NumberFormatException e) {
 	e.printStackTrace();
 }
-
-
-
-
-
 %>

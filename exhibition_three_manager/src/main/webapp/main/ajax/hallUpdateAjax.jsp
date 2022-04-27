@@ -35,10 +35,10 @@ try{
 	ehVO.setExTel(exTel);
 	
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-	int cnt = ehmDAO.upadateExhibitonHall(ehVO); 
+	boolean updateFlag = ehmDAO.updateExhibitonHall(ehVO); 
 	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("cnt", cnt);
+	jsonObj.put("upadateFlag", updateFlag);
 }catch(NumberFormatException e){
 	e.printStackTrace();
 } 

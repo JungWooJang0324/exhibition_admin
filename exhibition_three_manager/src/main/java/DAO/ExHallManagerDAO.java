@@ -156,14 +156,13 @@ public class ExHallManagerDAO {
 				.append(" 	from (select rownum as rnum, ex_hall_name, ex_loc, ex_hall_num  ")
 				.append("		from( select *	from EXHIBITION_HALL					")
 				.append("				where ").append(option)
-				.append(" like '%'||?||'%' order by ex_hall_num	) )	")
-				.append("	where rnum > ? and rnum <= ?  order by rnum desc	");
+				.append(" 	like '%'||?||'%' order by ex_hall_num	) where rownum <=? )	")
+				.append("	where rnum > ?  order by rnum desc	");
 
-			System.out.println(selectExHall);
 			pstmt = con.prepareStatement(selectExHall.toString());
 			pstmt.setString(1, keyword.trim());
-			pstmt.setInt(2, (pageNum - 1) * amount);
-			pstmt.setInt(3, pageNum * amount);
+			pstmt.setInt(2, pageNum * amount);
+			pstmt.setInt(3, (pageNum - 1) * amount);
 
 			rs = pstmt.executeQuery();
 
@@ -234,7 +233,8 @@ public class ExHallManagerDAO {
 
 	}// insertExhibitonHall
 
-	public int upadateExhibitonHall(ExHallVO ehVO) throws ClassNotFoundException, NamingException {
+	public boolean updateExhibitonHall(ExHallVO ehVO) throws ClassNotFoundException, NamingException {
+		boolean flag=false;
 		int cnt = 0;
 
 		Connection con = null;
@@ -278,11 +278,15 @@ public class ExHallManagerDAO {
 				e.printStackTrace();
 			}
 		}
-
-		return cnt;
+		
+		if(cnt>0) {
+			flag=true;
+		}
+		return flag;
 	}// upadateExhibitonHall
 
-	public int deleteExhibitonHall(int hallNum) throws ClassNotFoundException, NamingException {
+	public boolean deleteExhibitonHall(int hallNum) throws ClassNotFoundException, NamingException {
+		boolean flag=false;
 		int cnt = 0;
 
 		Connection con = null;
@@ -313,7 +317,12 @@ public class ExHallManagerDAO {
 			}
 		}
 
-		return cnt;
+		if(cnt>0) {
+			flag=true;
+			System.out.println(cnt);
+			System.out.println(flag);
+		}
+		return flag;
 
 	}// deleteExhibitonHall
 
