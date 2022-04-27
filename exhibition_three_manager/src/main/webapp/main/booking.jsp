@@ -190,7 +190,7 @@
 	
 	List<ReservationManagerVO> rezList = null;
 	if(cnt>0){
-		rezList= rmDao.selectReservation(startRow, pageSize, nameSel, vDate, findCatName);
+		rezList= rmDao.selectReservation(startRow, endRow, nameSel, vDate, findCatName);
 		pageContext.setAttribute("rezList", rezList);
 	%>
 	
