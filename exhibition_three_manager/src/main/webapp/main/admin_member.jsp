@@ -275,7 +275,7 @@
 									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
 										%>  
 									<li>
-					<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
+								<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 									이전
 									</a>
 									</li> <% 

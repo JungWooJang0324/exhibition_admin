@@ -45,43 +45,8 @@
     var errorPage=["404","500","401"];
     $( function() {	
     $("#findNamesBtn").click(function() {
-    	var nameSelection= $("#nameSelection option:selected").val();
-    	//예약날짜 검색 내역
-    	var reservationDate = $("#reservationDate").val();
-    	//사용자 이름 검색 내역
-		var findCatName=$("#findCatName").val();
-   		$.ajax({
-   			url:"http://localhost/exhibition_three_manager/main/ajax/bookingFindAjax.jsp",
-   			data: {"nameSel":nameSelection, "rezDate":reservationDate, "findCatName":findCatName},
-   			async:false,
-   			type: "get",
-   			dataType:"json",
-   			error:function(xhr){
-   				alert("bookingFind:"+xhr.status+", "+xhr.statusText);
-   				//location.href="401.html";
-   			},
-   			success:function(jsonObj){
-				var output="";
-				
-				if(!jsonObj.dateFlag){
-					output+= "조회결과 없음";
-				}
-				else{
-					$.each(jsonObj.list, function(i, jsonObj) {
-						output+="<tr style='cursor:pointer' data-bs-toggle='modal' data-bs-target='#bookingDetail' data-num='"+jsonObj.rezNum+"' class='rezList'>";
-						output+= "<td id='mainRezNum'>"+jsonObj.rezNum+"</td>";
-						output+= "<td>"+jsonObj.exName+"</td>";
-						output+= "<td>"+jsonObj.userName+"</td>";
-						output+= "<td>"+jsonObj.visitDate+"</td>";
-						output+= "<td id='rezStatus'>"+jsonObj.rezStatus+"</td></tr>";
-					});
-				}
-			
-				$("#bookingTBody").html(output);
-				$("#reservationDate").val("");
-				$("#findCatName").val("");
-   			}
-   		});//ajax
+    	document.dataSearchFrm.submit();
+
 	});//findNamesBtn
     	
     	
@@ -115,15 +80,6 @@
   
 });  //ready;
 
-		
-    $( "#reservationDate" ).datepicker({
-		  dateFormat: "yy-mm-dd",
-		  dayNames: [ "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" ],
-		  dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-		  monthNamesShort: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" ],
-		  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
-		});
-   
     function confirmModify() {
     	var num= $("#resNum").text();
  		var rezCount=$("#rezCount").val();
@@ -197,8 +153,48 @@
 	
     </script>
     </head>
-    
-    <body class="sb-nav-fixed">
+    <%
+	ReservationManagerDAO rmDao = new ReservationManagerDAO();
+	int cnt = rmDao.cntRez();
+		
+	int pageSize=5;
+	String pageNum=request.getParameter("pageNum");
+	if(pageNum==null){
+		pageNum="1";
+	}
+	//검색항목 설정
+		String nameSel=request.getParameter("nameSelection");
+	  	if("".equals(nameSel) || nameSel==null){
+	 		nameSel="name";
+	 	}
+	 	
+	 	if(nameSel.equals("findExName")){
+	 		nameSel="ex_name";
+	 	}else{
+	 		nameSel="name";
+	 	} 
+	 	
+	 	//검색어 설정
+	 	String vDate= request.getParameter("vDate");
+	 	if(vDate==null || "".equals(vDate)){
+	 		vDate="";
+	 	}
+	 	String findCatName= request.getParameter("findCatName");
+	 	if(findCatName==null || "".equals(findCatName)){
+	 		findCatName="";
+	 	} 
+	 	
+	int currentPage= Integer.parseInt(pageNum);
+	int startRow=(currentPage-1)*pageSize+1;
+	int endRow=currentPage * pageSize;	
+	
+	List<ReservationManagerVO> rezList = null;
+	if(cnt>0){
+		rezList= rmDao.selectReservation(startRow, pageSize, nameSel, vDate, findCatName);
+		pageContext.setAttribute("rezList", rezList);
+	%>
+	
+     <body class="sb-nav-fixed">
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
@@ -240,21 +236,21 @@
                         </ol>
                         <!-- 검색창 -->
 							<div id="searchDiv" >
-                            <div class="input-group flex-nowrap" style="width:300px;">
-								  <span class="input-group-text" id="addon-wrapping">방문날짜</span>
-					      		<input type="date" id="reservationDate" class="form-control" placeholder="방문 일자" style="width:200px">
-								</div>
 								
-                            <form class="d-flex" >
-			                         <div class="input-group mb-3" style="width:500px;margin-top:10px;">
-								  		<span class="input-group-text" id="addon-wrapping">항목검색</span>
-											 <select class="form-select" aria-label=".form-select-sm example" id="nameSelection">
-											  <option value="findUserName" selected="selected">사용자 이름</option>
-											  <option value="findExName">전시 이름</option>
-											</select>
-										  <input type="text" class="form-control" aria-label="회원 검색" style="width:100px" id="findCatName" onkeyup="">
-										  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" id="findNamesBtn">검색</button>
-									</div>
+                            <form class="d-flex" action="http://localhost/exhibition_three_manager/main/booking.jsp" name="dataSearchFrm">
+                            	<div class="input-group mb-3" style="width:300px; height:40px; margin-top:10px;" >
+								  <span class="input-group-text" id="addon-wrapping">방문날짜</span>
+					      		  <input type="date" name="vDate" class="form-control" placeholder="방문 일자" style="width:200px;" id="vDate" value="${param.vDate}">
+								</div>
+	                         <div class="input-group mb-3" style="width:500px;margin-top:10px; margin-left: 100px;">
+						  		<span class="input-group-text" id="addon-wrapping">항목검색</span>
+									 <select class="form-select" aria-label=".form-select-sm example" name="nameSelection" id="nameSel">
+									  <option value="findUserName" ${(param.nameSelection =="findUserName")?"selected":"" } >사용자 이름</option>
+									  <option value="findExName" ${(param.nameSelection =="findExName")?"selected":""} >전시 이름</option>
+									</select>
+								  <input type="text" class="form-control" style="width:100px" name="findCatName" id="findCatName" value="${param.findCatName}">
+								  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" id="findNamesBtn">검색</button>
+								</div>
 							      </form>
                         	</div>
                         	
@@ -275,12 +271,7 @@
                                    </tr>
 						  	</thead> 
 						  	<tbody id="bookingTBody"> 
-								 <%
-									ReservationManagerDAO rDAO = new ReservationManagerDAO();
-									List<ReservationManagerVO> rezList = rDAO.selectReservation();
-										
-									pageContext.setAttribute("rezList", rezList);
-									%>
+								 
 									<c:forEach var="res" items="${rezList}">
 						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}"  class="rezList">
 									<td id="mainRezNum"><c:out value="${res.rezNum}"/></td>
@@ -295,18 +286,68 @@
 				        			</td>
 						  		</tr>
 						  			</c:forEach> 
-						  	
 						  	</tbody> 
+						  	<%}%>
 						  </table>
 						  
                             </div>
                                <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary page-item" href="">이전</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">1</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">2</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">3</a></li> 
-									<li ><a style="margin-right:5px;text-decoration:none;"class="text-secondary" href="">다음</a></li> 
+								<%
+								if(cnt > 0){
+									int pageCount = cnt/pageSize + (cnt%pageSize == 0 ? 0 : 1); //레코드 수에 따른 페이지 수 구하기
+									int pageBlock=5; // 한번에 보여질 페이지 번호의 갯수
+									int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;//첫페이지 번호
+									
+									int endPage = startPage + pageBlock - 1;//마지막 페이지 번호
+
+									if(endPage > pageCount){
+										endPage = pageCount;
+									}
+									
+									pageContext.setAttribute("currentPage", currentPage);
+									pageContext.setAttribute("endPage", endPage);
+									pageContext.setAttribute("startPage", startPage);
+									pageContext.setAttribute("pageBlock", pageBlock);
+									pageContext.setAttribute("pageCount", pageCount);
+
+										%>  
+									
+									<c:if test="${startPage gt pageBlock}">
+									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="booking.jsp?pageNum=<%=startPage-5%>&vDate=${param.vDate}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
+									이전
+									</a>
+									</c:if>
+									
+									<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1">
+										<c:if test="${i eq currentPage}">
+											<li>
+											<a style="margin-right:10px;"class="text-secondary" href="">
+											<c:out value="${i}"/>
+											</a>
+											</li> 
+										</c:if>
+										<c:if test="${i ne currentPage}">
+											<li>
+											<a style="margin-right:10px;"class="text-secondary" href="booking.jsp?pageNum=${i}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
+											<c:out value="${i}"/>
+											</a>
+											</li> 
+										</c:if>
+										
+									</c:forEach>
+									
+									
+									<c:if test="${endPage lt pageCount}">
+									<li>
+										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="booking.jsp?pageNum=${startPage+5}pageNum=${i}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
+										다음
+										</a>
+										</li> 
+								</c:if>
+							<%	}//end if
+								%>
+								
 								</ul> 
 							</div>
                         </div>

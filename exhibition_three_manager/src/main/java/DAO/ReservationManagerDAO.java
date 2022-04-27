@@ -16,8 +16,7 @@ import VO.ReservationManagerVO;
 import connection.DbConnection;
 
 public class ReservationManagerDAO {
-	//메인 ReservationList
-	public List<ReservationManagerVO> selectReservation() throws SQLException, ClassNotFoundException, NamingException{
+	public List<ReservationManagerVO> selectReservation(int startRow, int pageSize,String nameSel,String vDate, String findCatName) throws SQLException, ClassNotFoundException, NamingException{
 		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -28,10 +27,24 @@ public class ReservationManagerDAO {
 			con=dc.getConn();
 			StringBuilder selectQuery = new StringBuilder();			
 			selectQuery
-			.append("	select rez_num,ex.ex_name,m.name, visit_date, rez_status 	")
+			.append("select rez_num, ex_name, name, visit_date, rez_status from ")
+			.append("(select rownum as rnm, rez_num, ex_name, name, visit_date, rez_status")
+			.append("	from(select rez.rez_num,ex.ex_name,m.name, rez.visit_date, rez.rez_status 	")
 			.append("	from reservation rez,member m,exhibition ex	")
-			.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num	");
+			.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num ")
+			.append("	order by rez.rez_num desc)")
+			.append(" 	where ").append(nameSel)
+			.append("	like '%'||?||'%' and to_char(visit_date, 'yyyy-MM-dd') like '%'||?||'%')")
+			.append("	where rnm between ? and ?");
+			
 			pstmt = con.prepareStatement(selectQuery.toString());
+			
+			
+			pstmt.setString(1, findCatName.trim());
+			pstmt.setString(2, vDate.trim());
+			pstmt.setInt(3, startRow); 
+			pstmt.setInt(4, pageSize);
+			 
 			rs = pstmt.executeQuery();
 			ReservationManagerVO rVO = null;
 			while(rs.next()) {
@@ -48,63 +61,35 @@ public class ReservationManagerDAO {
 			dc.close(rs, pstmt, con);
 			
 		}
-		
 		return list;
 		
+		
 	}//selectReservation
-	
-	//검색후 변경될 List
-	public List<ReservationManagerVO> selectReservation2(String nameSel, String rezDate, String findCatName) throws SQLException, ClassNotFoundException, NamingException{
-		List<ReservationManagerVO> list = new ArrayList<ReservationManagerVO>();
+	//페이징 전체 수 계산
+	public int cntRez() throws SQLException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
 		ResultSet rs = null;
-		
-		try{
+		int cnt=0;
+		try {
 			con=dc.getConn();
-			StringBuilder selectQuery = new StringBuilder();
-			if(nameSel.equals("findExName")) {
-				selectQuery.append(" select rez_num, ex_name, name, visit_date, rez_status	")
-				.append("from (select rez.rez_num,ex.ex_name,m.name, rez.visit_date, rez_status		")
-				.append("	from reservation rez,member m,exhibition ex		")
-				.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num)	")
-				.append("	where to_char(visit_date, 'yyyy-MM-dd') like '%'||?||'%' and ex_name like'%'||?||'%'");
 			
-			}else{
-				selectQuery.append(" select rez_num, ex_name, name, visit_date, rez_status	")
-				.append("from (select rez.rez_num,ex.ex_name,m.name, rez.visit_date, rez_status		")
-				.append("	from reservation rez,member m,exhibition ex		")
-				.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num)	")
-				.append("	where to_char(visit_date, 'yyyy-MM-dd') like '%'||?||'%' and name like'%'||?||'%'");
-			}
+			String sql= "SELECT * FROM reservation";
+			pstmt=con.prepareStatement(sql);
+			rs=pstmt.executeQuery();
 			
-			pstmt = con.prepareStatement(selectQuery.toString());
-			pstmt.setString(1, rezDate);
-			pstmt.setString(2, findCatName);
-
-			rs = pstmt.executeQuery();
-			ReservationManagerVO rVO = null;
 			while(rs.next()) {
-				rVO = new ReservationManagerVO();
-				rVO.setRezNum(rs.getInt("rez_num"));
-				rVO.setExName(rs.getString("ex_name"));
-				rVO.setUserName(rs.getString("name"));
-				rVO.setVisitData(rs.getDate("visit_date"));
-				rVO.setRezStatus(rs.getString("rez_status"));
-				list.add(rVO);
-			}//end while
+				cnt++;
+			}
 			
 		}finally {
 			dc.close(rs, pstmt, con);
-			
 		}
 		
-		return list;
+		return cnt;
 		
-	}//selectReservation2
-	
-	
+	}
 	
 	public ReservationManagerVO selectOneReservation(int rezNum) throws SQLException, ClassNotFoundException, NamingException{
 		ReservationManagerVO rVO=null;
