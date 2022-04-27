@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,24 +100,53 @@ public class AdminExhibitionDAO {
 		
 		return count;
 	}//getCount
-	public int deleteEx(String exNum) throws SQLException{
+	
+	
+	public int deleteEx(String exNum) throws SQLException, ParseException {
+		Connection conn=null;
+		PreparedStatement pstmt=null;
+		DbConnection dc=DbConnection.getInstance();
+		int cnt=0;
+		try {
+			conn=dc.getConn();
+			String updateRez="UPDATE EXHIBITION SET EX_STATUS='f' WHERE EX_NUM=?";
+			pstmt = conn.prepareStatement(updateRez.toString());
+			
+			pstmt.setString(1, exNum);
+			cnt=pstmt.executeUpdate();
+		}finally {
+			dc.close(null, pstmt, conn);
+		}
+		
+		return cnt;
+	}
+	public int updateEx(ExhibitionVO eVO) throws SQLException{
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
-		int cnt=0;
+		int cnt = 0;
 		try {
 			con = dc.getConn();
-			String delete = "	UPDATE EXHIBITION SET EX_STATUS='f' WHERE EX_NUM=?	";
-			pstmt = con.prepareStatement(delete);
-			pstmt.setString(1, exNum);
-			cnt =pstmt.executeUpdate();
+			String updateQuery = "UPDATE EXHIBITION SET ex_name=?,ex_info=?,ex_intro=?, ex_hall_num=?, exhibit_date=?, deadline=?, total_count=?, watch_count=? where ex_num=? ";
+			pstmt = con.prepareStatement(updateQuery);
+			pstmt.setString(1, eVO.getExName());
+			pstmt.setString(2, eVO.getExInfo());
+			pstmt.setString(3, eVO.getExIntro());
+			pstmt.setInt(4, eVO.getExHallNum());
+			pstmt.setString(5, eVO.getExhibitDateText());
+			pstmt.setString(6, eVO.getDeadLineText());
+			pstmt.setInt(7, eVO.getTotalCount());
+			pstmt.setInt(8, eVO.getWatchCount());
+			pstmt.setInt(9, eVO.getExNum());
 			
-		}finally{
+			cnt = pstmt.executeUpdate();
+			
+		}finally {
 			dc.close(null, pstmt, con);
-		}
+		}//end finally
 		return cnt;
-	}
-	
+		
+	}//updateEx
 	public int releaseEx(String exNum) throws SQLException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -125,7 +155,7 @@ public class AdminExhibitionDAO {
 		
 		try {
 			con = dc.getConn();
-			String releaseQuery = " UPDATE EXHIBITION SET EX_STATUS='t' WHERE EX_NUM= ? ";
+			String releaseQuery = " UPDATE EXHIBITION SET EX_STATUS='p' WHERE EX_NUM= ? ";
 			pstmt= con.prepareStatement(releaseQuery);
 			pstmt.setString(1, exNum);
 			
@@ -177,7 +207,7 @@ public class AdminExhibitionDAO {
 				eVO.setAddImg(rs.getString("add_img"));
 				eVO.setTeen(rs.getInt("teen"));
 				eVO.setChild(rs.getInt("child"));
-				eVO.setMgrName(rs.getString("mgr_name"));
+				eVO.setExHallNum(rs.getInt("ex_hall_num"));
 				
 			}//end if
 			
@@ -202,7 +232,7 @@ public class AdminExhibitionDAO {
 //			.append(" 	ex_intro,exhibition_poster, add_img,exhibit_date,deadline)		")	
 //			.append(" 	VALUES(13,?,?,?,?,?,?,?,?,?,?);		");	
 			String insertQuery =
-		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster, add_img,exhibit_date,deadline) VALUES(16,?,?,?,?,?,?,?,?,?,?)";
+		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster,add_img,exhibit_date,deadline) VALUES(20,?,?,?,?,?,?,?,?,?,?)";
 			
 			pstmt = con.prepareStatement(insertQuery);
 			

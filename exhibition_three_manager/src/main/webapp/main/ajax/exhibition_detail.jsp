@@ -20,9 +20,9 @@ jsonObj.put("addImg",eVO.getAddImg());
 jsonObj.put("adult",eVO.getAdult());
 jsonObj.put("teen",eVO.getTeen());
 jsonObj.put("child",eVO.getChild());
-jsonObj.put("mgrName",eVO.getMgrName());
 jsonObj.put("exhibitDate",eVO.getExhibitDateText());
 jsonObj.put("deadline",eVO.getDeadLineText());
+jsonObj.put("exHallNum",eVO.getExHallNum());
 
 /* jsonObj.put("exhibitDate",eVO.getExhibitionDate());
 jsonObj.put("deadline",eVO.getDeadLine());  */

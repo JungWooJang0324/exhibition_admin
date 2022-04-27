@@ -29,66 +29,22 @@
  		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
      	<style>
 	     	hr {width:200px; margin: 0px auto; margin-top:10px;}
         </style>
 	<script type="text/javascript">
-	$(function(){
-		/* $("#searchBtn").click(function(){
-			document.dataSearchFrm.submit();
-		}); */
-		$("#modifyModal").on('show.bs.modal', function(e) {
-			var exNum = $(e.relatedTarget).data('num');
-			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_detail.jsp",
-				data:{"exNum": exNum},
-				dataType:"json",
-				error : function(xhr){
-					alert(xhr.status+" / "+xhr.statusText);
-				},
-				success : function(jsonObj){
-					$("#exNum").text(exNum);
-				 	$("#startDate"). val(jsonObj.exhibitDate);
-					$("#endDate").val(jsonObj.deadline); 
-					$("#exPoster").text(jsonObj.exPoster); 
-					$("#exIntro").val(jsonObj.exIntro);
-					$("#exName").val(jsonObj.exName);
-					$("#addImg").text(jsonObj.addImg);
-					$("#exInfo").val(jsonObj.exInfo);
-					$("#totalCount").val(jsonObj.totalCount);
-					$("#watchCount").val(jsonObj.watchCount); 
-					$("#adult").val(jsonObj.adult); 
-					$("#teen").val(jsonObj.teen); 
-					$("#child").val(jsonObj.child); 
-					$("#mgrName").val(jsonObj.mgrName); 
-				} })//ajax;
-		});
-		$("#statusBtn").click(function(){
-			$("#confirmRelease").modal('show');
-		});//click
-		$("#deleteBtn").click(function(){
-			$("#confirmDelete").modal('show');
-		});//click
-		$("#modifyBtn").click(function(){
-			$("#confirmModify").modal('show');
-		})//click
-	  })//ready;
+	
 		function releaseExhibition(){
 			var exNum = $("#exNum").text();
-			$("#confirmRelease").modal('hide');
-			$("#modifyModal").modal('hide');
+			
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_release.jsp",
 				data:{"exNum":exNum},
-				type:"get",
+				type:"post",
 				dataType:"json",
-				async:"false",
+				async:false,
 				error:function(xhr){
 					alert(xhr.status+" / "+xhr.statusText);
 				},//error
@@ -100,49 +56,32 @@
 					}				
 				}//success
 			}) 
+			$("#confirmRelease").modal('hide');
+			$("#modifyModal").modal('hide');
 		}//releaseExhibition
+		
 		function deleteExhibition(){
-			var exNum = $("#exNum").text();
-			$("#confirmDelete").modal('hide');
-			$("#modifyModal").modal('hide');
-			alert(exNum);
-			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_delete.jsp",
-				data:{"exNum":exNum},
-				type:"post",
-				dataType:"json",
-				error:function(request,status,error){
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				},//error
-				success:function(jsonObj){
-					alert(jsonObj);
-					if(jsonObj.cnt > 0){
-						alert("삭제가 완료 되었습니다.");
-					}else{
-						alert("실패확인용");
-					}				
-				}//success
-			});//ajax 
-			
-		}
-		function updateExhibition(){
-			$("#confirmModify").modal('hide');
-			$("#modifyModal").modal('hide');
-			$("#exNum").text();
-		 	/* $("#startDate"). val(jsonObj.exhibitDate);
-			$("#endDate").val(jsonObj.deadline);  
-			$("#exPoster").text(jsonObj.exPoster);*/ 
-			//$("#addImg").text(jsonObj.addImg);
-			let exIntro = $("#exIntro").val();
-			let exName = $("#exName").val();
-			let exInfo = $("#exInfo").val();
-			$("#totalCount").val();
-			$("#watchCount").val(); 
-			$("#adult").val(); 
-			$("#teen").val(); 
-			$("#child").val(); 
-			$("#mgrName").val(); 
-		}
+			var num= $("#exNum").text();
+			alert(num);
+			 $.ajax({
+					url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_delete.jsp",
+					data: {"exNum":num},
+					type: "post",
+					dataType:"json",
+					async:false,
+					error:function(xhr){
+						alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
+					//	location.href="401.html";
+					},
+					success:function(jsonObj){
+						if(jsonObj.cnt > 0){
+							alert("전시가 취소되었습니다.")
+							location.reload();
+						}
+					}  
+				}); //ajax
+		}//deleteExhibition
+		
 		function compareExt(file){
 			var compareExt="png,jpg,gif,bmp".split(",");
 			var fileExt = file.toLowerCase().substring(file.lastIndexOf(".")+1);
@@ -163,24 +102,66 @@
 					return;
 			}//end if	
 		}
+		function updateExhibition(){
+			var exNum = $("#exNum").text();
+			var exName = $("#exName").val(),exHall = $("#exHall").val();
+			var startDate = $("#startDate").val(),endDate = $("#endDate").val();
+			var intro = $("#exIntro").val(),info =$("#exInfo").val();
+			var totalNum = $("#totalCount").val(),watchNum = $("#watchCount").val();
+				
+			var title =["이름","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원"];
+			var value=[exName,startDate,endDate,intro,info,totalNum,watchNum];
+			for(var i = 0; i < title.length; i++){
+				if(value[i]==""){
+					alert(title+"을 입력해 주세요");
+				}//end if
+			}//end for
+			$.ajax({
+				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp",
+				data:{
+					"exNum" : exNum,
+					"exName":exName,
+					"exHall" :exHall,
+					"startDate":startDate,
+					"endDate":endDate,
+					"intro":intro,
+					"info":info,
+					"totalNum":totalNum,
+					"watchNum":watchNum
+				},
+				async:false,
+				dataType:"json",
+				error:function(xhr){
+					alert(xhr.status+"/"+xhr.statusText);
+				},//error
+				success:function(jsonObj){
+					if(jsonObj.cnt>0){
+						alert("성공")
+					}
+				}//success
+				
+				
+			})
+			
+		}
+		
 		function addExhibition(){
-			var inputPoster = $("#addExPoster").val();
-			compareExt(inputPoster);// 포스터 유효성
-			var posterPath = "C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/poster/"+inputPoster.substring(inputPoster.lastIndexOf("\\")+1);
+		
+			var poster = $("#addExPoster").val();
+			compareExt(poster);// 포스터 유효성
 			var addImg = $("#addAddImg").val();
 			compareExt(addImg);//추가이미지 유효성
-			var addImgPath = "C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/add img/"+addImg.substring(addImg.lastIndexOf("\\")+1);
 			var exName = $("#addExName").val(),exHall = $("#addExHall").val();
 			var startDate = $("#addStartDate").val(),endDate = $("#addEndDate").val();
 			var intro = $("#addIntro").val(),info =$("#addInfo").val();
 			var totalNum = $("#addTotalNum").val(),watchNum = $("#addWatchNum").val();
 		
-			//alert(posterPath+"\n"+exName+"\n"+exHall+"\n"+startDate+"\n"+endDate+"\n"+intro+"\n"+info+"\n"+totalNum+"\n"+watchNum+"\n"+addImgPath);
+			alert(poster+"\n"+exName+"\n"+exHall+"\n"+startDate+"\n"+endDate+"\n"+intro+"\n"+info+"\n"+totalNum+"\n"+watchNum+"\n"+addImg);
 			
 			 $.ajax({
 				url : "http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp",
 				data:{
-					"poster":posterPath,
+					"poster":poster,
 					"exName":exName,
 					"exHall":exHall,
 					"startDate":startDate,
@@ -189,23 +170,65 @@
 					"info":info,
 					"totalCount":totalNum,
 					"watchCount":watchNum,
-					"addImg" : addImgPath
+					"addImg" : addImg 
 				},
 				dataType:"json",
+				async:false,
 				error:function(request,status,error){
 					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 				},//error
 				success:function(jsonObj){
 					if(jsonObj.cnt==1){
 						alert("성공");
+						location.reload();
 					}else{
 						alert("실패");
 					}
-				}
-			})
-			 
+				}//success
+			});//ajax
+		};//click
 			
-		}
+		$(function(){
+			 $("#searchBtn").click(function(){
+				document.dataSearchFrm.submit();
+			}); 
+		
+			$("#modifyModal").on('show.bs.modal', function(e) {
+				var exNum = $(e.relatedTarget).data('num');
+				$.ajax({
+					url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_detail.jsp",
+					data:{"exNum": exNum},
+					dataType:"json",
+					error : function(xhr){
+						alert(xhr.status+" / "+xhr.statusText);
+					},
+					success : function(jsonObj){
+						$("#exNum").text(exNum);
+					 	$("#startDate"). val(jsonObj.exhibitDate);
+						$("#endDate").val(jsonObj.deadline); 
+						$("#exPoster").text(jsonObj.exPoster); 
+						$("#exIntro").val(jsonObj.exIntro);
+						$("#exName").val(jsonObj.exName);
+						$("#addImg").text(jsonObj.addImg);
+						$("#exInfo").val(jsonObj.exInfo);
+						$("#totalCount").val(jsonObj.totalCount);
+						$("#watchCount").val(jsonObj.watchCount); 
+						$("#adult").val(jsonObj.adult); 
+						$("#teen").val(jsonObj.teen); 
+						$("#child").val(jsonObj.child); 
+						$("#exHall").val(jsonObj.exHallNum);
+					} })//ajax;
+			});
+			$("#statusBtn").click(function(){
+				$("#confirmRelease").modal('show');
+			});//click
+			$("#deleteBtn").click(function(){
+				$("#confirmDelete").modal('show');
+			});//click
+			$("#modifyBtn").click(function(){
+				$("#confirmModify").modal('show');
+			})//click
+		  })//ready;
 	</script>  
     </head>
         <%
@@ -414,7 +437,7 @@
                     </div>
                 </footer>
                  <!-- 전시 추가 modal  -->
-	                <div class="modal fade" tabindex="-1" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" aria-labelledby="exampleModalToggleLabel2">
+	                <div class="modal fade" tabindex="-1" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false">
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -422,7 +445,7 @@
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					      <form action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" id="addFrm">
+					      <!-- <form action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" id="addFrm"> --> 
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
 								  <input type="email" class="form-control" id="addExName" name="exName" placeholder="전시명"  style="width:200px">
@@ -430,7 +453,7 @@
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시장 / 담당자</label>
 							      	<select class="form-select" id="addExHall"aria-label=".form-select-sm example" style="width:400px">
-									  <option selected>전시장과 담당자를 선택해주세요</option>
+									  <option selected>전시장 / 담당자를 선택해주세요</option>
 									  <%
 									  	try{
 									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
@@ -514,7 +537,7 @@
 								</div>
 							</div>
 							</div>
-					      </form>
+					     <!--  </form> -->
 					      </div>
 					      <!-- modal body end -->
 					      <div class="modal-footer">
@@ -552,11 +575,19 @@
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시장</label>
-							      	<select class="form-select" aria-label=".form-select-sm example" style="width:300px">
-									  <option selected>서울현대미술관</option>
-									  <option value="1">One</option>
-									  <option value="2">Two</option>
-									  <option value="3">Three</option>
+							      	 	<select class="form-select" id="exHall"aria-label=".form-select-sm example" style="width:400px">
+									  <%
+									  	try{
+									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
+									  	for(ExHallVO eVO : exNameList){
+									  %>
+									   <option value='<%=eVO.getExHallNum()%>'><%=eVO.getExName()%> / 담당자 : <%=eVO.getMgrName() %></option>
+									   <%
+									  	}//end for
+									  	}catch(SQLException e){
+									  		e.printStackTrace();
+									  	}
+									   %>
 									</select>
 								</div>
 					      	<div class="mb-3">
@@ -603,10 +634,6 @@
 								<input type="text" class="form-control" id="watchCount" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
-						    <div class="mb-3">
-								<label for="exampleFormControlTextarea1" class="form-label">담당자 이름</label>
-								<input type="text" class="form-control" id="mgrName" placeholder="김전시"  style="width:100px">
-							</div>
 							
 							<div class="row">
 							<label class="form-label">전시 가격</label>
@@ -692,7 +719,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary" onclick="addExhibition()">Ok</button>
+				        <button type="button" class="btn btn-primary" id="addExhibitionOk" onclick="addExhibition()">Ok</button>
 				      </div>
 				    </div>
 				  </div>

@@ -5,11 +5,14 @@
     trimDirectiveWhitespaces="true"
     %>
 <%
-String exNum = request.getParameter("exNum");
-JSONObject jsonObj = new JSONObject();
-AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
-int cnt = aeDAO.deleteEx(exNum);
-jsonObj.put("cnt", cnt);
-out.print(jsonObj.toJSONString());
+String rezNum=request.getParameter("exNum");
+System.out.println(rezNum);
+AdminExhibitionDAO aDAO=new AdminExhibitionDAO();
+int cnt=aDAO.deleteEx(rezNum);
 
+JSONObject jsonObj = new JSONObject();
+
+jsonObj.put("cnt", cnt);
+
+out.println(jsonObj.toJSONString());
 %>
