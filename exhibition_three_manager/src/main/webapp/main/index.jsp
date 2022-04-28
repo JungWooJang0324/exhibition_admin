@@ -81,7 +81,7 @@
                                     	int cntToday = amd.countTodayMem();
                                     %>
                                     
-                                    <div class="card-body">
+                                    <div class="card-body" onclick="location.href='admin_member.jsp'">
                                      <table class="table table-hover">
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
                                     		<th>총 회원수</th>
@@ -102,7 +102,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6" >
+                            <div class="col-xl-6" onclick="location.href='board.jsp'">
                                 <div class="card mb-4">
                                 <div class="card-header">
                                         <i class="fas fa-chart-bar me-1"></i>
@@ -124,7 +124,7 @@
                                     <canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                        <div class="row">
+                        <div class="row" onclick="location.href='ex_schedule.jsp'">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
                                     <div class="card-header">
@@ -154,7 +154,7 @@
                                     <canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-xl-6" onclick="location.href='booking.jsp'">
                                 <div class="card mb-4">
                                     <div class="card-header">
                                         <i class="fas fa-chart-area me-1"></i>

@@ -42,7 +42,6 @@
 </style>
     <script type="text/javascript">
    	
-    var errorPage=["404","500","401"];
     $( function() {	
     $("#findNamesBtn").click(function() {
     	document.dataSearchFrm.submit();
@@ -58,8 +57,8 @@
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				alert("bookingDetail "+xhr.status+", "+xhr.statusText);
-				//location.href="401.html";
+				//alert("bookingDetail "+xhr.status+", "+xhr.statusText);
+				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				$("#exName").html(jsonObj.exName);				
@@ -94,15 +93,15 @@
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				alert("confirmModify : "+xhr.status+", "+xhr.statusText);
-			//	location.href="401.html";
+				//alert("confirmModify : "+xhr.status+", "+xhr.statusText);
+				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				if(jsonObj.cnt > 0){
 					alert("수정되었습니다.")
 					location.href="booking.jsp";
 				} else{
-					location.href="401.html";
+					location.href="admin_error.html";
 				} 
 			}  
 		}); //ajax
@@ -117,8 +116,8 @@
 				type: "get",
 				dataType:"json",
 				error:function(xhr){
-					alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
-				//	location.href="401.html";
+					//alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
+					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){
@@ -139,8 +138,8 @@
 				type: "get",
 				dataType:"json",
 				error:function(xhr){
-					alert("confirmAjax : "+xhr.status+", "+xhr.statusText);
-				//	location.href="401.html";
+					//alert("confirmAjax : "+xhr.status+", "+xhr.statusText);
+					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){
