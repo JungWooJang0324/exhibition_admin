@@ -37,7 +37,7 @@
 	<script type="text/javascript">
 	
 		function releaseExhibition(){
-			var exNum = $("#exNum").text();
+			var exNum = $("#exNum").val();
 			
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_release.jsp",
@@ -61,7 +61,7 @@
 		}//releaseExhibition
 		
 		function deleteExhibition(){
-			var num= $("#exNum").text();
+			var num= $("#exNum").val();
 			alert(num);
 			 $.ajax({
 					url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_delete.jsp",
@@ -82,19 +82,20 @@
 				}); //ajax
 		}//deleteExhibition
 		
-		function compareExt(file){
+		function compareExt(file){//파일 확장자 검사
+			if(file==""){
+				alert("파일을 입력해주세요");
+				return;
+			}//end if
 			var compareExt="png,jpg,gif,bmp".split(",");
 			var fileExt = file.toLowerCase().substring(file.lastIndexOf(".")+1);
-			
 			var flag=false;
-			
 			for(var i = 0; i < compareExt.length; i++){
 				if(compareExt[i] == fileExt){
 					flag=true;
 					break;
 				}//end if
 			}//end for
-			
 			if(!flag){
 					alert(file+"은 업로드 불가능합니다.\n"
 							+"이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
@@ -102,20 +103,13 @@
 					return;
 			}//end if	
 		}
-		function updateExhibition(){
+		/* function updateExhibition(){
 			var exNum = $("#exNum").text();
 			var exName = $("#exName").val(),exHall = $("#exHall").val();
 			var startDate = $("#startDate").val(),endDate = $("#endDate").val();
 			var intro = $("#exIntro").val(),info =$("#exInfo").val();
 			var totalNum = $("#totalCount").val(),watchNum = $("#watchCount").val();
 				
-			var title =["이름","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원"];
-			var value=[exName,startDate,endDate,intro,info,totalNum,watchNum];
-			for(var i = 0; i < title.length; i++){
-				if(value[i]==""){
-					alert(title+"을 입력해 주세요");
-				}//end if
-			}//end for
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp",
 				data:{
@@ -136,27 +130,31 @@
 				},//error
 				success:function(jsonObj){
 					if(jsonObj.cnt>0){
-						alert("성공")
+						alert("전시를 수정하였습니다.");
+						location.reload();
 					}
 				}//success
-				
-				
-			})
-			
+			});//ajax
+		}//updateExhibition */
+		function updateExhibition(){
+			$("#modifyExhibition").submit();
+			alert("전시 수정을 완료했습니다.");
+			$("#confirmModify").modal('hide');
+			$("#modifyModal").modal('hide');
+			location.reload();
 		}
 		
-		function addExhibition(){
-		
+		/* function addExhibition(){//전시 추가
 			var poster = $("#addExPoster").val();
-			compareExt(poster);// 포스터 유효성
+			compareExt(poster);// 포스터 확장자
 			var addImg = $("#addAddImg").val();
-			compareExt(addImg);//추가이미지 유효성
+			compareExt(addImg);//추가이미지 확장자
 			var exName = $("#addExName").val(),exHall = $("#addExHall").val();
 			var startDate = $("#addStartDate").val(),endDate = $("#addEndDate").val();
 			var intro = $("#addIntro").val(),info =$("#addInfo").val();
 			var totalNum = $("#addTotalNum").val(),watchNum = $("#addWatchNum").val();
-		
-			alert(poster+"\n"+exName+"\n"+exHall+"\n"+startDate+"\n"+endDate+"\n"+intro+"\n"+info+"\n"+totalNum+"\n"+watchNum+"\n"+addImg);
+			
+			//alert(poster+"\n"+exName+"\n"+exHall+"\n"+startDate+"\n"+endDate+"\n"+intro+"\n"+info+"\n"+totalNum+"\n"+watchNum+"\n"+addImg);
 			
 			 $.ajax({
 				url : "http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp",
@@ -179,14 +177,20 @@
 				},//error
 				success:function(jsonObj){
 					if(jsonObj.cnt==1){
-						alert("성공");
+						alert("전시 추가 성공");
 						location.reload();
 					}else{
 						alert("실패");
 					}
 				}//success
 			});//ajax
-		};//click
+		}; *///click
+		
+		function addExhibition(){
+			$("#addFrm").submit();
+			alert("전시가 추가되었습니다.");
+			location.reload();
+		}//addExhibition
 			
 		$(function(){
 			 $("#searchBtn").click(function(){
@@ -203,13 +207,11 @@
 						alert(xhr.status+" / "+xhr.statusText);
 					},
 					success : function(jsonObj){
-						$("#exNum").text(exNum);
+						$("#exNum").val(exNum);
 					 	$("#startDate"). val(jsonObj.exhibitDate);
 						$("#endDate").val(jsonObj.deadline); 
-						$("#exPoster").text(jsonObj.exPoster); 
 						$("#exIntro").val(jsonObj.exIntro);
 						$("#exName").val(jsonObj.exName);
-						$("#addImg").text(jsonObj.addImg);
 						$("#exInfo").val(jsonObj.exInfo);
 						$("#totalCount").val(jsonObj.totalCount);
 						$("#watchCount").val(jsonObj.watchCount); 
@@ -217,6 +219,8 @@
 						$("#teen").val(jsonObj.teen); 
 						$("#child").val(jsonObj.child); 
 						$("#exHall").val(jsonObj.exHallNum);
+						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);
+						$("#addImage").attr("src","../images/"+jsonObj.addImg);
 					} })//ajax;
 			});
 			$("#statusBtn").click(function(){
@@ -226,8 +230,42 @@
 				$("#confirmDelete").modal('show');
 			});//click
 			$("#modifyBtn").click(function(){
+				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원"];
+				var value=[$("#exName"),$("#startDate"),$("#endDate"),$("#exIntro"),$("#exInfo"),$("#totalCount"),$("#watchCount")];
+				for(var i = 0; i < title.length; i++){
+					if(value[i].val()==""){
+						alert(title+"을 입력해 주세요");
+						value[i].focus();
+						return;
+					}//end if
+				}//end for
+				if(!$.isNumeric(value[5].val())||!$.isNumeric(value[6].val())){
+					alert("허용인원과 관람인원은 숫자로 입력해주세요");
+					return;
+				}//end if
 				$("#confirmModify").modal('show');
 			})//click
+			$("#addExBtn").click(function(){
+				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원"];
+				var value=[$("#addExName"),$("#addStartDate"),$("#addEndDate"),$("#addIntro"),$("#addInfo"),$("#addTotalNum"),$("#addWatchNum")];
+				for(var i = 0; i < title.length; i++){
+					if(value[i].val()==""){
+						alert(title[i]+"을 입력해 주세요");
+						value[i].focus();
+						return;
+					}//end if
+				}//end for
+				if($("#addExHall").val()==""){
+					alert("전시장을 입력해주세요");
+					$("#addExHall").focus();
+					return;
+				}
+				if(!$.isNumeric(value[5].val())||!$.isNumeric(value[6].val())){
+					alert("허용인원과 관람인원은 숫자로 입력해주세요");
+					return;
+				}//end if
+				$("#confirmAdd").modal('show');
+			});//click
 		  })//ready;
 	</script>  
     </head>
@@ -445,15 +483,15 @@
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					      <!-- <form action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" id="addFrm"> --> 
+					     <form id="addFrm" method="post"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp" enctype="multipart/form-data" target='blankifr'>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
-								  <input type="email" class="form-control" id="addExName" name="exName" placeholder="전시명"  style="width:200px">
+								  <input type="email" class="form-control" id="addExName" name="addExName" placeholder="전시명"  style="width:200px">
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시장 / 담당자</label>
-							      	<select class="form-select" id="addExHall"aria-label=".form-select-sm example" style="width:400px">
-									  <option selected>전시장 / 담당자를 선택해주세요</option>
+							      	<select class="form-select" id="addExHall" name="addExHall"aria-label=".form-select-sm example" style="width:400px">
+									  <option value="" selected>전시장 / 담당자를 선택해주세요</option>
 									  <%
 									  	try{
 									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
@@ -472,44 +510,42 @@
 					      	<label class="form-label">전시 기간</label>
 					      	<div class="row">
 					      	<div class="col-6">
-					      	<input type="date" id="addStartDate" class="form-control" placeholder="시작 일자" style="width:200px">
+					      	<input type="date" id="addStartDate" name="addStartDate" class="form-control" placeholder="시작 일자" style="width:200px">
 					      	</div>
 					      	<div class="col-6">
-					      	<input type="date" id="addEndDate" class="form-control" placeholder="마감 일자" style="width:200px">
+					      	<input type="date" id="addEndDate" name="addEndDate"class="form-control" placeholder="마감 일자" style="width:200px">
 					      	</div>
 					      	</div>
 					      	</div>
 					      	<div class="mb-3" >
 						      	<label class="form-label">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addExPoster">
+						      	
+								  <input type="file" class="form-control" id="addExPoster" name="addExPoster">
+						    	
 								</div>
-						      	<div style="width:200px; height:200px;">
-						      		<img src="" class="rounded float-start">
-						      	</div>	
+								<label class="form-label">추가 이미지</label>
+						      	<div class="input-group mb-3" style="width:500px">
+								  <input type="file" class="form-control" id="addAddImg" name="addAddImg">
+								</div>
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
-								  <textarea class="form-control" id="addIntro" rows="3" style="width:500px"></textarea>
+								  <textarea class="form-control" id="addIntro"name="addIntro"  rows="3" style="width:500px"></textarea>
 							</div>
-						    <div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
-						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addAddImg">
-								</div>
-							</div>
+						   
 						      	<div class="mb-3">
 								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
-								  <textarea class="form-control" id="addInfo" rows="10"></textarea>
+								  <textarea class="form-control" id="addInfo" name="addInfo" rows="10"></textarea>
 								</div>
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
-								<input type="text" class="form-control" id="addTotalNum" placeholder="100"  style="width:100px">
+								<input type="text" class="form-control" id="addTotalNum" name="addTotalNum" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
-								<input type="text" class="form-control" id="addWatchNum" placeholder="0"  style="width:100px">
+								<input type="text" class="form-control" id="addWatchNum" name="addWatchNum" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
 							
@@ -518,36 +554,36 @@
 						    <div class="mb-3 col-4">
 						    	<label>성인</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="성인" id="addAdult">
+								  <input type="text" class="form-control" aria-label="성인" id="addAdult" name="addAdult">
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>청소년</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="청소년" id="addTeen">
+								  <input type="text" class="form-control" aria-label="청소년" id="addTeen"name="addTeen">
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label>유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" aria-label="유아/65세 이상"id="addChild" >
+								  <input type="text" class="form-control" aria-label="유아/65세 이상"id="addChild"name="addChild" >
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 							</div>
-					     <!--  </form> -->
+							</form>
 					      </div>
 					      <!-- modal body end -->
 					      <div class="modal-footer">
 					        <div class="container-fluid">
 					      <div class="row">
 					      	<div class="col-6 text-center">
-					        <a type="button" class="btn btn-outline-dark"  data-bs-dismiss="modal" href="http://localhost/exhibition_three_manager/main/hall.jsp">돌아가기</a>
+					        <a type="button" class="btn btn-outline-dark"  data-bs-dismiss="modal" >돌아가기</a>
 					      	</div>
 					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-info"data-bs-target="#confirmAdd" data-bs-toggle="modal" >전시 추가</button>
+					        <button type="button" class="btn btn-outline-info" id="addExBtn">전시 추가</button>
 					      	</div>
 					      </div>
 					      </div>
@@ -565,17 +601,16 @@
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					      <label class="form-label">전시 번호 : </label>
-						      	<span id="exNum">
-						      		
-								</span>
+					      <form id="modifyExhibition"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
+					      <label class="form-label">전시 번호 </label>
+						      	<input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:50px;"/>	
 						      	<div class="mb-3">
 								  <label for="전시명" class="form-label">전시명</label>
-								  <input type="text" class="form-control" id="exName" style="width:200px"/>
+								  <input type="text" class="form-control" id="exName" name="exName" style="width:200px"/>
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="form-label">전시장</label>
-							      	 	<select class="form-select" id="exHall"aria-label=".form-select-sm example" style="width:400px">
+							      	 	<select class="form-select" id="exHall" name="exHall"aria-label=".form-select-sm example" style="width:400px">
 									  <%
 									  	try{
 									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
@@ -594,44 +629,43 @@
 					      	<label class="form-label">전시 기간</label>
 					      	<div class="row">
 					      	<div class="col-6">
-					      	<input type="date" id="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
+					      	<input type="date" id="startDate" name="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
 					      	</div>
 					      	<div class="col-6">
-					      	<input type="date" id="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
+					      	<input type="date" id="endDate"name="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
 					      	</div>
 					      	</div>
 					      	</div>
 					      	<div class="mb-3" >
 						      	<label class="form-label">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <span id="exPoster"></span> 
+						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster">
 								</div>
-						      	<div style="width:200px; height:200px;">
-						      		<!-- <img src="images/adult.png" class="rounded float-start" alt="..."> -->
-						      	</div>	
+								  <img id="posterImg"/>
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
-								  <textarea class="form-control" id="exIntro" rows="3" style="width:500px"></textarea>
+								  <textarea class="form-control" id="exIntro" name="exIntro" rows="3" style="width:500px"></textarea>
 							</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <span id="addImg"></span>
+						      	<input type="file" class="form-control" id="modifyAddImg" name="modifyAddImg">
 								</div>
+								  <img id="addImage"/>
 							</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
-								  <textarea class="form-control" id="exInfo" rows="10"></textarea>
+								  <textarea class="form-control" id="exInfo"name="exInfo" rows="10"></textarea>
 								</div>
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
-								<input type="text" class="form-control" id="totalCount" placeholder="100"  style="width:100px">
+								<input type="text" class="form-control" id="totalCount"name="totalCount" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
-								<input type="text" class="form-control" id="watchCount" placeholder="0"  style="width:100px">
+								<input type="text" class="form-control" id="watchCount"name="watchCount" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
 							
@@ -660,6 +694,7 @@
 							</div>
 							</div>
 								
+					      </form>
 					      </div>
 					      <div class="modal-footer">
 					      			<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
@@ -749,4 +784,5 @@
         </div>
       
     </body>
+    <iframe name='blankifr' style='display:none;'></iframe>
 </html>

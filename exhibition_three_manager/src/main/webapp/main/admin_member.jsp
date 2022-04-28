@@ -29,7 +29,7 @@
         <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
-     
+     	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
       hr {width:200px; margin: 0px auto; margin-top:10px;}
       #member_tab{ text-align:center;}
@@ -121,8 +121,16 @@
   				$("#confirmHid").val("delete");
   			}).modal("show");
   		});//click
+  	$("#searchZipcode").click(function(){
+	  	 new daum.Postcode({
+		        oncomplete: function(data) {
+		        	 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+				$('#zipcode').val(data.zonecode);      // 우편번호(5자리)
+				$('#address1').val(data.address);       // 기본주소 
+		        }
+	 	  }).open();
+  	});//click
   	});//ready
-  	
 </script>
     </head>
     <%
@@ -275,7 +283,7 @@
 									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
 										%>  
 									<li>
-								<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
+					<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="admin_member.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
 									이전
 									</a>
 									</li> <% 

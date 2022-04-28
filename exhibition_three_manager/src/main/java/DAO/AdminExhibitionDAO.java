@@ -32,7 +32,7 @@ public class AdminExhibitionDAO {
 			.append("    select * from     ")
 			.append("    (select rownum rn, ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,     ")
 			.append("     ex_intro,exhibition_poster, add_img, ex_status,exhibit_date,deadline,input_date    ")
-			.append("     from (select * from exhibition where   ").append(query)
+			.append("     from (select * from exhibition where (ex_status='t' or ex_status='p') and ").append(query)
 			.append("   like '%'||?||'%' order by input_date)) where rn between ? and ?  ");
 			List<ExhibitionVO> list = null;
 			Connection con = null;
@@ -76,7 +76,7 @@ public class AdminExhibitionDAO {
 		int count = 0;
 		StringBuilder sql = new StringBuilder();
 		sql
-		.append("	select count(*) from exhibition where ")
+		.append("	select count(*) from exhibition where (ex_status='t' or ex_status='p') and ")
 		.append(query).append("	like '%'||?||'%'	");
 		
 		Connection con = null;
@@ -127,7 +127,7 @@ public class AdminExhibitionDAO {
 		int cnt = 0;
 		try {
 			con = dc.getConn();
-			String updateQuery = "UPDATE EXHIBITION SET ex_name=?,ex_info=?,ex_intro=?, ex_hall_num=?, exhibit_date=?, deadline=?, total_count=?, watch_count=? where ex_num=? ";
+			String updateQuery = "UPDATE EXHIBITION SET ex_name=?,ex_info=?,ex_intro=?, ex_hall_num=?, exhibit_date=?, deadline=?, total_count=?, watch_count=?, exhibition_poster=?, add_img=? where ex_num=?";
 			pstmt = con.prepareStatement(updateQuery);
 			pstmt.setString(1, eVO.getExName());
 			pstmt.setString(2, eVO.getExInfo());
@@ -137,7 +137,9 @@ public class AdminExhibitionDAO {
 			pstmt.setString(6, eVO.getDeadLineText());
 			pstmt.setInt(7, eVO.getTotalCount());
 			pstmt.setInt(8, eVO.getWatchCount());
-			pstmt.setInt(9, eVO.getExNum());
+			pstmt.setString(9, eVO.getExhibitionPoster());
+			pstmt.setString(10, eVO.getAddImg());
+			pstmt.setInt(11, eVO.getExNum());
 			
 			cnt = pstmt.executeUpdate();
 			
@@ -232,7 +234,7 @@ public class AdminExhibitionDAO {
 //			.append(" 	ex_intro,exhibition_poster, add_img,exhibit_date,deadline)		")	
 //			.append(" 	VALUES(13,?,?,?,?,?,?,?,?,?,?);		");	
 			String insertQuery =
-		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster,add_img,exhibit_date,deadline) VALUES(20,?,?,?,?,?,?,?,?,?,?)";
+		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster,add_img,exhibit_date,deadline,ex_status) VALUES(ex_seq.nextval,?,?,?,?,?,?,?,?,?,?,'t')";
 			
 			pstmt = con.prepareStatement(insertQuery);
 			
