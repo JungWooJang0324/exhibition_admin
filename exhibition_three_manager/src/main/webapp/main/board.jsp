@@ -2,7 +2,7 @@
 <%@page import="DAO.BoardManagerDAO"%>
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
-<%-- <%@include file="admin_id_session.jsp" %> --%>
+<%@include file="admin_id_session.jsp" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -146,8 +146,6 @@ function deletePost( dbId ){
 }
 <%
 BoardManagerDAO bDAO = new BoardManagerDAO();
-
-
 
 
 //한 페이지 출력 글 수
