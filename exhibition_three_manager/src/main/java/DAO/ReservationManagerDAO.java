@@ -66,7 +66,7 @@ public class ReservationManagerDAO {
 		
 	}//selectReservation
 	//페이징 전체 수 계산
-	public int cntRez() throws SQLException {
+	public int cntRez(String nameSel, String vDate, String findCatName) throws SQLException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
@@ -75,8 +75,21 @@ public class ReservationManagerDAO {
 		try {
 			con=dc.getConn();
 			
-			String sql= "SELECT * FROM reservation";
-			pstmt=con.prepareStatement(sql);
+			StringBuilder selectQuery= new StringBuilder();
+			selectQuery
+			.append("select rez_num, ex_name, name, visit_date, rez_status")
+			.append("	from(select rez.rez_num,ex.ex_name,m.name, rez.visit_date, rez.rez_status 	")
+			.append("	from reservation rez,member m,exhibition ex	")
+			.append("	where rez.userid=m.userid and rez.ex_num = ex.ex_num ")
+			.append("	order by rez.rez_num desc)")
+			.append(" 	where ").append(nameSel)
+			.append("	like '%'||?||'%' and to_char(visit_date, 'yyyy-MM-dd') like '%'||?||'%'");
+			
+			pstmt=con.prepareStatement(selectQuery.toString());
+
+			pstmt.setString(1, findCatName.trim());
+			pstmt.setString(2, vDate.trim());
+			
 			rs=pstmt.executeQuery();
 			
 			while(rs.next()) {

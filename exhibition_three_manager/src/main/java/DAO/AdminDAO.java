@@ -19,7 +19,7 @@ public class AdminDAO {
 		String date="";
 		try {
 			conn=dc.getConn();
-			String sql="select created_date from admin where admin_id= ? and password=? ";
+			String sql="select created_date from admin where admin_id=? and password=? ";
 		
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, userId);

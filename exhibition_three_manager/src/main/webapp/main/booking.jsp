@@ -46,9 +46,7 @@
     $( function() {	
     $("#findNamesBtn").click(function() {
     	document.dataSearchFrm.submit();
-
 	});//findNamesBtn
-    	
     	
  	$("#bookingDetail").on("show.bs.modal", function(e) {		
 	   	var num= $(e.relatedTarget).data('num');
@@ -85,6 +83,10 @@
  		var rezCount=$("#rezCount").val();
 		var visitDate=$("#visitDate").val();
 				
+		if(rezCount=="" || visitDate==""){
+			alert("예약인원과 방문날짜는 비어있을 수 없습니다.");
+			return;
+		}
 		 $.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/bookingModifyAjax.jsp",
 			data: {"rezCount":rezCount, "visitDate":visitDate, "rezNum":num},
@@ -155,7 +157,6 @@
     </head>
     <%
 	ReservationManagerDAO rmDao = new ReservationManagerDAO();
-	int cnt = rmDao.cntRez();
 		
 	int pageSize=5;
 	String pageNum=request.getParameter("pageNum");
@@ -184,10 +185,13 @@
 	 		findCatName="";
 	 	} 
 	 	
+	int cnt = rmDao.cntRez(nameSel, vDate, findCatName);
+	
 	int currentPage= Integer.parseInt(pageNum);
 	int startRow=(currentPage-1)*pageSize+1;
 	int endRow=currentPage * pageSize;	
 	
+	System.out.println(cnt);
 	List<ReservationManagerVO> rezList = null;
 	if(cnt>0){
 		rezList= rmDao.selectReservation(startRow, endRow, nameSel, vDate, findCatName);
