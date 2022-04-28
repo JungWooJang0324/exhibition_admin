@@ -1,3 +1,4 @@
+<%@page import="java.lang.reflect.Field"%>
 <%@page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy"%>
 <%@page import="com.oreilly.servlet.MultipartRequest"%>
 <%@page import="java.io.File"%>
@@ -24,8 +25,22 @@ String intro = mr.getParameter("exIntro");
 String info = mr.getParameter("exInfo");
 int totalNum = Integer.parseInt(mr.getParameter("totalCount"));
 int watchNum = Integer.parseInt(mr.getParameter("watchCount"));
+String hidPoster = mr.getParameter("hidPoster");
+File hidPosterPath = new File(saveDirectory.getPath()+"/"+hidPoster);
+String hidAddImg = mr.getParameter("hidAddImg");
+File hidAddImgPath = new File(saveDirectory.getPath()+"/"+hidAddImg);
 String poster = mr.getFilesystemName("modifyExPoster");
 String addImg = mr.getFilesystemName("modifyAddImg");
+if(poster==null||"".equals(poster)){//포스터를 입력하지 않은경우
+	poster=hidPoster;
+}else if(hidPosterPath.exists()){
+	hidPosterPath.delete();
+}//end else if
+if(addImg==null||"".equals(addImg)){//추가 이미지를 입력하지 않은 경우
+	addImg=hidAddImg;
+}else if(hidAddImgPath.exists()){
+	hidAddImgPath.delete();
+}//end else if
 
 
 ExhibitionVO eVO = new ExhibitionVO();

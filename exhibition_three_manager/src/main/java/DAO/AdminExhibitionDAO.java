@@ -1,16 +1,11 @@
 package DAO;
 
-
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.sql.Clob;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +14,6 @@ import javax.naming.NamingException;
 
 import VO.ExHallVO;
 import VO.ExhibitionVO;
-import VO.MemberVO;
 import VO.PriceVO;
 import connection.DbConnection;
 
@@ -210,14 +204,12 @@ public class AdminExhibitionDAO {
 				eVO.setTeen(rs.getInt("teen"));
 				eVO.setChild(rs.getInt("child"));
 				eVO.setExHallNum(rs.getInt("ex_hall_num"));
-				
 			}//end if
 			
 		}finally {
 			dc.close(rs, pstmt, con);
 			br.close();
 		}
-		
 		return eVO;
 	}//selectExDetail
 	

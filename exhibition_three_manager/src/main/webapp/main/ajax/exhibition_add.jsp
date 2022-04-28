@@ -39,8 +39,8 @@ eVO.setTotalCount(totalCount);
 eVO.setWatchCount(watchCount);
 eVO.setAddImg(addImgName);  
 
-ImageResize.resizeImage(saveDirectory.getPath()+"/"+posterName, 80,60);
-ImageResize.resizeImage(saveDirectory.getPath()+"/"+addImgName, 80,60);
+/* ImageResize.resizeImage(saveDirectory.getPath()+"/"+posterName, 80,60);
+ImageResize.resizeImage(saveDirectory.getPath()+"/"+addImgName, 80,60); */
 
 AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
 int cnt = aeDAO.insertExhibition(eVO);

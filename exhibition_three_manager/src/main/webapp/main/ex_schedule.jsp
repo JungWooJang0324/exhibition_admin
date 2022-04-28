@@ -46,8 +46,7 @@
 				dataType:"json",
 				async:false,
 				error:function(xhr){
-					console.log(xhr.status+" / "+xhr.statusText);
-					location.href="admin_error.html";
+					alert(xhr.status+" / "+xhr.statusText);
 				},//error
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){
@@ -71,8 +70,8 @@
 					dataType:"json",
 					async:false,
 					error:function(xhr){
-						console.log(xhr.status+" / "+xhr.statusText);
-						location.href="admin_error.html";
+						alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
+					//	location.href="401.html";
 					},
 					success:function(jsonObj){
 						if(jsonObj.cnt > 0){
@@ -84,10 +83,6 @@
 		}//deleteExhibition
 		
 		function compareExt(file){//파일 확장자 검사
-			if(file==""){
-				alert("파일을 입력해주세요");
-				return;
-			}//end if
 			var compareExt="png,jpg,gif,bmp".split(",");
 			var fileExt = file.toLowerCase().substring(file.lastIndexOf(".")+1);
 			var flag=false;
@@ -97,46 +92,8 @@
 					break;
 				}//end if
 			}//end for
-			if(!flag){
-					alert(file+"은 업로드 불가능합니다.\n"
-							+"이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
-				$("#confirmAdd").modal('hide');
-					return;
-			}//end if	
+			return flag;
 		}
-		/* function updateExhibition(){
-			var exNum = $("#exNum").text();
-			var exName = $("#exName").val(),exHall = $("#exHall").val();
-			var startDate = $("#startDate").val(),endDate = $("#endDate").val();
-			var intro = $("#exIntro").val(),info =$("#exInfo").val();
-			var totalNum = $("#totalCount").val(),watchNum = $("#watchCount").val();
-				
-			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp",
-				data:{
-					"exNum" : exNum,
-					"exName":exName,
-					"exHall" :exHall,
-					"startDate":startDate,
-					"endDate":endDate,
-					"intro":intro,
-					"info":info,
-					"totalNum":totalNum,
-					"watchNum":watchNum
-				},
-				async:false,
-				dataType:"json",
-				error:function(xhr){
-					alert(xhr.status+"/"+xhr.statusText);
-				},//error
-				success:function(jsonObj){
-					if(jsonObj.cnt>0){
-						alert("전시를 수정하였습니다.");
-						location.reload();
-					}
-				}//success
-			});//ajax
-		}//updateExhibition */
 		function updateExhibition(){
 			$("#modifyExhibition").submit();
 			alert("전시 수정을 완료했습니다.");
@@ -144,48 +101,6 @@
 			$("#modifyModal").modal('hide');
 			location.reload();
 		}
-		
-		/* function addExhibition(){//전시 추가
-			var poster = $("#addExPoster").val();
-			compareExt(poster);// 포스터 확장자
-			var addImg = $("#addAddImg").val();
-			compareExt(addImg);//추가이미지 확장자
-			var exName = $("#addExName").val(),exHall = $("#addExHall").val();
-			var startDate = $("#addStartDate").val(),endDate = $("#addEndDate").val();
-			var intro = $("#addIntro").val(),info =$("#addInfo").val();
-			var totalNum = $("#addTotalNum").val(),watchNum = $("#addWatchNum").val();
-			
-			//alert(poster+"\n"+exName+"\n"+exHall+"\n"+startDate+"\n"+endDate+"\n"+intro+"\n"+info+"\n"+totalNum+"\n"+watchNum+"\n"+addImg);
-			
-			 $.ajax({
-				url : "http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp",
-				data:{
-					"poster":poster,
-					"exName":exName,
-					"exHall":exHall,
-					"startDate":startDate,
-					"endDate":endDate,
-					"intro":intro,
-					"info":info,
-					"totalCount":totalNum,
-					"watchCount":watchNum,
-					"addImg" : addImg 
-				},
-				dataType:"json",
-				async:false,
-				error:function(request,status,error){
-					alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				},//error
-				success:function(jsonObj){
-					if(jsonObj.cnt==1){
-						alert("전시 추가 성공");
-						location.reload();
-					}else{
-						alert("실패");
-					}
-				}//success
-			});//ajax
-		}; *///click
 		
 		function addExhibition(){
 			$("#addFrm").submit();
@@ -205,8 +120,7 @@
 					data:{"exNum": exNum},
 					dataType:"json",
 					error : function(xhr){
-						console.log(xhr.status+" / "+xhr.statusText);
-						location.href="admin_error.html";
+						alert(xhr.status+" / "+xhr.statusText);
 					},
 					success : function(jsonObj){
 						$("#exNum").val(exNum);
@@ -221,6 +135,8 @@
 						$("#teen").val(jsonObj.teen); 
 						$("#child").val(jsonObj.child); 
 						$("#exHall").val(jsonObj.exHallNum);
+						$("#hidPoster").val(jsonObj.exPoster);
+						$("#hidAddImg").val(jsonObj.addImg);
 						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);
 						$("#addImage").attr("src","../images/"+jsonObj.addImg);
 					} })//ajax;
@@ -241,10 +157,29 @@
 						return;
 					}//end if
 				}//end for
+				var poster=$("#modifyExPoster").val();
+				if(poster!=""){
+					if(!compareExt(poster)){
+						alert("이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
+						$("#modifyExPoster").focus();
+						return;
+					}//end if
+				}//end if
+				
+				var addImg = $("#modifyAddImg").val();
+				if(addImg!=""){
+					if(!compareExt(addImg)){
+						alert("이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
+						$("#modifyAddImg").focus();
+						return;
+					}//end if
+				}//end if
+				
 				if(!$.isNumeric(value[5].val())||!$.isNumeric(value[6].val())){
 					alert("허용인원과 관람인원은 숫자로 입력해주세요");
 					return;
 				}//end if
+			
 				$("#confirmModify").modal('show');
 			})//click
 			$("#addExBtn").click(function(){
@@ -262,11 +197,33 @@
 					$("#addExHall").focus();
 					return;
 				}
+				var poster=$("#addExPoster").val();
+				if(poster==""){
+					alert("포스터를 입력해주세요");
+					$("#addExPoster").focus();
+					return;
+				}
+				if(!compareExt(poster)){
+					alert("이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
+					$("#addExPoster").focus();
+					return;
+				}
+				var addImg = $("#addAddImg").val();
+				if(addImg==""){
+					alert("추가 이미지를 입력해주세요");
+					$("#addAddImg").focus();
+					return;
+				}
+				if(!compareExt(addImg)){
+					alert("이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
+					$("#addAddImg").focus();
+					return;
+				}
+				
 				if(!$.isNumeric(value[5].val())||!$.isNumeric(value[6].val())){
 					alert("허용인원과 관람인원은 숫자로 입력해주세요");
 					return;
 				}//end if
-				$("#confirmAdd").modal('show');
 			});//click
 		  })//ready;
 	</script>  
@@ -642,6 +599,7 @@
 						      	<label class="form-label">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster">
+						      	 <input type="hidden" id="hidPoster" name ="hidPoster"/>
 								</div>
 								  <img id="posterImg"/>
 					      	</div>
@@ -653,6 +611,7 @@
 								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	<input type="file" class="form-control" id="modifyAddImg" name="modifyAddImg">
+						      	<input type="hidden" id="hidAddImg" name="hidAddImg"/>
 								</div>
 								  <img id="addImage"/>
 							</div>
