@@ -46,7 +46,8 @@
 				dataType:"json",
 				async:false,
 				error:function(xhr){
-					alert(xhr.status+" / "+xhr.statusText);
+					console.log(xhr.status+" / "+xhr.statusText);
+					location.href="admin_error.html";
 				},//error
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){
@@ -70,8 +71,8 @@
 					dataType:"json",
 					async:false,
 					error:function(xhr){
-						alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
-					//	location.href="401.html";
+						console.log(xhr.status+" / "+xhr.statusText);
+						location.href="admin_error.html";
 					},
 					success:function(jsonObj){
 						if(jsonObj.cnt > 0){
@@ -204,7 +205,8 @@
 					data:{"exNum": exNum},
 					dataType:"json",
 					error : function(xhr){
-						alert(xhr.status+" / "+xhr.statusText);
+						console.log(xhr.status+" / "+xhr.statusText);
+						location.href="admin_error.html";
 					},
 					success : function(jsonObj){
 						$("#exNum").val(exNum);

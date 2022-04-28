@@ -55,7 +55,8 @@ $(function(){
 			data:{ "hallNum":hallNum},
 			dataType:"json",
 			error:function(xhr){
-				alert("※에러"+xhr.status);
+				console.log(xhr.status+" / "+xhr.statusText);
+				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				$("#exName_de").val(jsonObj.exName);
@@ -109,7 +110,8 @@ $(function(){
 						exTel : $("#exTel_add").val()
 					},
 					error:function(xhr){
-							alert("에러"+xhr.status);
+						console.log(xhr.status+" / "+xhr.statusText);
+						location.href="admin_error.html";
 					},
 					success:function(){
 							alert("전시추가 성공")
@@ -152,7 +154,8 @@ $(function(){
 				},
 				datatype:"json",
 				error:function(xhr){
-					alert("※에러"+xhr.status);
+					console.log(xhr.status+" / "+xhr.statusText);
+					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
 					if(jsonObj.cnt!=0){
@@ -180,7 +183,8 @@ $(function(){
 				type:"post",
 				data:{ "hallNum": $("#exNum_de").text()},
 				error:function(xhr){
-					alert("※에러"+xhr.status);
+					console.log(xhr.status+" / "+xhr.statusText);
+					location.href="admin_error.html";
 				},
 				datatype : "json",
 				success:function(jsonObj){

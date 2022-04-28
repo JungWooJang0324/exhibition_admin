@@ -81,7 +81,8 @@
 				},
 				dataType:"json",
 				error : function(xhr){
-					alert(xhr.status);
+					console.log(xhr.status);
+					location.href="admin_error.html";
 				},
 				success : function(jsonObj){
 					var msg = "실패";
@@ -253,10 +254,10 @@
 	    						 		<%
 	    						 		}else{
 											%>
+																					
 											<tr>
 											<td colspan="3">조회 데이터가 없습니다.</td>
-											</tr>											
-											<%		    						 		
+											</tr>						<%		    						 		
 	    						 		
 	    						 		}//end else
 	    						 		%>

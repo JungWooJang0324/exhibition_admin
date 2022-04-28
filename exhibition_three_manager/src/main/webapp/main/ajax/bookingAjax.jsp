@@ -28,8 +28,7 @@ JSONObject jsonObj= new JSONObject();
 	jsonObj.put("price", rVO.getPrice());
 
 	out.println(jsonObj.toJSONString());
-	System.out.println("-------------"+num);
-	System.out.println(jsonObj.toJSONString());
+	jsonObj.toJSONString();
 
 
 %>

@@ -61,7 +61,8 @@ $(function(){
 			data:{ "bdId":bdId	},
 			dataType:"json",
 			error:function(xhr){
-				alert("※에러"+xhr.status);
+				console.log("※에러"+xhr.status);
+				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				$("#bdId_de").html(jsonObj.bdId);

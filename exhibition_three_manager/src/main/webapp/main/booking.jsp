@@ -57,7 +57,7 @@
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				//alert("bookingDetail "+xhr.status+", "+xhr.statusText);
+				console.log("bookingDetail "+xhr.status+", "+xhr.statusText);
 				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
@@ -69,7 +69,7 @@
 				$("#rezDate").html(jsonObj.rezDate);				
 				$("#userId").html(jsonObj.userId);				
 				$("#visitDate").val(jsonObj.visitDate);				
-				$("#price").html(jsonObj.price);				
+				$("#price").html(jsonObj.price);	
 			}
 		});//ajax
 		
@@ -93,7 +93,7 @@
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				//alert("confirmModify : "+xhr.status+", "+xhr.statusText);
+				console.log("confirmModify : "+xhr.status+", "+xhr.statusText);
 				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
@@ -116,7 +116,7 @@
 				type: "get",
 				dataType:"json",
 				error:function(xhr){
-					//alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
+					console.log("cancelAjax : "+xhr.status+", "+xhr.statusText);
 					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
@@ -138,7 +138,7 @@
 				type: "get",
 				dataType:"json",
 				error:function(xhr){
-					//alert("confirmAjax : "+xhr.status+", "+xhr.statusText);
+					console.log("confirmAjax : "+xhr.status+", "+xhr.statusText);
 					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
@@ -149,8 +149,6 @@
 				}  
 			}); //ajax
 	}
-	
-	
 	
     </script>
     </head>
@@ -190,11 +188,11 @@
 	int startRow=(currentPage-1)*pageSize+1;
 	int endRow=currentPage * pageSize;	
 	
-	System.out.println(cnt);
 	List<ReservationManagerVO> rezList = null;
 	if(cnt>0){
 		rezList= rmDao.selectReservation(startRow, endRow, nameSel, vDate, findCatName);
 		pageContext.setAttribute("rezList", rezList);
+	}
 	%>
 	
      <body class="sb-nav-fixed">
@@ -274,10 +272,10 @@
                                    </tr>
 						  	</thead> 
 						  	<tbody id="bookingTBody"> 
-								 
+								 <%if(cnt>0) {%>
 									<c:forEach var="res" items="${rezList}">
 						  		<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#bookingDetail" data-num="${res.rezNum}"  class="rezList">
-									<td id="mainRezNum"><c:out value="${res.rezNum}"/></td>
+									<td id="mainRezNum"><span id="star"></span><c:out value="${res.rezNum}"/></td>
 									<td><c:out value="${res.exName}"/></td>
 									<td><c:out value="${res.userName}"/></td>
 									<td><c:out value="${res.visitData}"/></td>
@@ -289,8 +287,12 @@
 				        			</td>
 						  		</tr>
 						  			</c:forEach> 
+						  	<%}else{%>
+						  		<tr>
+								<td colspan="5">조회 데이터가 없습니다.</td>
+								</tr>	
+						  	<%} %>
 						  	</tbody> 
-						  	<%}%>
 						  </table>
 						  
                             </div>
