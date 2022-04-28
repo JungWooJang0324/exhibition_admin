@@ -29,8 +29,8 @@ try{
 	BoardManagerDAO bDAO = new BoardManagerDAO();
 	JSONObject jsonObj = new JSONObject();
 
-	boolean updateFlag = bDAO.updateBoard(bVO); 
-	jsonObj.put("updateFlag", updateFlag);
+	int cnt = bDAO.updateBoard(bVO); 
+	jsonObj.put("cnt", cnt);
 	
 }catch(NumberFormatException e){
 	e.printStackTrace();

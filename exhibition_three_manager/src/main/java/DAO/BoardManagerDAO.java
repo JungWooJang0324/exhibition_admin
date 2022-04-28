@@ -32,7 +32,7 @@ public class BoardManagerDAO {
 
 			con = dc.getConn();
 			StringBuilder sql = new StringBuilder();
-			sql.append("	select count(bd_id) from BOARD							");
+			sql.append("	select count(bd_id) from BOARD	");
 
 			if ("".equals(keyword) || keyword == null) {
 				pstmt = con.prepareStatement(sql.toString());
@@ -43,7 +43,7 @@ public class BoardManagerDAO {
 					count = rs.getInt(1);
 				}
 			} else {
-				sql.append("	where ").append(option).append(" like '%'||?||'%'		");
+				sql.append("	where ").append(option).append(" like '%'||?||'%' ");
 
 				pstmt = con.prepareStatement(sql.toString());
 				pstmt.setString(1, keyword.trim());
@@ -67,72 +67,7 @@ public class BoardManagerDAO {
 		return count;
 	}
 
-	/**
-	 * 전체 select 함수
-	 * 
-	 * @param start
-	 * @param end
-	 * @param category
-	 * @param keyword
-	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws NamingException
-	 *//*
-		 * public List<BoardVO> selectAllBoard(int start, int end) throws
-		 * ClassNotFoundException, NamingException { List<BoardVO> boardList = null;
-		 * Connection con = null; PreparedStatement pstmt = null; ResultSet rs = null;
-		 * 
-		 * DbConnection dc = DbConnection.getInstance();
-		 * 
-		 * try { con = dc.getConn();
-		 * 
-		 * StringBuilder selectBoard = new StringBuilder();
-		 * 
-		 * selectBoard.append(
-		 * "	select f.rnum, f.bd_id, f.title, f.userid, f.input_date, f.cat_name	, f.cat_num, f.admin_id					"
-		 * )
-		 * .append("	from(select rownum as rnum, e.bd_id, e.title, e.userid, e.input_date, e.cat_name, e.cat_num, e.admin_id 	"
-		 * )
-		 * .append("	from(SELECT b.bd_id, b.title, b.userid, b.input_date, cat.cat_name, b.cat_num, b.admin_id					"
-		 * )
-		 * .append("		from Board b																							"
-		 * )
-		 * .append("		inner join	category cat																				"
-		 * )
-		 * .append("		on cat.cat_num = b.cat_num 																				"
-		 * )
-		 * .append("		order by bd_id) e 																						"
-		 * )
-		 * .append("	where rownum < ?) f 																						"
-		 * )
-		 * .append("	where rnum > ?  																							"
-		 * )
-		 * .append("	order by rnum desc																							"
-		 * );
-		 * 
-		 * pstmt = con.prepareStatement(selectBoard.toString()); pstmt.setInt(1, end);
-		 * pstmt.setInt(2, start);
-		 * 
-		 * System.out.println(end + " / " + start);
-		 * 
-		 * rs = pstmt.executeQuery();
-		 * 
-		 * boardList = new ArrayList<BoardVO>(); BoardVO bVO = null;
-		 * 
-		 * while (rs.next()) { bVO = new BoardVO(); bVO.setRnum(rs.getInt("rnum"));
-		 * bVO.setBdId(rs.getInt("bd_id")); bVO.setCatNum(rs.getInt("cat_num"));
-		 * bVO.setTitle(rs.getString("title")); bVO.setUserId(rs.getString("userid"));
-		 * bVO.setAdminId(rs.getString("admin_id"));
-		 * bVO.setInputDate(rs.getDate("input_date"));
-		 * bVO.setCatName(rs.getString("cat_name")); boardList.add(bVO); }
-		 * 
-		 * System.out.println("게시글 목록 select 성공");
-		 * 
-		 * } catch (SQLException e) { e.printStackTrace(); } finally {
-		 * 
-		 * try { dc.close(rs, pstmt, con); } catch (SQLException e) {
-		 * e.printStackTrace(); } } return boardList; }// selectBoardAdmin
-		 */
+	
 	/**
 	 * 검색한 값 select 함수
 	 * 
@@ -144,7 +79,7 @@ public class BoardManagerDAO {
 	 * @throws ClassNotFoundException
 	 * @throws NamingException
 	 */
-	public List<BoardVO> selectSearchBoard(int pageNum, int amount, String option, String keyword)
+	public List<BoardVO> selectBoard(int startRow, int pageSize, String option, String keyword)
 			throws ClassNotFoundException, NamingException {
 
 		List<BoardVO> boardList = null;
@@ -164,18 +99,18 @@ public class BoardManagerDAO {
 					.append("	from(select rownum as rnum, e.bd_id, e.title, e.userid, e.input_date, e.cat_name, e.admin_id 	")
 					.append("	from(SELECT b.bd_id, b.title, b.userid, b.input_date, b.admin_id, cat.cat_name 					")
 					.append("		from Board	b																				")
-					.append("		right outer join	category cat																	")
+					.append("		right outer join	category cat															")
 					.append("		on cat.cat_num = b.cat_num 																	")
 					.append("		where ").append(option).append(" like '%'||?||'%' 											")
-					.append("		order by input_date) e where rownum <= ? ) f														")
-					.append("	where rnum > ?  order by rnum desc																");
+					.append("		order by input_date desc) e where rownum <= ? ) f											")
+					.append("	where rnum >= ?  order by rnum 																	");
 
 			
 
 			pstmt = con.prepareStatement(selectBoard.toString());
 			pstmt.setString(1, keyword.trim());
-			pstmt.setInt(2, pageNum * amount);
-			pstmt.setInt(3, (pageNum - 1) * amount);
+			pstmt.setInt(2, pageSize+startRow-1);
+			pstmt.setInt(3, startRow);
 
 			rs = pstmt.executeQuery();
 
@@ -193,9 +128,7 @@ public class BoardManagerDAO {
 				bVO.setCatName(rs.getString("CAT_NAME"));
 				boardList.add(bVO);
 			}
-
 			System.out.println("게시글 목록 select 성공");
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -209,8 +142,7 @@ public class BoardManagerDAO {
 		return boardList;
 	}// selectBoardAdmin
 
-	public boolean updateBoard(BoardVO bVO) throws ClassNotFoundException, NamingException {
-		boolean flag = false;
+	public int updateBoard(BoardVO bVO) throws ClassNotFoundException, NamingException {
 		int cnt = 0;
 
 		Connection con = null;
@@ -239,7 +171,8 @@ public class BoardManagerDAO {
 			pstmt.setInt(4, bVO.getBdId());
 
 			cnt = pstmt.executeUpdate();
-
+			
+			System.out.println("게시판 수정 성공");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -251,15 +184,10 @@ public class BoardManagerDAO {
 			}
 		}
 
-		if(cnt>0) {
-			flag = true; 
-			System.out.println("게시글 update 성공");
-		}
-		return flag;
+		return cnt;
 	}// upadateExhibitonHall
 
 	public int deleteBoardAdmin(int bdId) throws ClassNotFoundException, NamingException {
-		boolean flag = false;
 		int cnt = 0;
 
 		Connection con = null;
@@ -289,9 +217,6 @@ public class BoardManagerDAO {
 				e.printStackTrace();
 			}
 		}
-		if(cnt>0) {
-			flag = true; 
-		}
 		return cnt;
 	}// deleteBoardAdmin
 
@@ -303,7 +228,8 @@ public class BoardManagerDAO {
 		try {
 			conn = dc.getConn();
 
-			String insertBoard = "insert into Board(bd_id, cat_num, title, description, admin_id, imgfile) values(bd_seq.nextval, ?,?,?,?,?)";
+			String insertBoard = 
+					"insert into Board(bd_id, cat_num, title, description, admin_id, imgfile, userid) values(bd_seq.nextval, ?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(insertBoard);
 
 			pstmt.setInt(1, bVO.getCatNum());
@@ -311,6 +237,7 @@ public class BoardManagerDAO {
 			pstmt.setString(3, bVO.getDescription());
 			pstmt.setString(4, bVO.getAdminId());
 			pstmt.setString(5, bVO.getImgFile());
+			pstmt.setString(6, bVO.getUserId());
 
 			pstmt.executeUpdate();
 

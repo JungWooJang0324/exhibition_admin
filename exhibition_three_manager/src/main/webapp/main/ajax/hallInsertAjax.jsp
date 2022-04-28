@@ -35,6 +35,7 @@ try{
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
 	ehmDAO.insertExhibitonHall(ehVO); 
 	
+	
 }catch(NumberFormatException e){
 	e.printStackTrace();
 }

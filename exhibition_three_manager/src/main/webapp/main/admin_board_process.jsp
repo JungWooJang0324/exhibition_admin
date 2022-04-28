@@ -24,6 +24,7 @@
 
 <%
 	bVO.setAdminId((String)session.getAttribute("admin_id"));
+	bVO.setUserId("admin");
 	bVO.setDescription(bVO.getDescription().replace("<p>", ""));
 	bVO.setDescription(bVO.getDescription().replace("</p>", ""));
 	

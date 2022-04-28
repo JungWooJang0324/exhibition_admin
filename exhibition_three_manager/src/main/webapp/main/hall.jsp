@@ -42,16 +42,13 @@ $(function(){
 	//전시장 상세보기 
 	$(".trDetail").click(function(){
 			
-		//히든 전시장 넘버(ex_hall_num) 받기
 		var hallNum = $(this).children().find("input:hidden[name=exHallName]").val();//클릭된 rnum 번호
 		
 		//넘버(ex_hall_num) 확인
-		console.log(hallNum);
+		//console.log(hallNum);
 		
-		//전시 상세 모달 show
 		$("#hallDetail").modal('show');
 		
-		//값 받아오기
 		$.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/hallDetailAjax.jsp",
 			type:"post",
@@ -76,13 +73,10 @@ $(function(){
 	});
 	
 	//전시 추가
-	//메인 추가 버튼
 	 $("#btnAdd").click(function(){
 		
-		 //전시 추가 모달 
 		$("#addHall").modal('show');
 		
-		 //전시 추가 모달 확인 버튼 클릭
 		$("#add").click(function(){
 			//null 체크
 			if($("#exName_add").val()==""|| $("#exLoc_add").val()=="" || $("#addr1_add").val()==""||
@@ -94,12 +88,11 @@ $(function(){
 				return;
 			}
 			
-			//추가 확인 모달
 			$("#confirmAdd").modal('show');
 			
-			//추가 확인 모달 ok 클릭
 			$("#addOk").click(function(){
-				$("#confirmAdd").modal('hide'); //추가 확인 모달 사라지고
+				$("#confirmAdd").modal('hide'); 
+				
 				$.ajax({
 					url:"http://localhost/exhibition_three_manager/main/ajax/hallInsertAjax.jsp",
 					type:"post",
@@ -116,18 +109,16 @@ $(function(){
 						exTel : $("#exTel_add").val()
 					},
 					error:function(xhr){
-						alert("에러"+xhr.status);
+							alert("에러"+xhr.status);
 					},
 					success:function(){
-						$("#addAlert").modal("show"); //추가되었다는 메시지
+							alert("전시추가 성공")
+							location.reload();
 					}
 				});
-				//추가 후 새로고침
-				location.reload();
 			});//$("#addOk").click
 		});//$("#add").click 
 		
-		//모달 안의 값 삭제
 		$("#exName_add").val()=="";	$("#exLoc_add").val()=="" ;	$("#addr1_add").val()=="" ;
 		$("#addr2_add").val()=="";  $("#zipcode_add").val()==""; $("#lat_add").val()=="";
 		$("#long_add").val()=="";	$("#mgrName_add").val()==""; $("#mgrTel_add").val()==""; $("#exTel_add").val()==""
@@ -139,9 +130,6 @@ $(function(){
 	//전시장 수정 버튼 클릭 시 
 	 $("#modifyBtn").click(function(){
 		 
-		 //전시 상세 모달 사라지고 
-		 $("#hallDetail").modal('hide');
-		//수정확인 모달 show
 		 $("#confirmModify").modal('show');
 		 
 		 $("#modifyOk").click(function(){
@@ -167,9 +155,11 @@ $(function(){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(!jsonObj.updateFlag){
+					if(jsonObj.cnt!=0){
 						alert("전시장 수정 성공");
 						location.reload();
+					}else{
+						alert("전시장 수정 성공");
 					}	
 				}
 			}); 
@@ -180,9 +170,6 @@ $(function(){
 	//전시장 삭제
 	$("#deleteBtn").click(function(){
 		 
-		 //전시 상세 모달 사라지고 
-		 $("#hallDetail").modal('hide');
-		//수정확인 모달 show
 		 $("#confirmDelete").modal('show');
 		 
 		 $("#deleteOk").click(function(){
@@ -197,11 +184,12 @@ $(function(){
 				},
 				datatype : "json",
 				success:function(jsonObj){
-					alert($("#exNum_de").text());
-					if(!jsonObj.deleteFlag){
+					if(jsonObj.cnt!=0){
 						alert("전시장 삭제 성공");
 						location.reload();
-					}		
+					}else{
+						alert("삭제 실패")
+					}	
 				}
 			}); 
 		});// $("#modifyOk") .click 
@@ -233,25 +221,12 @@ $(function(){
 	
 	$("#searchBtn").click(function(){
 		document.searchFrm.submit();		
-	});//click
-	
+	});
 	
 });//ready
 
 <%
 ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-
-String option  = request.getParameter("option"); //검색 조건 
-if(option==null||"".equals(option)){  
-	option = "ex_hall_name";
-}
-String keyword  = request.getParameter("keyword");//검색 단어
-if(keyword==null||"".equals(keyword)){ 
-	keyword = "";
-}
-
-//전시장 총 개수
-int cnt = ehmDAO.getTotalRows(option, keyword);
 
 //한 페이지 출력 글 수
 int pageSize = 5;
@@ -266,8 +241,23 @@ if(pageNum == null){
 int currentPage = Integer.parseInt(pageNum);
 int startRow = (currentPage-1)*pageSize+1; 
 int endRow = currentPage * pageSize;
-//최신순 넘버링
-int number = cnt - ((currentPage - 1) * pageSize);
+
+String option  = request.getParameter("option"); //검색 조건 
+String keyword  = request.getParameter("keyword");//검색 단어
+
+//전시장 총 개수
+int cnt = ehmDAO.getTotalRows(option, keyword);
+
+//넘버링
+int number = cnt; 
+if(option==null||"".equals(option)){  
+	option = "ex_hall_name";
+}
+if(keyword==null||"".equals(keyword)){ 
+	keyword = "";
+	number = cnt - ((currentPage - 1) * pageSize);
+}
+
 
 %>
 </script> 
@@ -336,12 +326,12 @@ int number = cnt - ((currentPage - 1) * pageSize);
                                     </thead>
                                     <tbody>
                                   	<%
-  	                                  	List<ExHallVO> dlist = ehmDAO.selectSearchExHall(currentPage, pageSize, option, keyword);
+  	                                  	List<ExHallVO> dlist = ehmDAO.selectExHall(startRow, pageSize, option, keyword);
   	                                	pageContext.setAttribute("list", dlist);
                                   	%>
                                   	<c:forEach var="exVO" items="${list}">
                                         <tr style="cursor:pointer" class = "trDetail" >
-                                            <%-- <td><c:out value="${exVO.rnum}"/></td> --%>
+                                            <%-- <td><c:out value="${exVO.rnum}"/></td>  --%>
                                             <td><%=number-- %></td>
                                             <td><c:out value="${exVO.exName}"/></td>                                          	
                                             <td><c:out value="${exVO.exLoc}"/></td>
@@ -659,22 +649,6 @@ int number = cnt - ((currentPage - 1) * pageSize);
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				        <button id="addOk" type="button" class="btn btn-primary">Ok</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-				<!-- 전시장 추가 알림  -->
-				<div class="modal fade" id="addAlert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				      </div>
-				      <div class="modal-body">
-				        전시장이 추가되었습니다.
-				      </div>
-				      <div class="modal-footer">
-				        <button id="addOk" type="button" class="btn btn-primary" data-bs-dismiss="modal">Ok</button>
 				      </div>
 				    </div>
 				  </div>

@@ -2,7 +2,7 @@
 <%@page import="DAO.BoardManagerDAO"%>
 <%@page import="VO.BoardVO"%>
 <%@page import="java.util.List"%>
-<%@include file="admin_id_session.jsp" %> 
+<%-- <%@include file="admin_id_session.jsp" %> --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -48,16 +48,13 @@ $(function(){
 	//게시글 상세보기 
 	$(".trDetail").click(function(){
 			
-		//게시글 넘버(bd_id) 받기
-		var bdId = $(this).children().find("input:hidden[name=bdId]").val();//클릭된 rnum 번호
+		var bdId = $(this).children().find("input:hidden[name=bdId]").val();
 		
 		//게시글 넘버(bd_id) 확인
-		console.log(bdId);
+		//console.log(bdId);
 		
-		//게시글 상세 모달 show
 		$("#boardDetail").modal('show'); 
 		
-		//값 받아오기
 		$.ajax({
 			url:"http://localhost/exhibition_three_manager/main/ajax/boardDetailAjax.jsp",
 			type:"post",
@@ -82,9 +79,6 @@ $(function(){
 	//게시글 수정 버튼 클릭 시 
 	 $("#modifyBtn").click(function(){
 		 
-		 //게시글 상세 모달 사라지고 
-		 $("#boardDetail").modal('hide');
-		//수정 확인 모달 show
 		 $("#confirmModify").modal('show');
 		 
 		 $("#modifyOk").click(function(){
@@ -103,7 +97,7 @@ $(function(){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(!jsonObj.updateFlag){
+					if(jsonObj.cnt!=0){
 						alert("업데이트 성공!");
 						location.reload();
 					}else{
@@ -113,7 +107,11 @@ $(function(){
 			}); 
 		});// $("#modifyOk") .click 
 	});// $("#").click
-	 
+	
+	
+	 $("#searchBtn").click(function(){
+			document.searchFrm.submit();		
+	});
 	
 });
 
@@ -121,7 +119,7 @@ $(function(){
 function deletePost( dbId ){
 	//tr클릭 게시글 상세 팝업 막기
 	event.stopPropagation(); 
-	//삭제 확인 모달 show
+	
 	 $("#confirmDelete").modal('show');
 	 
 	 $("#deleteOk").click(function(){
@@ -135,7 +133,7 @@ function deletePost( dbId ){
 			},
 			datatype : "json",
 			success:function(jsonObj){
-				if(!jsonObj.deleteFlag){
+				if(jsonObj.cnt!=0){
 					alert("삭제 성공!");
 					location.reload();
 				}else{
@@ -147,17 +145,9 @@ function deletePost( dbId ){
 }
 <%
 BoardManagerDAO bDAO = new BoardManagerDAO();
-String option  = request.getParameter("option"); //검색 조건 
-if(option==null||"".equals(option)){  
-	option = "title";
-}
-String keyword  = request.getParameter("keyword");//검색 단어
-if(keyword==null||"".equals(keyword)){ 
-	keyword = "";
-}
 
-//전시장 총 개수
-int cnt = bDAO.getTotalRows(option, keyword);
+
+
 
 //한 페이지 출력 글 수
 int pageSize = 5;
@@ -172,8 +162,22 @@ if(pageNum == null){
 int currentPage = Integer.parseInt(pageNum);
 int startRow = (currentPage-1)*pageSize+1; 
 int endRow = currentPage * pageSize;
-//최신순 넘버링
-int number = cnt - ((currentPage - 1) * pageSize);
+
+String option  = request.getParameter("option"); //검색 조건 
+String keyword  = request.getParameter("keyword");//검색 단어
+
+//전시장 총 개수
+int cnt = bDAO.getTotalRows(option, keyword);
+
+//넘버링
+int number = cnt; 
+if(option==null||"".equals(option)){  
+	option = "title";
+}
+if(keyword==null||"".equals(keyword)){ 
+	keyword = "";
+	number = cnt - ((currentPage - 1) * pageSize);
+}
 
 %>
 </script> 
@@ -217,16 +221,16 @@ int number = cnt - ((currentPage - 1) * pageSize);
                         </ol>
                         <!-- 검색 div -->
                         <div class="card-body" style="width: 400px; float: right;">
-                            <form class="d-flex">
+                            <form class="d-flex" action="http://localhost/exhibition_three_manager/main/board.jsp">
 	                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"   >
 									  <option ${param.option =="title"? "selected":""} value="title">제목 </option>
-									  <option ${param.option =="user_id"? "selected":""} value="user_id">작성자</option>
+									  <option ${param.option =="userid"? "selected":""} value="userid">작성자</option>
 									  <option ${param.option =="input_date"? "selected":""} value="input_date">작성일</option>
-									  <option ${param.option =="category"? "selected":""} value="category">카테고리</option>
+									  <option ${param.option =="cat_name"? "selected":""} value="cat_name">카테고리</option>
 								</select>
-	                        	<input type="text" class="form-control" style="margin-right: 10px">
-	                        	<button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;">
-	                        		<i class="fa-solid fa-magnifying-glass"></i>
+	                        	<input type="text" id="search"  name="keyword" value="${param.keyword}" class="form-control" style="margin-right: 10px">
+	                        	<button type="button" id="searchBtn" class="btn btn-outline-dark btn-sm" style="height: 35px;">
+	                        		<i  class="fa-solid fa-magnifying-glass"></i>
 	                       		</button>
 						      </form>
                         </div>
@@ -247,12 +251,12 @@ int number = cnt - ((currentPage - 1) * pageSize);
                                     </thead>
                                     <tbody>
                                    <%
-                                  	List<BoardVO> dList = bDAO.selectSearchBoard(currentPage, pageSize, option, keyword);
+                                  	List<BoardVO> dList = bDAO.selectBoard(startRow, pageSize, option, keyword);
                                   	pageContext.setAttribute("list", dList);
                                   	%>
                                   	<c:forEach var="bVO" items="${list}">
                                          <tr class="trDetail" style="cursor:pointer">
-                                            <%-- <td><c:out value="${bVO.rnum}"/></td> --%>
+                                        <%--  <td><c:out value="${bVO.rnum}"/></td>  --%>
                                             <td><%=number-- %></td>
                                             <td><c:out value="${bVO.title}"/></td>                                          	
                                             <td>
@@ -290,7 +294,7 @@ int number = cnt - ((currentPage - 1) * pageSize);
                    	 <div id="pageNavigation">
 							<ul class="pagination justify-content-center"> 
 								<%
-									if(cnt>0){
+									if(cnt!=0){
 										
 										//전체 페이지 수
 										int pageCount = cnt / pageSize + (cnt%pageSize == 0 ? 0:1);
@@ -331,6 +335,7 @@ int number = cnt - ((currentPage - 1) * pageSize);
 										</li>
 								<%	}
 						  		}%>
+						  		
 							</ul>
                		</div>
                 </main>

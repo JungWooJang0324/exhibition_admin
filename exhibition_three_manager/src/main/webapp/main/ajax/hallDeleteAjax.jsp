@@ -9,12 +9,12 @@ try {
 	//전시장 삭제
 	int hallNum = Integer.parseInt(request.getParameter("hallNum")) ;
 	
-	int cnt = 20;
 	ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
-	boolean deleteFlag = ehmDAO.deleteExhibitonHall(hallNum);
+	/* boolean deleteFlag = ehmDAO.deleteExhibitonHall(hallNum); */
+	int cnt = ehmDAO.deleteExhibitonHall(hallNum);
 
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("deleteFlag", deleteFlag);
+	jsonObj.put("cnt", cnt);
 	
 } catch (NumberFormatException e) {
 	e.printStackTrace();

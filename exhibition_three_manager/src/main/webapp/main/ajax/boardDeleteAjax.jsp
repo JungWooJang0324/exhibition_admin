@@ -14,14 +14,12 @@ try{
 	//전시장 삭제
 	int bdId = Integer.parseInt(request.getParameter("bdId_de")) ;
 	
-	System.out.println( "------bdId ----"+bdId );
 	
 	BoardManagerDAO bDAO = new BoardManagerDAO();
-	//boolean deleteFlag =bDAO.deleteBoardAdmin(30);; 
-	int deleteFlag =bDAO.deleteBoardAdmin(bdId);; 
+	int cnt =bDAO.deleteBoardAdmin(bdId);; 
 	
 	JSONObject jsonObj = new JSONObject();
-	jsonObj.put("deleteFlag", deleteFlag);
+	jsonObj.put("cnt", cnt);
 	
 }catch(NumberFormatException e){
 	e.printStackTrace();
