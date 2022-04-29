@@ -78,6 +78,8 @@ $(function(){
 		
 		$("#addHall").modal('show');
 		
+		checkAdd();//값 형
+			
 		$("#add").click(function(){
 			//null 체크
 			if($("#exName_add").val()==""|| $("#exLoc_add").val()=="" || $("#addr1_add").val()==""||
@@ -131,8 +133,7 @@ $(function(){
 	 
 	//전시장 수정 버튼 클릭 시 
 	 $("#modifyBtn").click(function(){
-		 
-		 $("#confirmModify").modal('show');
+		 checkUpdate();
 		 
 		 $("#modifyOk").click(function(){
 			 $("#confirmModify").modal('hide');
@@ -228,6 +229,76 @@ $(function(){
 	});
 	
 });//ready
+
+
+function checkAdd(){
+	
+	
+	var coordinate = ["#lat_add","#long_add"];
+ 	var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/; //폰 번호 검증
+	var regTel = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))-(\d{3,4})-(\d{4})$/;  //일반전화 검증
+	var reg =  /^[+-]?(\d{1,3})?[.](\d{0,5})?$/; //좌표검증
+	
+	
+	$("#mgrTel_add").change(function(){
+	     if (!regPhone.test($("#mgrTel_add").val())) {
+	         alert('-를 넣어 폰 번호를 정확히 입력해주세요.');
+	         return false;
+	     }
+	});
+	
+	$("#exTel_add").change(function(){
+	     if (!regTel.test($("#exTel_add").val())) {
+	         alert('-를 넣어 전화번호를 정확히 입력해주세요.');
+	         return false;
+	     }
+	});
+	
+ 	$.each(coordinate, function(idx, c){
+		$(c).change(function(){
+		     if (!reg.test($(c).val())) {
+		         alert('좌표를 정확히 입력해주세요. 정수부분 3자리, 소수부분 5자리까지 입력가능합니다.');
+		         return false;
+		     }
+		});
+	});   
+	
+	  
+}
+
+
+function checkUpdate(){
+	
+	var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/; //폰 번호 검증
+	var regTel = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))-(\d{3,4})-(\d{4})$/;  //일반전화 검증
+	var reg =  /^[+-]?(\d{1,3})?[.](\d{0,5})?$/;; //좌표 검증
+	
+	
+     if (!regPhone.test($("#mgrTel_de").val())) {
+         alert('-를 넣어 폰 번호를 정확히 입력해주세요.');
+         return;
+     }
+	
+     if (!regTel.test($("#exTel_de").val())) {
+         alert('-를 넣어 전화번호를 정확히 입력해주세요.');
+         return;
+     }
+     
+     if (!reg.test($("#lat_de").val())) {
+         alert('위도를 정확히 입력해주세요. +-, 정수부분 3자리, 소수부분 5자리까지 입력가능합니다.');
+         return;
+     }
+     
+     if (!reg.test($("#long_de").val())) {
+         alert('경도를 정확히 입력해주세요. +-, 정수부분 3자리, 소수부분 5자리까지 입력가능합니다.');
+         return;
+     }
+     
+     $("#confirmModify").modal('show');
+}
+
+
+
 
 <%
 ExHallManagerDAO ehmDAO = new ExHallManagerDAO();
@@ -479,10 +550,10 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px">
-					 				<input id="lat_add"  type="text" name="latitude" placeholder="위도" />
+					 				<input id="lat_add"  type="text" name="latitude" placeholder="위도"  onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 				 				</td>
 			 					<td style="padding-bottom: 10px">
-			 						<input id="long_add" type="text" name="longitutde" placeholder="경도" />
+			 						<input id="long_add" type="text" name="longitutde" placeholder="경도" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 		 						</td>
 					 		</tr>
 					 		<tr>
@@ -498,7 +569,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px" >
-					 				<input id="mgrTel_add" type="text" name="mgrTel" placeholder="담당자 번호" />
+					 				<input id="mgrTel_add" type="text" name="mgrTel" placeholder="담당자 번호" class="addChk"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -506,7 +577,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px">
-				 					<input id="exTel_add" type="text" name="exTel" placeholder="전시장 번호" />
+				 					<input id="exTel_add" type="text" name="exTel" placeholder="전시장 번호" class="addChk"/>
 				 				</td>
 					 		</tr>
 					 	</table>
@@ -566,10 +637,10 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="lat_de" />
+					 				<input type="text" id="lat_de" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 					 			</td>
 					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="long_de" />
+					 				<input type="text" id="long_de" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -585,7 +656,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="mgrTel_de" />
+					 				<input type="text" id="mgrTel_de" class="updateChk"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -593,7 +664,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td  style="padding-bottom: 10px">
-					 				<input type="text" id="exTel_de" />
+					 				<input type="text" id="exTel_de" class="updateChk"/>
 					 			</td>
 					 		</tr>
 					 	</table>
