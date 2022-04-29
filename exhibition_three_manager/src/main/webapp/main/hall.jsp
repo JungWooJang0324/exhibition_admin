@@ -233,6 +233,10 @@ $(function(){
 
 function checkAdd(){
 	
+	$(document).on("keyup", ".addChk", function() { 
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") ); 
+	});
+
 	
 	var coordinate = ["#lat_add","#long_add"];
  	var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/; //폰 번호 검증
@@ -656,7 +660,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="mgrTel_de" class="updateChk"/>
+					 				<input type="text" id="mgrTel_de"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -664,7 +668,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td  style="padding-bottom: 10px">
-					 				<input type="text" id="exTel_de" class="updateChk"/>
+					 				<input type="text" id="exTel_de" />
 					 			</td>
 					 		</tr>
 					 	</table>
