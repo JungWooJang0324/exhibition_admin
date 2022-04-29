@@ -39,7 +39,14 @@
         </style>
         
 <script type="text/javascript">
+
 $(function(){
+	
+	$("#searchBtn").click(function(){
+		document.searchFrm.submit();		
+	});
+	 
+	
 	//글쓰기버튼 클릭
 	$("#btnAdd").click(function(){
 		location.href="admin_add_board.jsp";
@@ -65,13 +72,13 @@ $(function(){
 				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
-				$("#bdId_de").html(jsonObj.bdId);
-				$("#inputDate_de").html(jsonObj.inputDate);
+				$("#bdId_de").val(jsonObj.bdId);
+				$("#inputDate_de").val(jsonObj.inputDate);
 				$("#title_de").val(jsonObj.title);
-				$("#id_de").html((jsonObj.userId==""||jsonObj.userId==null)? jsonObj.adminId:jsonObj.userId );
+				$("#id_de").val((jsonObj.userId==""||jsonObj.userId==null)? jsonObj.adminId:jsonObj.userId );
 				$("#catName_de").val(jsonObj.catNum); 
 				$("#description_de").val(jsonObj.description.replaceAll("br", "\n"));
-				$("#imgFile_de").html(jsonObj.imgFile);
+				$("#imgFile_de").val(jsonObj.imgFile);
 			}
 		}); 
 	});
@@ -91,7 +98,7 @@ $(function(){
 					"catNum" : $("#catName_de").val(),
 					"title": $("#title_de").val(),
 					"description": $("#description_de").val(),
-					"bdId" : $("#bdId_de").text()
+					"bdId" : $("#bdId_de").val()
 				},
 				datatype:"json",
 				error:function(xhr){
@@ -110,11 +117,8 @@ $(function(){
 	});// $("#").click
 	
 	
-	 $("#searchBtn").click(function(){
-			document.searchFrm.submit();		
-	});
-	
 });
+
 
 //게시글 삭제
 function deletePost( dbId ){
@@ -218,7 +222,7 @@ if(keyword==null||"".equals(keyword)){
                         </ol>
                         <!-- 검색 div -->
                         <div class="card-body" style="width: 400px; float: right;">
-                            <form class="d-flex" action="http://localhost/exhibition_three_manager/main/board.jsp">
+                            <form class="d-flex" id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/exhibition_three_manager/main/board.jsp">
 	                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"   >
 									  <option ${param.option =="title"? "selected":""} value="title">제목 </option>
 									  <option ${param.option =="userid"? "selected":""} value="userid">작성자</option>
@@ -316,11 +320,11 @@ if(keyword==null||"".equals(keyword)){
 								<%}
 								  for(int i=startPage; i<=endPage; i++){
 								  	if(i==currentPage){%>
-										<li><a style="margin-right:10px;"class="text-secondary">
+										<li><a style="margin-right:10px;text-decoration:none;"class="text-secondary">
 											<%=i %>
 										</a></li>
 									<%}else{%>
-										<li><a href="board.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary">
+										<li><a href="board.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary page-item">
 											<%=i %>
 										</a></li>
 								<%		}
@@ -328,7 +332,7 @@ if(keyword==null||"".equals(keyword)){
 							  		
 							  		if(endPage<pageCount){%>	
 							  			<li>
-										<a  href="board.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">다음</a>
+										<a  href="board.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item page-item">다음</a>
 										</li>
 								<%	}
 						  		}%>
@@ -355,20 +359,23 @@ if(keyword==null||"".equals(keyword)){
 				 		</thead>
 				 		<tbody>
 					 		<tr>
-					 			<td id="bdId_de" style="padding-bottom: 10px" ></td>
-					 			<td style="padding-bottom: 10px" id="inputDate_de"></td>
+					 			<td>
+					 				<input type="text" id="bdId_de"  name="bdId_de" class="form-control" readonly="readonly" style="width:100px;height:30px;margin-bottom:20px;"/>
+					 			</td>
+					 			<td>
+					 				<input type="text" id="inputDate_de" name="inputDate_de" class="form-control" readonly="readonly" style="width:120px;height:30px;margin-bottom:20px;"/>
+					 			</td>
 					 		</tr>
 					 		<tr>
 					 			<th >제목</th>
 					 			<th>카테고리</th>
-					 			
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px" >
-					 				<input type="text" id="title_de" />
+					 			<td style="padding-bottom: 20px;" >
+					 				<input type="text" id="title_de" class="form-control" style="width: 200px"/>
 				 				</td>
-					 			<td style="padding-bottom: 10px"> 
-									<select id="catName_de" name="catName_de">
+					 			<td style="padding-bottom: 20px"> 
+									<select id="catName_de" name="catName_de" class="form-control">
 										<jsp:useBean id="bVO" class="VO.BoardVO" scope="page"/> 
 										<% List<BoardVO> list = new ArrayList<BoardVO>();
 											list=bDAO.selectCategory();
@@ -385,17 +392,19 @@ if(keyword==null||"".equals(keyword)){
 					 			<th>이미지</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px" id="id_de">
+					 			<td >
+				 					<input type="text" id="id_de"  name="id_de" class="form-control" readonly="readonly" style="width:200px;height:30px;margin-bottom:20px;"/>
 				 				</td>
-								<td style="padding-bottom: 10px" id="imgFile_de" >
+								<td >
+									<input type="text" id="imgFile_de"  name="imgFile_de" class="form-control" readonly="readonly" style="width:300px;height:30px;margin-bottom:20px;"/>
 								</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2">글 내용</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px" colspan="2">
-					 				<textarea id="description_de" style="overflow-y:scroll;width: 760px; height: 200px ">
+					 			<td style="padding-bottom: 20px" colspan="2">
+					 				<textarea id="description_de" class="form-control" style="overflow-y:scroll;width: 760px; height: 200px ">
 					 				</textarea>
 				 				</td>
 					 		</tr>

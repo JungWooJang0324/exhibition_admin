@@ -44,6 +44,7 @@ $(function(){
 		height: 400,                 		// set editor height
 		  	focus: true,                  // set focus to editable area after initializing summernote
 			  lang: "ko-KR",
+	          placeholder: '내용을 입력해주세요.',
 			  toolbar: [
 		          ['style', ['style']],
 		          ['font', ['bold', 'underline', 'clear']],
@@ -137,10 +138,11 @@ function fileChk(){
 		<input id="title" name="title" class="inputBox" type="text"  style="margin-bottom: 5px; width: 100%" placeholder=" 제목을 입력해주세요."/>
 	</div>
 	<div>
-		<textarea id="summernote" name="description"></textarea>
+		<textarea id="summernote" name="description" ></textarea>
 	</div>
 	<div>
-		<input type="file" id="imgFile" name="imgFile"  placeholder=""/>
+      	<input type="file" class="form-control" id="imgFile" name="imgFile" style="margin-top: 10px; width: 25%; ">
+      	<input type="hidden" id="hidAddImg" name="hidAddImg"/>
 	</div>
 	<div id="btnDiv" style="margin-top: 30px">
 		<button type="button" id="backBtn" class="btn btn-outline-dark" style="float: left;margin-left: 10px">뒤로가기</button> 

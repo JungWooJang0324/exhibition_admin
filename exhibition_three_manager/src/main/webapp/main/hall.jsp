@@ -60,7 +60,7 @@ $(function(){
 			},
 			success:function(jsonObj){
 				$("#exName_de").val(jsonObj.exName);
-				$("#exNum_de").html(jsonObj.exNum);
+				$("#exNum_de").val(jsonObj.exNum);
 				$("#addr1_de").val(jsonObj.addr1);
 				$("#addr2_de").val(jsonObj.addr2);
 				$("#zipcode_de").val(jsonObj.zipcode);
@@ -143,7 +143,7 @@ $(function(){
 				type:"post",
 				data:{
 					"exName" : $("#exName_de").val(),
-					"hallNum": $("#exNum_de").text(),
+					"hallNum": $("#exNum_de").val(),
 					"addr1": $("#addr1_de").val(),
 					"addr2": $("#addr2_de").val(),
 					"zipcode" : $("#zipcode_de").val(),
@@ -378,7 +378,7 @@ if(keyword==null||"".equals(keyword)){
                         </ol>
                         <!-- 검색 div -->
                          <div  style="width: 400px; float: right; margin-bottom: 10px">
-                            <form class="d-flex" id="searchFrm" action="http://localhost/exhibition_three_manager/main/hall.jsp">
+                            <form id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/exhibition_three_manager/main/hall.jsp">
 		                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"  >
 										  <option ${param.option =="ex_hall_name"? "selected":""} value="ex_hall_name">전시장명</option>
 										  <option ${param.option =="ex_loc"? "selected":""} value="ex_loc">전시 위치</option>
@@ -460,7 +460,7 @@ if(keyword==null||"".equals(keyword)){
 								<%}
 								  for(int i=startPage; i<=endPage; i++){
 								  	if(i==currentPage){%>
-										<li><a style="margin-right:10px;"class="text-secondary">
+										<li><a style="margin-right:10px;text-decoration:none;"class="text-secondary">
 											<%=i %>
 										</a></li>
 									<%}else{%>
@@ -520,7 +520,7 @@ if(keyword==null||"".equals(keyword)){
 								</td>
 					 		</tr>
 					 		<tr>
-					 			<th class="modalTh" style="width: 300px">주소</th><th class="modalTh">우편번호</th>
+					 			<th style="width: 300px">주소</th><th>우편번호</th>
 					 		</tr>
 
 					 		<tr>
@@ -589,37 +589,39 @@ if(keyword==null||"".equals(keyword)){
 				        <h5 class="modal-title" id="staticBackdropLabel">전시장 상세</h5>
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
-				      <div class="modal-body" >
+				      <div class="modal-body">
 					 	<table class="modalTab">
 					 		<tr>
-					 			<th colspan="2">전시장 명</th>
+					 			<th colspan="2" >전시장 명</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="exName_de" />
+					 			<td style="padding-bottom: 20px">
+					 				<input type="text" class="form-control" id="exName_de" style="width: 250px; margin-right: 30px" />
 					 			</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2">전시장 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td  style="padding-bottom: 10px" id="exNum_de"></td>
+					 			<td  style="padding-bottom: 10px" >
+					 				<input type="text" id="exNum_de" name="exNum_de" class="form-control" readonly="readonly" style="width:80px;height:30px;margin-bottom:10px;"/>
+					 			</td>
 					 		</tr>
 					 		<tr>
-					 			<th style="width: 300px">상세주소</th>
-					 			<th class="modalTh" style="width: 300px">우편번호</th>
+					 			<th >상세주소</th>
+					 			<th style="width: 200px">우편번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td  >
-					 				<input type="text" id="addr1_de" />
+					 			<td >
+					 				<input type="text" id="addr1_de" class="form-control"  style="width: 250px; margin-right: 30px"/>
 					 			</td>
 					 			<td >
-					 				<input type="text" id="zipcode_de" />
+					 				<input type="text" id="zipcode_de" class="form-control"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px" colspan="2">
-					 				<input type="text" id="addr2_de" />
+					 			<td style="padding-bottom: 20px" colspan="2">
+					 				<input type="text" id="addr2_de" class="form-control" style="width: 250px; margin-right: 30px"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -627,27 +629,27 @@ if(keyword==null||"".equals(keyword)){
 					 			<th>경도</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="lat_de" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
+					 			<td style="padding-bottom: 20px">
+					 				<input type="text" id="lat_de" class="form-control" style="width: 100px; margin-right: 30px" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 					 			</td>
-					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="long_de" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
+					 			<td style="padding-bottom: 20px">
+					 				<input type="text" id="long_de"  class="form-control" style="width: 100px; margin-right: 30px"  onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" >전시장 담당자</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="mgrName_de" />
+					 			<td style="padding-bottom: 20px">
+					 				<input type="text" id="mgrName_de" class="form-control" style="width: 250px; margin-right: 30px"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" >전시 담당자 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input type="text" id="mgrTel_de"/>
+					 			<td style="padding-bottom: 20px">
+					 				<input type="text" id="mgrTel_de"  class="form-control" style="width: 250px; margin-right: 30px"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -655,7 +657,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td  style="padding-bottom: 10px">
-					 				<input type="text" id="exTel_de" />
+					 				<input type="text" id="exTel_de" class="form-control" style="width: 250px; margin-right: 30px"/>
 					 			</td>
 					 		</tr>
 					 	</table>
