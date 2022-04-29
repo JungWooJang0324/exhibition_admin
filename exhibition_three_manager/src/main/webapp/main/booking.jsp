@@ -75,6 +75,9 @@
 		
     });//bookingDetail
   
+    $("#confirmModify").click(function() {
+		$("#confirmModal").modal('show');
+	})
 });  //ready;
 
     function confirmModify() {
@@ -426,7 +429,7 @@
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button><!-- id="confirmModify"  -->
-				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#confirmModify" onclick="confirmModify(${res.rezNum})">예약 수정</button>
+				        <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" id="confirmModify">예약 수정</button>
 				      </div>
 				    </div>
 				  </div>
@@ -462,6 +465,23 @@
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
 				        <button type="button" class="btn btn-outline-info" onclick="rezConfirm(${res.rezNum})">Ok</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- 수정 확인 modal -->
+				<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        수정하시겠습니까?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-outline-info" onclick="confirmModify(${res.rezNum})">Ok</button>
 				      </div>
 				    </div>
 				  </div>
