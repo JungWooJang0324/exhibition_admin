@@ -11,13 +11,12 @@
 	int rezCount=Integer.parseInt(request.getParameter("rezCount"));
 	String visitDate= request.getParameter("visitDate");
 	int rezNum=Integer.parseInt(request.getParameter("rezNum"));
-
+ 
 	ReservationManagerDAO rm=new ReservationManagerDAO();
 	int cnt=rm.updateReservation(rezCount, visitDate , rezNum);
 	
 	JSONObject jsonObj = new JSONObject();
 	
 	jsonObj.put("cnt", cnt);
-	System.out.println(cnt);
 	out.println(jsonObj.toJSONString());
 %>

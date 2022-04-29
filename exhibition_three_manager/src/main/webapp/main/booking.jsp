@@ -61,15 +61,15 @@
 				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
-				$("#exName").html(jsonObj.exName);				
-				$("#exNum").html(jsonObj.exNum);				
-				$("#resNum").html(num);				
-				$("#userName").html(jsonObj.userName);				
+				$("#exName").val(jsonObj.exName);				
+				$("#exNum").val(jsonObj.exNum);				
+				$("#resNum").val(num);				
+				$("#userName").val(jsonObj.userName);				
 				$("#rezCount").val(jsonObj.rezCount);				
-				$("#rezDate").html(jsonObj.rezDate);				
-				$("#userId").html(jsonObj.userId);				
+				$("#rezDate").val(jsonObj.rezDate);				
+				$("#userId").val(jsonObj.userId);				
 				$("#visitDate").val(jsonObj.visitDate);				
-				$("#price").html(jsonObj.price);	
+				$("#price").val(jsonObj.price);	
 			}
 		});//ajax
 		
@@ -78,7 +78,7 @@
 });  //ready;
 
     function confirmModify() {
-    	var num= $("#resNum").text();
+    	var num= $("#resNum").val();
  		var rezCount=$("#rezCount").val();
 		var visitDate=$("#visitDate").val();
 				
@@ -332,7 +332,7 @@
 										</c:if>
 										<c:if test="${i ne currentPage}">
 											<li>
-											<a style="margin-right:10px;"class="text-secondary" href="booking.jsp?pageNum=${i}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
+											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="booking.jsp?pageNum=${i}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
 											<c:out value="${i}"/>
 											</a>
 											</li> 
@@ -365,62 +365,62 @@
 				        <h5 class="modal-title" id="staticBackdropLabel">예약 관리 상세</h5>
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
-				      <div class="modal-body" >
+				      <div class="modal-body">
 					 	<table class="modalTab" style="width:98%;" cellpadding="5">
 					 		<tr>
-					 			<th colspan="2" class="modalTh">전시명</th>
-					 			<th colspan="2" class="modalTh">전시 번호</th>
+					 			<th class="modalTh">전시명</th>
+					 			<th class="modalTh">전시 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="exName"></td>
-					 			<td class="modalTd" id="exNum"></td>
+					 			<td class="modalTd"><input type="text" id="exName" class="form-control" readonly/></td>
+					 			<td class="modalTd"><input type="text" id="exNum" class="form-control" style="width:100px" readonly/></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">예약 번호</th>
+					 			<th class="modalTh">예약 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="resNum"></td>
+					 			<td class="modalTd"><input type="text" id="resNum" class="form-control" style="width:100px" readonly/></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">예약자명</th>
-					 		</tr>
-					 		
-					 		<tr>
-					 			<td class="modalTd" id="userName"></td>
+					 			<th class="modalTh">예약자명</th>
 					 		</tr>
 					 		
 					 		<tr>
-					 			<th colspan="2" class="modalTh">예약자 ID</th>
-					 		</tr>
-					 		<tr>
-					 			<td class="modalTd" id="userId"></td>
+					 			<td class="modalTd"><input type="text" id="userName" class="form-control" style="width:100px" readonly/></td>
 					 		</tr>
 					 		
 					 		<tr>
-					 			<th colspan="2" class="modalTh">예약인원</th>
+					 			<th class="modalTh">예약자 ID</th>
+					 		</tr>
+					 		<tr>
+					 			<td class="modalTd"><input type="text" id="userId" class="form-control" readonly/></td>
+					 		</tr>
+					 		
+					 		<tr>
+					 			<th class="modalTh">예약인원</th>
 					 		</tr>
 					 		<tr>
 					 			<td class="modalTd"><input id="rezCount" type="number" class="inputBox"/>
 					 			<span id="countWarning" style="font-size:10px; color:#ff0000;"></span></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">예약일자</th>
+					 			<th class="modalTh">예약일자</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="rezDate"></td>
+					 			<td class="modalTd"><input type="date" id="rezDate" class="form-control" readonly/></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">방문기간</th>
+					 			<th class="modalTh">방문기간</th>
 					 		</tr>
 					 		<tr>
 					 			<td class="modalTd"><input id="visitDate" type="date" class="inputBox"/>
 					 			<span id="visitWarning" style="font-size:10px; color:#ff0000;"></span></td>
 					 		</tr>
 					 		<tr>
-					 			<th colspan="2" class="modalTh">예약가격</th>
+					 			<th class="modalTh">예약가격</th>
 					 		</tr>
 					 		<tr>
-					 			<td class="modalTd" id="price"></td>
+					 			<td class="modalTd" ><input type="text" id="price" class="form-control" readonly/></td>
 					 		</tr>
 					 	</table>
 				      </div>
