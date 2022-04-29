@@ -33,6 +33,7 @@
 <style>
       hr {width:200px; margin: 0px auto; margin-top:10px;}
       #member_tab{ text-align:center;}
+      .memberTitle{font-weight:bold}
 </style>
 <script type="text/javascript">
      
@@ -333,26 +334,26 @@
 					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					      	<div class="text-secondary">ID(Email)</div>
+					      	<div class="memberTitle">ID(Email)</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:450px">
 							  <input type="text" class="form-control" id="id" placeholder="Username" readonly/>
 							  <span class="input-group-text">@</span>
 							  <input type="text" class="form-control" id="server" placeholder="Server" readonly/>
 							</div>
-					      	<div class="text-secondary">이름</div>
+					      	<div class="memberTitle">이름</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
 					      	<input type="text" class="form-control" id="userName" placeholder="이름" readonly/>
 							</div>
-					      	<div class="text-secondary">전화번호</div>
+					      	<div class="memberTitle">전화번호</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
 							  <input type="text" class="form-control" id="tel"placeholder="전화번호"/>
 							</div>
-					      	<div>우편번호</div>
+					      	<div class="memberTitle">우편번호</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:250px">
 							  <input type="text" class="form-control" id="zipcode" placeholder="우편번호" />
 							   <button class="btn btn-outline-info" type="button" id="searchZipcode">우편번호검색</button>
 							</div>
-					      	<div class="row"><div class="col-6">주소</div> <div class="col-6">상세주소</div></div>
+					      	<div class="row"><div class="memberTitle col-6">주소</div> <div class="memberTitle col-6">상세주소</div></div>
 					      	<div class="row">
 					      	<div class="col-6">
 					      	<div class="input-group input-group-sm mb-3" style="width:250px">
@@ -365,7 +366,7 @@
 							</div>
 					      	</div> 
 					      	 </div>
-					      	<div>가입일</div>
+					      	<div class="memberTitle">가입일</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:200px">
 							<input type="text" class="form-control" id="subDate" placeholder="가입일"readonly/>
 							</div>

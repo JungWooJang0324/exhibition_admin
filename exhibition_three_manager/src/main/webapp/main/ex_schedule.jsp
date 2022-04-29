@@ -33,6 +33,8 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
      	<style>
 	     	hr {width:200px; margin: 0px auto; margin-top:10px;}
+	     	.exTitle{font-weight:bold}
+	     	#memberTab{text-align:center;}
         </style>
 	<script type="text/javascript">
 	
@@ -317,17 +319,15 @@
 									</div>
 							      </form>
                             <!-- 테이블 정의 -->
-                                <table class="table table-hover" id="dataTables-example">
+                                <table class="table table-hover" id="memberTab" >
                             	<thead> 
-							   <tr>
-                                    <th>Exhibition Number</th>
-                                    <th>Exhibition Name</th>
-                                    <th>Input Date</th>
-                                    <!-- 	<th>ISDELETED</th>
-                                    	<th>ISUBSCRIBE_DATE</th> -->
-                                    </tr>
-						  	</thead> 
-						  	<tbody> 
+								   <tr>
+	                                    <th>전시번호</th>
+	                                    <th>전시명</th>
+	                                    <th>입력일</th>
+	                               </tr>
+						  		</thead> 
+						  		<tbody> 
 						  		  <%
 						  		 
 						  		 if(count > 0 ){
@@ -433,11 +433,11 @@
 					      <div class="modal-body">
 					     <form id="addFrm" method="post"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp" enctype="multipart/form-data" target='blankifr'>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시명</label>
+								  <label for="exampleFormControlInput1" class="exTitle">전시명</label>
 								  <input type="email" class="form-control" id="addExName" name="addExName" placeholder="전시명"  style="width:200px">
 								</div>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시장 / 담당자</label>
+								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
 							      	<select class="form-select" id="addExHall" name="addExHall"aria-label=".form-select-sm example" style="width:400px">
 									  <option value="" selected>전시장 / 담당자를 선택해주세요</option>
 									  <%
@@ -455,66 +455,67 @@
 									</select>
 								</div>
 					      	<div class="mb-3">
-					      	<label class="form-label">전시 기간</label>
 					      	<div class="row">
 					      	<div class="col-6">
+					      	<label class="exTitle">시작일</label>
 					      	<input type="date" id="addStartDate" name="addStartDate" class="form-control" placeholder="시작 일자" style="width:200px">
 					      	</div>
 					      	<div class="col-6">
+					      	<label class="exTitle">마감일</label>
 					      	<input type="date" id="addEndDate" name="addEndDate"class="form-control" placeholder="마감 일자" style="width:200px">
 					      	</div>
 					      	</div>
 					      	</div>
 					      	<div class="mb-3" >
-						      	<label class="form-label">전시 포스터</label>
+						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	
 								  <input type="file" class="form-control" id="addExPoster" name="addExPoster">
 						    	
 								</div>
-								<label class="form-label">추가 이미지</label>
+								<label class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
 								  <input type="file" class="form-control" id="addAddImg" name="addAddImg">
 								</div>
 					      	</div>
 						    <div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
+								<label for="exampleFormControlInput1" class="exTitle">전시 간단 소개</label>
 								  <textarea class="form-control" id="addIntro"name="addIntro"  rows="3" style="width:500px"></textarea>
 							</div>
 						   
 						      	<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
+								  <label for="exampleFormControlTextarea1" class="exTitle">전시 내용</label>
 								  <textarea class="form-control" id="addInfo" name="addInfo" rows="10"></textarea>
 								</div>
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
-								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
+								  <label for="exampleFormControlTextarea1" class="exTitle">허용인원</label>
 								<input type="text" class="form-control" id="addTotalNum" name="addTotalNum" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
-								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
+								  <label for="exampleFormControlTextarea1" class="exTitle">관람인원</label>
 								<input type="text" class="form-control" id="addWatchNum" name="addWatchNum" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
 							
 							<div class="row">
-							<label class="form-label">전시 가격</label>
+							<label class="exTitle">전시 가격</label>
 						    <div class="mb-3 col-4">
-						    	<label>성인</label>
+						    	<label class="exTitle">성인</label>
 								<div class="input-group" style="width:150px">
 								  <input type="text" class="form-control" aria-label="성인" id="addAdult" name="addAdult">
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
-						    	<label>청소년</label>
+						    	<label class="exTitle">청소년</label>
 								<div class="input-group" style="width:150px">
 								  <input type="text" class="form-control" aria-label="청소년" id="addTeen"name="addTeen">
 								  <span class="input-group-text" >원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
-						    	<label>유아/65세 이상</label>
+						    	<label class="exTitle">유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
 								  <input type="text" class="form-control" aria-label="유아/65세 이상"id="addChild"name="addChild" >
 								  <span class="input-group-text" >원</span>
@@ -550,14 +551,14 @@
 					      </div>
 					      <div class="modal-body">
 					      <form id="modifyExhibition"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
-					      <label class="form-label">전시 번호 </label>
-						      	<input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:50px;"/>	
+					      <label class="exTitle">전시 번호 </label>
+						      	<input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:40px;height:30px;margin-bottom:20px;"/>	
 						      	<div class="mb-3">
-								  <label for="전시명" class="form-label">전시명</label>
+								  <label for="전시명" class="exTitle">전시명</label>
 								  <input type="text" class="form-control" id="exName" name="exName" style="width:200px"/>
 								</div>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="form-label">전시장</label>
+								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
 							      	 	<select class="form-select" id="exHall" name="exHall"aria-label=".form-select-sm example" style="width:400px">
 									  <%
 									  	try{
@@ -574,18 +575,19 @@
 									</select>
 								</div>
 					      	<div class="mb-3">
-					      	<label class="form-label">전시 기간</label>
 					      	<div class="row">
 					      	<div class="col-6">
+					      	<label class="exTitle">시작일</label>
 					      	<input type="date" id="startDate" name="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
 					      	</div>
 					      	<div class="col-6">
+					      	<label class="exTitle">마감일</label>
 					      	<input type="date" id="endDate"name="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
 					      	</div>
 					      	</div>
 					      	</div>
 					      	<div class="mb-3" >
-						      	<label class="form-label">전시 포스터</label>
+						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster">
 						      	 <input type="hidden" id="hidPoster" name ="hidPoster"/>
@@ -593,11 +595,11 @@
 								  <img id="posterImg"/>
 					      	</div>
 						    <div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">전시 간단 소개</label>
+								<label for="exampleFormControlInput1" class="exTitle">전시 간단 소개</label>
 								  <textarea class="form-control" id="exIntro" name="exIntro" rows="3" style="width:500px"></textarea>
 							</div>
 						    <div class="mb-3">
-								<label for="exampleFormControlInput1" class="form-label">추가 이미지</label>
+								<label for="exampleFormControlInput1" class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	<input type="file" class="form-control" id="modifyAddImg" name="modifyAddImg">
 						      	<input type="hidden" id="hidAddImg" name="hidAddImg"/>
@@ -605,38 +607,38 @@
 								  <img id="addImage"/>
 							</div>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlTextarea1" class="form-label">전시 내용</label>
+								  <label for="exampleFormControlTextarea1" class="exTitle">전시 내용</label>
 								  <textarea class="form-control" id="exInfo"name="exInfo" rows="10"></textarea>
 								</div>
 					      	<div class="row">
 						      	<div class="mb-3 col-6">
-								  <label for="exampleFormControlTextarea1" class="form-label">허용인원</label>
+								  <label for="exampleFormControlTextarea1" class="exTitle">허용인원</label>
 								<input type="text" class="form-control" id="totalCount"name="totalCount" placeholder="100"  style="width:100px">
 								</div>
 						      	<div class="mb-3 col-6">
-								  <label for="exampleFormControlTextarea1" class="form-label">관람인원</label>
+								  <label for="exampleFormControlTextarea1" class="exTitle">관람인원</label>
 								<input type="text" class="form-control" id="watchCount"name="watchCount" placeholder="0"  style="width:100px">
 								</div>
 					      	</div>
 							
 							<div class="row">
-							<label class="form-label">전시 가격</label>
+							<label class="exTitle">전시 가격</label>
 						    <div class="mb-3 col-4">
-						    	<label>성인</label>
+						    	<label class="exTitle">성인</label>
 								<div class="input-group" style="width:150px">
 								  <input type="text" class="form-control" id="adult">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
-						    	<label>청소년</label>
+						    	<label class="exTitle">청소년</label>
 								<div class="input-group" style="width:150px">
 								  <input type="text" class="form-control" id="teen">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
-						    	<label>유아/65세 이상</label>
+						    	<label class="exTitle">유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
 								  <input type="text" class="form-control"id="child">
 								  <span class="input-group-text">원</span>
