@@ -26,6 +26,10 @@ int totalCount = Integer.parseInt(mr.getParameter("addTotalNum"));
 int watchCount = Integer.parseInt(mr.getParameter("addWatchNum"));
 String posterName = mr.getFilesystemName("addExPoster");
 String addImgName = mr.getFilesystemName("addAddImg");
+int adult = Integer.parseInt(mr.getParameter("addAdult")); 
+int child = Integer.parseInt(mr.getParameter("addChild"));
+int teen = Integer.parseInt(mr.getParameter("addTeen"));
+
 
 ExhibitionVO eVO = new ExhibitionVO();
 eVO.setExhibitionPoster(posterName);
@@ -38,12 +42,20 @@ eVO.setExInfo(info);
 eVO.setTotalCount(totalCount);
 eVO.setWatchCount(watchCount);
 eVO.setAddImg(addImgName);  
+eVO.setAdult(adult);
+eVO.setChild(child);
+eVO.setTeen(teen);
+
+AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
+aeDAO.insertExhibition(eVO);
+int ex_num = aeDAO.selectExnum(exName, startDate);
+eVO.setExNum(ex_num);
 
 /* ImageResize.resizeImage(saveDirectory.getPath()+"/"+posterName, 80,60);
 ImageResize.resizeImage(saveDirectory.getPath()+"/"+addImgName, 80,60); */
 
-AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
-int cnt = aeDAO.insertExhibition(eVO);
+
+aeDAO.insertPrice(eVO);
 
 
 %>

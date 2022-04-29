@@ -150,8 +150,8 @@
 				$("#confirmDelete").modal('show');
 			});//click
 			$("#modifyBtn").click(function(){
-				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원"];
-				var value=[$("#exName"),$("#startDate"),$("#endDate"),$("#exIntro"),$("#exInfo"),$("#totalCount"),$("#watchCount")];
+				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원","가격","가격","가격"];
+				var value=[$("#exName"),$("#startDate"),$("#endDate"),$("#exIntro"),$("#exInfo"),$("#totalCount"),$("#watchCount"),$("#adult"),$("#teen"),$("#child")];
 				for(var i = 0; i < title.length; i++){
 					if(value[i].val()==""){
 						alert(title+"을 입력해 주세요");
@@ -177,16 +177,24 @@
 					}//end if
 				}//end if
 				
-				if(!$.isNumeric(value[5].val())||!$.isNumeric(value[6].val())){
+				var pattern_num= /^[0-9]+$/;
+				
+				if(!pattern_num.test(value[5].val())||!pattern_num.test(value[6].val())){
 					alert("허용인원과 관람인원은 숫자로 입력해주세요");
+					value[5].focus();
+					return;
+				}//end if
+				if(!pattern_num.test(value[7].val())||!pattern_num.test(value[8].val())||!pattern_num.test(value[9].val())){
+					alert("가격은 숫자로 입력해주세요");
+					value[7].focus();
 					return;
 				}//end if
 			
 				$("#confirmModify").modal('show');
 			})//click
 			$("#addExBtn").click(function(){
-				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원"];
-				var value=[$("#addExName"),$("#addStartDate"),$("#addEndDate"),$("#addIntro"),$("#addInfo"),$("#addTotalNum"),$("#addWatchNum")];
+				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원","가격","가격","가격"];
+				var value=[$("#addExName"),$("#addStartDate"),$("#addEndDate"),$("#addIntro"),$("#addInfo"),$("#addTotalNum"),$("#addWatchNum"),$("#addAdult"),$("#addTeen"),$("#addChild")];
 				for(var i = 0; i < title.length; i++){
 					if(value[i].val()==""){
 						alert(title[i]+"을 입력해 주세요");
@@ -221,11 +229,19 @@
 					$("#addAddImg").focus();
 					return;
 				}
+				var pattern_num= /^[0-9]+$/;
 				
-				if(!$.isNumeric(value[5].val())||!$.isNumeric(value[6].val())){
+				if(!pattern_num.test(value[5].val())||!pattern_num.test(value[6].val())){
 					alert("허용인원과 관람인원은 숫자로 입력해주세요");
+					value[5].focus();
 					return;
 				}//end if
+				if(!pattern_num.test(value[7].val())||!pattern_num.test(value[8].val())||!pattern_num.test(value[9].val())){
+					alert("가격은 숫자로 입력해주세요");
+					value[7].focus();
+					return;
+				}//end if
+				$("#confirmAdd").modal('show');
 			});//click
 		  })//ready;
 	</script>  
@@ -552,7 +568,7 @@
 					      <div class="modal-body">
 					      <form id="modifyExhibition"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
 					      <label class="exTitle">전시 번호 </label>
-						      	<input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:40px;height:30px;margin-bottom:20px;"/>	
+						      	<input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
 						      	<div class="mb-3">
 								  <label for="전시명" class="exTitle">전시명</label>
 								  <input type="text" class="form-control" id="exName" name="exName" style="width:200px"/>
@@ -626,21 +642,21 @@
 						    <div class="mb-3 col-4">
 						    	<label class="exTitle">성인</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" id="adult">
+								  <input type="text" class="form-control" id="adult" name="adult">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label class="exTitle">청소년</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control" id="teen">
+								  <input type="text" class="form-control" id="teen" name="teen">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>
 						    <div class="mb-3 col-4">
 						    	<label class="exTitle">유아/65세 이상</label>
 								<div class="input-group" style="width:150px">
-								  <input type="text" class="form-control"id="child">
+								  <input type="text" class="form-control"id="child" name="child">
 								  <span class="input-group-text">원</span>
 								</div>
 							</div>

@@ -31,6 +31,10 @@ String hidAddImg = mr.getParameter("hidAddImg");
 File hidAddImgPath = new File(saveDirectory.getPath()+"/"+hidAddImg);
 String poster = mr.getFilesystemName("modifyExPoster");
 String addImg = mr.getFilesystemName("modifyAddImg");
+int adult = Integer.parseInt(mr.getParameter("adult"));
+int child = Integer.parseInt(mr.getParameter("child"));
+int teen = Integer.parseInt(mr.getParameter("teen"));
+
 if(poster==null||"".equals(poster)){//포스터를 입력하지 않은경우
 	poster=hidPoster;
 }else if(hidPosterPath.exists()){
@@ -55,7 +59,13 @@ eVO.setTotalCount(totalNum);
 eVO.setWatchCount(watchNum);
 eVO.setExhibitionPoster(poster);
 eVO.setAddImg(addImg);
+eVO.setAdult(adult);
+eVO.setChild(child);
+eVO.setTeen(teen);
 
 AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
-int cnt = aeDAO.updateEx(eVO);
+
+
+aeDAO.updateEx(eVO);
+aeDAO.updatePrice(eVO);
 %>

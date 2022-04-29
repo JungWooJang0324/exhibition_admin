@@ -66,6 +66,28 @@ public class AdminExhibitionDAO {
 		
 	}//selectMember
 		
+	public int selectExnum(String exName,String exhibitDate) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		DbConnection dc = DbConnection.getInstance();
+		int ex_num = 0;
+		try {
+			con = dc.getConn();
+			String selectQuery  ="select ex_num from exhibition where ex_name=? and exhibit_date=?";
+			pstmt= con.prepareStatement(selectQuery);
+			pstmt.setString(1, exName);
+			pstmt.setString(2, exhibitDate);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				ex_num=rs.getInt("ex_num");
+			}//end if
+			
+		}finally {
+			dc.close(rs, pstmt, con);
+		}
+		return ex_num;
+	}
 	public int getCount(String field, String query) throws SQLException {
 		int count = 0;
 		StringBuilder sql = new StringBuilder();
@@ -114,11 +136,10 @@ public class AdminExhibitionDAO {
 		
 		return cnt;
 	}
-	public int updateEx(ExhibitionVO eVO) throws SQLException{
+	public void updateEx(ExhibitionVO eVO) throws SQLException{
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
-		int cnt = 0;
 		try {
 			con = dc.getConn();
 			String updateQuery = "UPDATE EXHIBITION SET ex_name=?,ex_info=?,ex_intro=?, ex_hall_num=?, exhibit_date=?, deadline=?, total_count=?, watch_count=?, exhibition_poster=?, add_img=? where ex_num=?";
@@ -135,12 +156,11 @@ public class AdminExhibitionDAO {
 			pstmt.setString(10, eVO.getAddImg());
 			pstmt.setInt(11, eVO.getExNum());
 			
-			cnt = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 		}finally {
 			dc.close(null, pstmt, con);
 		}//end finally
-		return cnt;
 		
 	}//updateEx
 	public int releaseEx(String exNum) throws SQLException {
@@ -213,18 +233,12 @@ public class AdminExhibitionDAO {
 		return eVO;
 	}//selectExDetail
 	
-	public int insertExhibition(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
+	public void insertExhibition(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
-		int cnt = 0;
 		try {
 			con = dc.getConn();
-//			StringBuilder insertQuery = new StringBuilder();
-//			insertQuery
-//			.append(" 	INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,	")
-//			.append(" 	ex_intro,exhibition_poster, add_img,exhibit_date,deadline)		")	
-//			.append(" 	VALUES(13,?,?,?,?,?,?,?,?,?,?);		");	
 			String insertQuery =
 		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster,add_img,exhibit_date,deadline,ex_status) VALUES(ex_seq.nextval,?,?,?,?,?,?,?,?,?,?,'t')";
 			
@@ -241,16 +255,15 @@ public class AdminExhibitionDAO {
 			pstmt.setString(9, eVO.getExhibitDateText());
 			pstmt.setString(10, eVO.getDeadLineText());
 			
-			cnt = pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			
 		}finally{
 			dc.close(null, pstmt, con);
 			
 		}//end finally
-		return cnt;
 	}//insertExhibition
 	
-	public void insertPrice(PriceVO pVO,int exNum) throws SQLException, ClassNotFoundException, NamingException {
+	public void insertPrice(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
@@ -260,10 +273,10 @@ public class AdminExhibitionDAO {
 			String insertQuery = "insert into price(ex_num, adult,teen,child) values(?,?,?,?)";
 			pstmt = con.prepareStatement(insertQuery);
 			
-			pstmt.setInt(1, exNum);
-			pstmt.setInt(2, pVO.getAdult());
-			pstmt.setInt(3, pVO.getTeen());
-			pstmt.setInt(4, pVO.getChild());
+			pstmt.setInt(1, eVO.getExNum());
+			pstmt.setInt(2, eVO.getAdult());
+			pstmt.setInt(3, eVO.getTeen());
+			pstmt.setInt(4, eVO.getChild());
 			
 			
 			pstmt.executeUpdate();
@@ -274,6 +287,32 @@ public class AdminExhibitionDAO {
 		}//end finally
 		
 	}//insertExhibition
+	
+	/**
+	 * 전시 가격 업데이트
+	 * @param eVO
+	 * @throws SQLException
+	 */
+	public void updatePrice(ExhibitionVO eVO)throws SQLException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			String updateQuery = "update price set adult=?,child=?,teen=? where ex_num=? ";
+			pstmt=con.prepareStatement(updateQuery);
+			
+			pstmt.setInt(1, eVO.getAdult());
+			pstmt.setInt(2, eVO.getChild());
+			pstmt.setInt(3, eVO.getTeen());
+			pstmt.setInt(4, eVO.getExNum());
+			
+			pstmt.executeUpdate();
+		}finally {
+			dc.close(null, pstmt, con);
+		}//end finally
+		
+	}//updatePrice
 	
 	/**
 	 * 전시장 목록
