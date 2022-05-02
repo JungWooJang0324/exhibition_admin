@@ -84,7 +84,14 @@
     	var num= $("#resNum").val();
  		var rezCount=$("#rezCount").val();
 		var visitDate=$("#visitDate").val();
+			
+		var now= new Date();
+		
+		if(now > new Date(visitDate)){
+			alert("예약할 수 없는 날짜입니다.(방문날짜는 현재일자보다 이를수 없습니다.)");
+			return;
 				
+		}
 		if(rezCount=="" || visitDate==""){
 			alert("예약인원과 방문날짜는 비어있을 수 없습니다.");
 			return;
