@@ -224,6 +224,7 @@ public class AdminExhibitionDAO {
 				eVO.setTeen(rs.getInt("teen"));
 				eVO.setChild(rs.getInt("child"));
 				eVO.setExHallNum(rs.getInt("ex_hall_num"));
+				eVO.setExStatus(rs.getString("ex_status"));
 			}//end if
 			
 		}finally {

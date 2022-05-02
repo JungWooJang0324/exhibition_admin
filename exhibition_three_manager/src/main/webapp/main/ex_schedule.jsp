@@ -64,10 +64,12 @@
 		
 		function deleteExhibition(){
 			var num= $("#exNum").val();
+			var poster=$("#hidPoster").val();
+			var addImg=$("#hidAddImg").val();
 			alert(num);
 			 $.ajax({
 					url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_delete.jsp",
-					data: {"exNum":num},
+					data: {"exNum":num, "poster":poster,"addImg":addImg},
 					type: "post",
 					dataType:"json",
 					async:false,
@@ -77,7 +79,7 @@
 					},
 					success:function(jsonObj){
 						if(jsonObj.cnt > 0){
-							alert("전시가 취소되었습니다.")
+							alert("전시가 취소되었습니다.");
 							location.reload();
 						}
 					}  
@@ -126,7 +128,7 @@
 					},
 					success : function(jsonObj){
 						$("#exNum").val(exNum);
-					 	$("#startDate"). val(jsonObj.exhibitDate);
+					 	$("#startDate").val(jsonObj.exhibitDate);
 						$("#endDate").val(jsonObj.deadline); 
 						$("#exIntro").val(jsonObj.exIntro);
 						$("#exName").val(jsonObj.exName);
@@ -141,9 +143,15 @@
 						$("#hidAddImg").val(jsonObj.addImg);
 						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);
 						$("#addImage").attr("src","../images/"+jsonObj.addImg);
+						$("#exStatus").val(jsonObj.exStatus);
 					} })//ajax;
+				
 			});
 			$("#statusBtn").click(function(){
+				if($("#exStatus").val()=="Y"){
+					alert("이미 사용자 페이지에 업데이트 된 전시입니다.");
+					return;
+				}//end if
 				$("#confirmRelease").modal('show');
 			});//click
 			$("#deleteBtn").click(function(){
@@ -159,6 +167,21 @@
 						return;
 					}//end if
 				}//end for
+			    
+				var nowDate = new Date();
+				var startDate = new Date($("#startDate").val());
+				var endDate = new Date($("#endDate").val());
+				if(startDate.getTime() < nowDate.getTime()){
+					alert("시작일을 현재날짜 이후로 설정해주세요");
+					$("#startDate").focus();
+					return;
+				}//end if
+			
+				if(startDate > endDate){
+					alert("마감일은 시작일 이후로 설정해주세요");
+					$("#endDate").focus();
+					return;
+				}//end if 
 				var poster=$("#modifyExPoster").val();
 				if(poster!=""){
 					if(!compareExt(poster)){
@@ -202,6 +225,20 @@
 						return;
 					}//end if
 				}//end for
+				var nowDate = new Date();
+				var startDate = new Date($("#addStartDate").val());
+				var endDate = new Date($("#addEndDate").val());
+				
+				if(startDate.getTime() < nowDate.getTime()){
+					alert("시작일을 현재날짜 이후로 설정해주세요");
+					$("#addStartDate").focus();
+					return;
+				}//end if
+				if(startDate > endDate){
+					alert("마감일은 시작일 이후로 설정해주세요");
+					$("#addEndDate").focus();
+					return;
+				}//end if 
 				if($("#addExHall").val()==""){
 					alert("전시장을 입력해주세요");
 					$("#addExHall").focus();
@@ -243,6 +280,7 @@
 				}//end if
 				$("#confirmAdd").modal('show');
 			});//click
+			
 		  })//ready;
 	</script>  
     </head>
@@ -567,8 +605,16 @@
 					      </div>
 					      <div class="modal-body">
 					      <form id="modifyExhibition"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
-					      <label class="exTitle">전시 번호 </label>
-						      	<input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
+					      <div class="row">
+						      <div class="col-6">
+							      <label class="exTitle">전시 번호 </label>
+								  <input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
+						      </div>
+						      <div class="col-6">
+							      <label class="exTitle">전시 노출 여부 </label>
+								  <input type="text" id="exStatus" name="exStatus" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
+						      </div>
+					      </div>
 						      	<div class="mb-3">
 								  <label for="전시명" class="exTitle">전시명</label>
 								  <input type="text" class="form-control" id="exName" name="exName" style="width:200px"/>
@@ -594,7 +640,7 @@
 					      	<div class="row">
 					      	<div class="col-6">
 					      	<label class="exTitle">시작일</label>
-					      	<input type="date" id="startDate" name="startDate" class="form-control" placeholder="시작 일자" style="width:200px">
+					      	<input type="date" id="startDate" name="startDate" class="form-control" placeholder="시작 일자"  style="width:200px">
 					      	</div>
 					      	<div class="col-6">
 					      	<label class="exTitle">마감일</label>
