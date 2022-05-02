@@ -301,7 +301,37 @@ function checkUpdate(){
      $("#confirmModify").modal('show');
 }
 
+function chkByte(obj, maxByte){
+	var str = obj.value;
+	var str_len = str.length;
 
+	var rbyte = 0;
+	var rlen = 0;
+	var one_char = "";
+	var str2 = "";
+
+	for(var i=0; i<str_len; i++){
+		one_char = str.charAt(i);
+		
+		if(escape(one_char).length > 4){
+		    rbyte += 3;                                         //한글3Byte
+		}else{
+		    rbyte++;                                            //영문 등 나머지 1Byte
+		}
+	
+		if(rbyte <= maxByte){
+		    rlen = i+1;                                          //return할 문자열 갯수
+		}
+	}
+
+	if(rbyte > maxByte){
+	    alert("한글 "+ Math.floor(maxByte/3)+"자 / 영문 "+maxByte+"자를 초과 입력할 수 없습니다.");
+	    str2 = str.substr(0,rlen);                                  //문자열 자르기
+	    obj.value = str2;
+	    fnChkByte(obj, maxByte);
+	    return;
+	}
+}
 
 
 <%
@@ -497,15 +527,15 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td>
-					 				<input id="exName_add" type="text" name="exHall" placeholder="전시장명" style="margin-bottom: 10px"/>
+					 				<input id="exName_add" type="text" name="exHall" placeholder="전시장명" class="form-control" style="margin-bottom: 20px" onKeyUp="javascript:chkByte(this,'100')"/>
 				 				</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2">지역</th>
 					 		</tr>
 					 		<tr>
-					 			<td  style="padding-bottom: 10px">
-									<select class="inputBox" id="exLoc_add" name="exLoc">
+					 			<td  style="padding-bottom: 20px">
+									<select  id="exLoc_add" class="form-select" name="exLoc">
 										<option value="서울">서울</option>
 										<option value="경기">경기</option>
 										<option value="강원">강원</option>
@@ -520,47 +550,47 @@ if(keyword==null||"".equals(keyword)){
 								</td>
 					 		</tr>
 					 		<tr>
-					 			<th style="width: 300px">주소</th><th>우편번호</th>
+					 			<th style="width: 250px;" >주소</th><th style="padding-left: 20px">우편번호</th>
 					 		</tr>
 
 					 		<tr>
-					 			<td>
-					 				<input type="text" id="addr1_add" name="addr" placeholder="주소" />
+					 			<td >
+					 				<input type="text" id="addr1_add" name="addr" class="form-control"  placeholder="주소" />
 				 				</td>
-				 				<td style="padding-bottom: 10px">
-				 					<input id="zipcode_add"type="text" name="zipcode" placeholder="우편번호" />
+				 				<td style="padding-left: 20px">
+				 					<input id="zipcode_add"type="text" name="zipcode" class="form-control" placeholder="우편번호" style="padding-left: 20px"/>
 			 					</td>
 					 		</tr>
-					 		<tr>
-					 			<td colspan="2" style="padding-bottom: 10px">
-					 				<input type="text" id="addr2_add" name="addr" placeholder="상세주소" />
+					 		<tr >
+					 			<td colspan="2" style="padding-bottom: 20px;" >
+					 				<input type="text" id="addr2_add" name="addr" placeholder="상세주소" class="form-control" style="width: 250px; "  onKeyUp="javascript:chkByte(this,'100')" />
 				 				</td>
 					 		</tr>
 					 		<tr>
-					 			<th>위도</th><th >경도</th>
+					 			<th>위도</th><th style="padding-left: 20px" >경도</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input id="lat_add"  type="text" name="latitude" placeholder="위도"  onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
+					 			<td style="padding-bottom: 20px">
+					 				<input id="lat_add"  type="text" name="latitude" placeholder="위도"  class="form-control"  style="width: 150px; " onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 				 				</td>
-			 					<td style="padding-bottom: 10px">
-			 						<input id="long_add" type="text" name="longitutde" placeholder="경도" onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
+			 					<td style="padding-bottom: 20px; padding-left: 20px">
+			 						<input id="long_add" type="text" name="longitutde" placeholder="경도" class="form-control" style="width: 150px; " onKeyup="this.value=this.value.replace(/[^0-9.-]/g,'');"/>
 		 						</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" >전시장 담당자</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px">
-					 				<input id="mgrName_add" type="text" name="mgrName" placeholder="담당자명" />	
+					 			<td style="padding-bottom: 20px">
+					 				<input id="mgrName_add" type="text" name="mgrName" placeholder="담당자명" class="form-control" onKeyUp="javascript:chkByte(this,'50')" />	
 				 				</td>
 					 		</tr>
 					 		<tr>
 					 			<th colspan="2" >전시 담당자 번호</th>
 					 		</tr>
 					 		<tr>
-					 			<td style="padding-bottom: 10px" >
-					 				<input id="mgrTel_add" type="text" name="mgrTel" placeholder="담당자 번호" class="addChk"/>
+					 			<td style="padding-bottom: 20px" >
+					 				<input id="mgrTel_add" type="text" name="mgrTel" placeholder="담당자 번호" class="addChk form-control" />
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -568,7 +598,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 10px">
-				 					<input id="exTel_add" type="text" name="exTel" placeholder="전시장 번호" class="addChk"/>
+				 					<input id="exTel_add" type="text" name="exTel" placeholder="전시장 번호" class="addChk form-control"/>
 				 				</td>
 					 		</tr>
 					 	</table>
@@ -596,7 +626,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 20px">
-					 				<input type="text" class="form-control" id="exName_de" style="width: 250px; margin-right: 30px" />
+					 				<input type="text" class="form-control" id="exName_de" style="width: 250px; margin-right: 30px" onKeyUp="javascript:chkByte(this,'100')"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -621,7 +651,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 20px" colspan="2">
-					 				<input type="text" id="addr2_de" class="form-control" style="width: 250px; margin-right: 30px"/>
+					 				<input type="text" id="addr2_de" class="form-control" style="width: 250px; margin-right: 30px" onKeyUp="javascript:chkByte(this,'100')"/>
 					 			</td>
 					 		</tr>
 					 		<tr>
@@ -641,7 +671,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 20px">
-					 				<input type="text" id="mgrName_de" class="form-control" style="width: 250px; margin-right: 30px"/>
+					 				<input type="text" id="mgrName_de" class="form-control" style="width: 250px; margin-right: 30px" onKeyUp="javascript:chkByte(this,'50')"/>
 					 			</td>
 					 		</tr>
 					 		<tr>

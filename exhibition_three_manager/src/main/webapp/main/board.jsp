@@ -33,8 +33,6 @@
         <style>
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
         	#searchDiv{ margin-bottom: 30px; text-align: right}
-      	/* 	#btnAddDiv{ text-align: right; margin-top: 20px; position: relative}
- 			#pageNavigation{position: absolute; bottom: 20%; left: 50%} */
         	
         </style>
         
@@ -147,6 +145,38 @@ function deletePost( dbId ){
 			}
 		}); 
 	});// $("#modifyOk") .click 
+}
+
+function chkByte(obj, maxByte){
+	var str = obj.value;
+	var str_len = str.length;
+
+	var rbyte = 0;
+	var rlen = 0;
+	var one_char = "";
+	var str2 = "";
+
+	for(var i=0; i<str_len; i++){
+		one_char = str.charAt(i);
+		
+		if(escape(one_char).length > 4){
+		    rbyte += 3;                                         //한글3Byte
+		}else{
+		    rbyte++;                                            //영문 등 나머지 1Byte
+		}
+	
+		if(rbyte <= maxByte){
+		    rlen = i+1;                                          //return할 문자열 갯수
+		}
+	}
+
+	if(rbyte > maxByte){
+	    alert("한글 "+Math.floor(maxByte/3)+"자 / 영문 "+maxByte+"자를 초과 입력할 수 없습니다.");
+	    str2 = str.substr(0,rlen);                                  //문자열 자르기
+	    obj.value = str2;
+	    fnChkByte(obj, maxByte);
+	    return;
+	}
 }
 <%
 BoardManagerDAO bDAO = new BoardManagerDAO();
@@ -372,10 +402,10 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td style="padding-bottom: 20px;" >
-					 				<input type="text" id="title_de" class="form-control" style="width: 200px"/>
+					 				<input type="text" id="title_de" class="form-control" style="width: 200px" onKeyUp="javascript:chkByte(this,'100')"/>
 				 				</td>
 					 			<td style="padding-bottom: 20px"> 
-									<select id="catName_de" name="catName_de" class="form-control">
+									<select id="catName_de" name="catName_de" class="form-select">
 										<jsp:useBean id="bVO" class="VO.BoardVO" scope="page"/> 
 										<% List<BoardVO> list = new ArrayList<BoardVO>();
 											list=bDAO.selectCategory();
@@ -393,7 +423,7 @@ if(keyword==null||"".equals(keyword)){
 					 		</tr>
 					 		<tr>
 					 			<td >
-				 					<input type="text" id="id_de"  name="id_de" class="form-control" readonly="readonly" style="width:200px;height:30px;margin-bottom:20px;"/>
+				 					<input type="text" id="id_de"  name="id_de" class="form-control" readonly="readonly" style="width:200px; height:30px;margin-bottom:20px;"/>
 				 				</td>
 								<td >
 									<input type="text" id="imgFile_de"  name="imgFile_de" class="form-control" readonly="readonly" style="width:300px;height:30px;margin-bottom:20px;"/>

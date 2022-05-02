@@ -50,7 +50,6 @@ $(function(){
 		          ['font', ['bold', 'underline', 'clear']],
 		          ['color', ['color']],
 		          ['para', ['ul', 'ol', 'paragraph']]
-		       
        ] });
 	 
 	 
@@ -113,6 +112,37 @@ function fileChk(){
 	$('#confirmAdd').modal('show');
 }
 
+function chkByte(obj, maxByte){
+	var str = obj.value;
+	var str_len = str.length;
+
+	var rbyte = 0;
+	var rlen = 0;
+	var one_char = "";
+	var str2 = "";
+
+	for(var i=0; i<str_len; i++){
+		one_char = str.charAt(i);
+		
+		if(escape(one_char).length > 4){
+		    rbyte += 3;                                         //한글3Byte
+		}else{
+		    rbyte++;                                            //영문 등 나머지 1Byte
+		}
+	
+		if(rbyte <= maxByte){
+		    rlen = i+1;                                          //return할 문자열 갯수
+		}
+	}
+
+	if(rbyte > maxByte){
+	    alert("한글 "+ Math.floor(maxByte/3)+"자 / 영문 "+maxByte+"자를 초과 입력할 수 없습니다.");
+	    str2 = str.substr(0,rlen);                                  //문자열 자르기
+	    obj.value = str2;
+	    fnChkByte(obj, maxByte);
+	    return;
+	}
+}
 
 </script>
 </head>
@@ -135,10 +165,11 @@ function fileChk(){
 		</select>
 	</div>
 	<div>	
-		<input id="title" name="title" class="inputBox" type="text"  style="margin-bottom: 5px; width: 100%" placeholder=" 제목을 입력해주세요."/>
+		<input id="title" name="title" class="inputBox" type="text"  style="margin-bottom: 5px; width: 100%" placeholder=" 제목을 입력해주세요."
+			onKeyUp="javascript:chkByte(this,'100')" />
 	</div>
 	<div>
-		<textarea id="summernote" name="description" ></textarea>
+		<textarea id="summernote" name="description"></textarea>
 	</div>
 	<div>
       	<input type="file" class="form-control" id="imgFile" name="imgFile" style="margin-top: 10px; width: 25%; ">
