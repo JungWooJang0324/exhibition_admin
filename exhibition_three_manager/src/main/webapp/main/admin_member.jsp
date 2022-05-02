@@ -132,6 +132,13 @@
 		        }
 	 	  }).open();
   	});//click
+	  	$(".exit").click(function(){
+	  		$("#confirmExit").modal('show');
+	  	});
+  		$("#exitOk").click(function(){
+	  		$("#confirmExit").modal('hide');
+  			$("#memberDetail").modal('hide');
+  		}); 
   	});//ready
 </script>
     </head>
@@ -151,7 +158,7 @@
  	}//end if
  	//검색어 설정
  	String field= request.getParameter("dataSearchText");
- 	if(field==null || "".equals(field)){
+ 	if(field==null || "".equals(field.trim())){
  		field="";
  	}
  	// 연산을 하기 위한 pageNum 형변환 / 현재 페이지
@@ -331,7 +338,7 @@
 					    <div class="modal-content">
 					      <div class="modal-header">
 					        <h5 class="modal-title">회원 수정</h5>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					        <button type="button" class="btn-close exit" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
 					      	<div class="memberTitle">ID(Email)</div>
@@ -372,7 +379,7 @@
 							</div>
 					      </div>
 					      <div class="modal-footer">
-							        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
+							        <button type="button" class="btn btn-outline-dark exit">돌아가기</button>
 							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">회원 삭제</button>
 							        <button type="button" class="btn btn-outline-info" id="modifyBtn">회원 수정</button>
 					      </div>
@@ -380,6 +387,8 @@
 					  </div>
 					</div>
 				<!-- modal -->
+            </div>
+        </div>
 				<!-- 확인 modal -->
 		 		<div class="modal fade" id="confirm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">
@@ -399,9 +408,25 @@
 				  </div>
 				</div> 
 				<!--  -->
-            </div>
-        </div>
-             
+             <!-- 종료 확인 modal -->
+				<div class="modal fade" id="confirmExit" tabindex="-1"data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        지금 종료하면 작성했던 내용은 저장되지 않습니다.<br>
+				        종료하시겠습니까?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary" id="exitOk">Ok</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- modal -->
       
     </body>
 </html>

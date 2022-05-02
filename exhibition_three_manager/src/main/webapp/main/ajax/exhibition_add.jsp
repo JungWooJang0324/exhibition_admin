@@ -29,9 +29,12 @@ String addImgName = mr.getFilesystemName("addAddImg");
 int adult = Integer.parseInt(mr.getParameter("addAdult")); 
 int child = Integer.parseInt(mr.getParameter("addChild"));
 int teen = Integer.parseInt(mr.getParameter("addTeen"));
+AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
+aeDAO.insertCategory(exName);
 
 
 ExhibitionVO eVO = new ExhibitionVO();
+eVO.setExNum(aeDAO.selectCat(exName));
 eVO.setExhibitionPoster(posterName);
 eVO.setExName(exName);
 eVO.setExHallNum(exHall);
@@ -46,7 +49,6 @@ eVO.setAdult(adult);
 eVO.setChild(child);
 eVO.setTeen(teen);
 
-AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
 aeDAO.insertExhibition(eVO);
 int ex_num = aeDAO.selectExnum(exName, startDate);
 eVO.setExNum(ex_num);

@@ -65,7 +65,7 @@ eVO.setTeen(teen);
 
 AdminExhibitionDAO aeDAO = new AdminExhibitionDAO();
 
-
+aeDAO.updateCat(eVO);
 aeDAO.updateEx(eVO);
 aeDAO.updatePrice(eVO);
 %>

@@ -12,8 +12,8 @@ String addImg = request.getParameter("addImg");
 
 AdminExhibitionDAO aDAO=new AdminExhibitionDAO();
 int cnt=aDAO.deleteEx(exNum);
-File posterPath = new File("C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/images"+poster);
-File addImgPath = new File("C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/images"+addImg);
+File posterPath = new File("C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/images/"+poster);
+File addImgPath = new File("C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/images/"+addImg);
 
 if(posterPath.exists()){
 	posterPath.delete();

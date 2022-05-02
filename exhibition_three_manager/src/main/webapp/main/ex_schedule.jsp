@@ -53,13 +53,14 @@
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){
 						alert("사용자 페이지에 업데이트 되었습니다.");
+						/* $("#confirmRelease").modal('hide');
+						$("#modifyModal").modal('hide'); */
+						location.reload();
 					}else{
 						alert("실패");
 					}				
 				}//success
 			}) 
-			$("#confirmRelease").modal('hide');
-			$("#modifyModal").modal('hide');
 		}//releaseExhibition
 		
 		function deleteExhibition(){
@@ -101,8 +102,6 @@
 		function updateExhibition(){
 			$("#modifyExhibition").submit();
 			alert("전시 수정을 완료했습니다.");
-			$("#confirmModify").modal('hide');
-			$("#modifyModal").modal('hide');
 			location.reload();
 		}
 		
@@ -116,7 +115,9 @@
 			 $("#searchBtn").click(function(){
 				document.dataSearchFrm.submit();
 			}); 
-		
+			$("#addModal").on('hidden.bs.modal',function(e){
+					$(this).find('form')[0].reset();
+			});
 			$("#modifyModal").on('show.bs.modal', function(e) {
 				var exNum = $(e.relatedTarget).data('num');
 				$.ajax({
@@ -141,11 +142,17 @@
 						$("#exHall").val(jsonObj.exHallNum);
 						$("#hidPoster").val(jsonObj.exPoster);
 						$("#hidAddImg").val(jsonObj.addImg);
-						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);
-						$("#addImage").attr("src","../images/"+jsonObj.addImg);
+						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);//포스터 보이기
+						$("#addImage").attr("src","../images/"+jsonObj.addImg);//추가이미지 보이기
 						$("#exStatus").val(jsonObj.exStatus);
+						if(new Date().getTime() > new Date(jsonObj.exhibitDate).getTime()){
+							//이미 시작된 전시에 readonly 추가
+							$("#startDate").attr("readonly","readonly");
+						}else{
+							//그 외에 readonly 삭제
+							$("#startDate").removeAttr("readonly","readonly");
+						}//end else
 					} })//ajax;
-				
 			});
 			$("#statusBtn").click(function(){
 				if($("#exStatus").val()=="Y"){
@@ -161,7 +168,7 @@
 				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원","가격","가격","가격"];
 				var value=[$("#exName"),$("#startDate"),$("#endDate"),$("#exIntro"),$("#exInfo"),$("#totalCount"),$("#watchCount"),$("#adult"),$("#teen"),$("#child")];
 				for(var i = 0; i < title.length; i++){
-					if(value[i].val()==""){
+					if(value[i].val().trim()==""){
 						alert(title+"을 입력해 주세요");
 						value[i].focus();
 						return;
@@ -169,11 +176,10 @@
 				}//end for
 			    
 				var nowDate = new Date();
-				var startDate = new Date($("#startDate").val());
 				var endDate = new Date($("#endDate").val());
-				if(startDate.getTime() < nowDate.getTime()){
-					alert("시작일을 현재날짜 이후로 설정해주세요");
-					$("#startDate").focus();
+				if(endDate.getTime() < nowDate.getTime()){
+					alert("마감일을 현재날짜 이후로 설정해주세요");
+					$("#endDate").focus();
 					return;
 				}//end if
 			
@@ -183,7 +189,7 @@
 					return;
 				}//end if 
 				var poster=$("#modifyExPoster").val();
-				if(poster!=""){
+				if(poster.trim()!=""){
 					if(!compareExt(poster)){
 						alert("이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
 						$("#modifyExPoster").focus();
@@ -192,7 +198,7 @@
 				}//end if
 				
 				var addImg = $("#modifyAddImg").val();
-				if(addImg!=""){
+				if(addImg.trim()!=""){
 					if(!compareExt(addImg)){
 						alert("이미지만 업로드 가능합니다.\n 가능 확장자 png,jpg,gif,bmp");
 						$("#modifyAddImg").focus();
@@ -219,7 +225,7 @@
 				var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","관람인원","가격","가격","가격"];
 				var value=[$("#addExName"),$("#addStartDate"),$("#addEndDate"),$("#addIntro"),$("#addInfo"),$("#addTotalNum"),$("#addWatchNum"),$("#addAdult"),$("#addTeen"),$("#addChild")];
 				for(var i = 0; i < title.length; i++){
-					if(value[i].val()==""){
+					if(value[i].val().trim()==""){
 						alert(title[i]+"을 입력해 주세요");
 						value[i].focus();
 						return;
@@ -245,7 +251,7 @@
 					return;
 				}
 				var poster=$("#addExPoster").val();
-				if(poster==""){
+				if(poster.trim()==""){
 					alert("포스터를 입력해주세요");
 					$("#addExPoster").focus();
 					return;
@@ -256,7 +262,7 @@
 					return;
 				}
 				var addImg = $("#addAddImg").val();
-				if(addImg==""){
+				if(addImg.trim()==""){
 					alert("추가 이미지를 입력해주세요");
 					$("#addAddImg").focus();
 					return;
@@ -280,8 +286,16 @@
 				}//end if
 				$("#confirmAdd").modal('show');
 			});//click
-			
+			$(".exit").click(function(){
+				$("#confirmExit").modal('show');
+			});
+			$("#exitOk").click(function(){
+				$("#confirmExit").modal('hide');
+				$("#modifyModal").modal('hide');
+				$("#addModal").modal('hide');
+			})
 		  })//ready;
+		  
 	</script>  
     </head>
         <%
@@ -482,7 +496,7 @@
 					    <div class="modal-content">
 					      <div class="modal-header">
 					        <h5 class="modal-title">전시 추가</h5>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					        <button type="button" class="btn-close exit"  aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
 					     <form id="addFrm" method="post"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp" enctype="multipart/form-data" target='blankifr'>
@@ -583,7 +597,7 @@
 					        <div class="container-fluid">
 					      <div class="row">
 					      	<div class="col-6 text-center">
-					        <a type="button" class="btn btn-outline-dark"  data-bs-dismiss="modal" >돌아가기</a>
+					        <a type="button" class="btn btn-outline-dark exit">돌아가기</a>
 					      	</div>
 					      	<div class="col-6 text-center">
 					        <button type="button" class="btn btn-outline-info" id="addExBtn">전시 추가</button>
@@ -601,7 +615,7 @@
 					    <div class="modal-content">
 					      <div class="modal-header">
 					        <h5 class="modal-title">전시 조회</h5>
-					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					        <button type="button" class="btn-close exit" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
 					      <form id="modifyExhibition"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
@@ -711,7 +725,7 @@
 					      </form>
 					      </div>
 					      <div class="modal-footer">
-					      			<button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">돌아가기</button>
+					      			<button type="button" class="btn btn-outline-dark exit">돌아가기</button>
 							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">전시 삭제</button>
 							        <button type="button" class="btn btn-outline-info" id="modifyBtn">전시 수정</button>
 							        <button type="button" class="btn btn-outline-success" id="statusBtn">전시 노출</button>
@@ -788,6 +802,26 @@
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				        <button type="button" class="btn btn-primary" onclick="releaseExhibition()">Ok</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+				<!-- modal -->
+				
+				<!-- 종료 확인 modal -->
+				<div class="modal fade" id="confirmExit" tabindex="-1"data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        지금 종료하면 작성했던 내용은 저장되지 않습니다.<br>
+				        종료하시겠습니까?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary" id="exitOk">Ok</button>
 				      </div>
 				    </div>
 				  </div>

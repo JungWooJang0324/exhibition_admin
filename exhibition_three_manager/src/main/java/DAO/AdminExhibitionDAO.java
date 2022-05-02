@@ -241,20 +241,23 @@ public class AdminExhibitionDAO {
 		try {
 			con = dc.getConn();
 			String insertQuery =
-		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster,add_img,exhibit_date,deadline,ex_status) VALUES(ex_seq.nextval,?,?,?,?,?,?,?,?,?,?,'t')";
+		"INSERT INTO EXHIBITION(ex_num,total_count,watch_count,ex_hall_num,ex_name,ex_info,ex_intro,exhibition_poster,add_img,exhibit_date,deadline,ex_status,cat_num) VALUES(?,?,?,?,?,?,?,?,?,?,?,'t',?)";
 			
 			pstmt = con.prepareStatement(insertQuery);
 			
-			pstmt.setInt(1, eVO.getTotalCount());
-			pstmt.setInt(2, eVO.getWatchCount());
-			pstmt.setInt(3, eVO.getExHallNum());
-			pstmt.setString(4, eVO.getExName());
-			pstmt.setString(5, eVO.getExInfo());
-			pstmt.setString(6, eVO.getExIntro());
-			pstmt.setString(7, eVO.getExhibitionPoster());
-			pstmt.setString(8, eVO.getAddImg());
-			pstmt.setString(9, eVO.getExhibitDateText());
-			pstmt.setString(10, eVO.getDeadLineText());
+			pstmt.setInt(1, eVO.getExNum());
+			pstmt.setInt(2, eVO.getTotalCount());
+			pstmt.setInt(3, eVO.getWatchCount());
+			pstmt.setInt(4, eVO.getExHallNum());
+			pstmt.setInt(4, eVO.getExHallNum());
+			pstmt.setString(5, eVO.getExName());
+			pstmt.setString(6, eVO.getExInfo());
+			pstmt.setString(7, eVO.getExIntro());
+			pstmt.setString(8, eVO.getExhibitionPoster());
+			pstmt.setString(9, eVO.getAddImg());
+			pstmt.setString(10, eVO.getExhibitDateText());
+			pstmt.setString(11, eVO.getDeadLineText());
+			pstmt.setInt(12, eVO.getExNum());
 			
 			pstmt.executeUpdate();
 			
@@ -264,11 +267,47 @@ public class AdminExhibitionDAO {
 		}//end finally
 	}//insertExhibition
 	
+	public void insertCategory(String ex_name) throws SQLException {
+		//category insert method
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			String insertQuery = " INSERT INTO CATEGORY(CAT_NUM,CAT_NAME) VALUES(EX_SEQ.NEXTVAL,?)";
+			pstmt = con.prepareStatement(insertQuery);
+			pstmt.setString(1, ex_name);
+			pstmt.executeUpdate();
+		}finally {
+			dc.close(null, pstmt, con);
+		}//end finally
+	}//insertCategory
+	
+	public int selectCat(String ex_name) throws SQLException{// category num 추가
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		ResultSet rs = null;
+		int catNum = 0;
+		try {
+			con = dc.getConn();
+			String insertQuery = " SELECT cat_num FROM CATEGORY WHERE CAT_NAME=?";
+			pstmt = con.prepareStatement(insertQuery);
+			pstmt.setString(1, ex_name);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				catNum=rs.getInt("cat_num");
+			}//end if
+		}finally {
+			dc.close(null, pstmt, con);
+		}//end finally
+		return catNum;
+	}//selectCat
+	
 	public void insertPrice(ExhibitionVO eVO) throws SQLException, ClassNotFoundException, NamingException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		DbConnection dc = DbConnection.getInstance();
-		
 		try {
 			con = dc.getConn();
 			String insertQuery = "insert into price(ex_num, adult,teen,child) values(?,?,?,?)";
@@ -288,6 +327,31 @@ public class AdminExhibitionDAO {
 		}//end finally
 		
 	}//insertExhibition
+	
+	/**
+	 * 전시 카테고리 업데이트
+	 * @throws SQLException
+	 */
+	public void updateCat(ExhibitionVO eVO)throws SQLException{
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		DbConnection dc = DbConnection.getInstance();
+		try {
+			con = dc.getConn();
+			String updateQuery = "update category set cat_name=? where cat_num=? ";
+			pstmt=con.prepareStatement(updateQuery);
+			
+			pstmt.setString(1, eVO.getExName());
+			pstmt.setInt(2, eVO.getExNum());
+			
+			pstmt.executeUpdate();
+		}finally {
+			dc.close(null, pstmt, con);
+		}//end finally
+		
+		
+		
+	}//updateCat
 	
 	/**
 	 * 전시 가격 업데이트
