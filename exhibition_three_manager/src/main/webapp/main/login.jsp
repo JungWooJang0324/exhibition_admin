@@ -12,7 +12,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Login</title>
-        <link href="../css/styles.css" rel="stylesheet" />
+        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
       
       

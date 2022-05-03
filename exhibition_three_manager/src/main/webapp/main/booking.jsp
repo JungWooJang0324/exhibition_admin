@@ -20,7 +20,7 @@
         <meta name="author" content="" />
         <title>Reservation</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="../css/styles.css" rel="stylesheet" />
+        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
         <!-- jQuery CDN -->
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -28,12 +28,12 @@
  		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="../js/scripts.js"></script>
+        <script src="http://localhost/exhibition_three_manager/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="../assets/demo/chart-area-demo.js"></script>
-        <script src="../assets/demo/chart-bar-demo.js"></script>
+        <script src="http://localhost/exhibition_three_manager/assets/demo/chart-area-demo.js"></script>
+        <script src="http://localhost/exhibition_three_manager/assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="../js/datatables-simple-demo.js"></script>
+        <script src="http://localhost/exhibition_three_manager/js/datatables-simple-demo.js"></script>
      
 <style>
         	
@@ -58,7 +58,6 @@
 			dataType:"json",
 			error:function(xhr){
 				console.log("bookingDetail "+xhr.status+", "+xhr.statusText);
-				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				$("#exName").val(jsonObj.exName);				
@@ -104,16 +103,13 @@
 			dataType:"json",
 			error:function(xhr){
 				console.log("confirmModify : "+xhr.status+", "+xhr.statusText);
-				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				if(jsonObj.cnt > 0){
 					alert("수정되었습니다.")
 					location.href="booking.jsp";
-				} else{
-					location.href="admin_error.html";
-				} 
-			}  
+				}  
+			}
 		}); //ajax
 	} //confirmModify
 	
@@ -127,7 +123,6 @@
 				dataType:"json",
 				error:function(xhr){
 					console.log("cancelAjax : "+xhr.status+", "+xhr.statusText);
-					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){
@@ -149,7 +144,6 @@
 				dataType:"json",
 				error:function(xhr){
 					console.log("confirmAjax : "+xhr.status+", "+xhr.statusText);
-					location.href="admin_error.html";
 				},
 				success:function(jsonObj){
 					if(jsonObj.cnt > 0){

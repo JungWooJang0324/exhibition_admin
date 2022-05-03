@@ -17,7 +17,7 @@
         <meta name="author" content="" />
         <title>Board</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="../css/styles.css" rel="stylesheet" />
+        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
         <!-- jQeury CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
@@ -67,7 +67,6 @@ $(function(){
 			dataType:"json",
 			error:function(xhr){
 				console.log("※에러"+xhr.status);
-				location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				$("#bdId_de").val(jsonObj.bdId);

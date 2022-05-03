@@ -10,7 +10,7 @@
         <meta name="author" content="" />
         <title>Settings</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="../css/styles.css" rel="stylesheet" />
+        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
       
         <style>
@@ -74,7 +74,7 @@
 											PASSWORD
 											</th>
 											<td>
-											<a href="password.jsp">수정하기</a>
+											<a href="http://localhost/exhibition_three_manager/main/password.jsp">수정하기</a>
 											</td>
 										</tr>
 										<tr>
@@ -89,7 +89,7 @@
 									</table>
 								</div>
 								<div style="margin-top: 50px;">
-									<a class="btn btn-primary" id="loginBtn" href="index.jsp">메인으로 가기</a>
+									<a class="btn btn-primary" id="loginBtn" href="http://localhost/exhibition_three_manager/main/index.jsp">메인으로 가기</a>
 									<a class="btn btn-primary" id="loginBtn" href="#" onclick="history.back()">뒤로 가기</a>
 								</div>
 								</div>

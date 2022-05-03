@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -6,8 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Error - SB Admin</title>
-        <link href="../css/styles.css" rel="stylesheet" />
+        <title>404 Error</title>
+        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -18,10 +21,9 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-6">
                                 <div class="text-center mt-4">
-                                    <h2>불편을 드려 죄송합니다.</h2>
+                                    <h2>요청하신 페이지가 없습니다.</h2>
                                     <p class="lead"></p>
-                                    <p>잠시 후에 다시  시도해 주세요.</p>
-                                    <a href="index.jsp">
+                                    <a href="http://localhost/exhibition_three_manager/main/index.jsp">
                                         <i class="fas fa-arrow-left me-1"></i>
                                         대시보드로 돌아가기
                                     </a>
