@@ -13,28 +13,28 @@
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/admin_member.jsp" id="nav_member">
+                            <a class="nav-link collapsed" href="http://<%=application.getInitParameter("domain") %>/main/admin_member.jsp" id="nav_member">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i>
                                 </div>
                                	회원 관리
 
                             </a>
                           <div class="sb-sidenav-menu-heading">EXHIBITIONS</div>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" id="nav_exhibition">
+                            <a class="nav-link collapsed" href="http://<%=application.getInitParameter("domain") %>/main/ex_schedule.jsp" id="nav_exhibition">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시 일정관리
                             </a>
-                            <a class="nav-link collapsed" href="http://localhost/exhibition_three_manager/main/hall.jsp" id="nav_hall">
+                            <a class="nav-link collapsed" href="http://<%=application.getInitParameter("domain") %>/main/hall.jsp" id="nav_hall">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 전시장 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOOKING</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/booking.jsp" id="nav_booking">
+                            <a class="nav-link" href="http://<%=application.getInitParameter("domain") %>/main/booking.jsp" id="nav_booking">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="http://localhost/exhibition_three_manager/main/board.jsp" id="nav_board">
+                            <a class="nav-link" href="http://<%=application.getInitParameter("domain") %>/main/board.jsp" id="nav_board">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>

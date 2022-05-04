@@ -20,7 +20,7 @@
         <meta name="author" content="" />
         <title>Reservation</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
         <!-- jQuery CDN -->
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -28,12 +28,12 @@
  		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="http://localhost/exhibition_three_manager/js/scripts.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="http://localhost/exhibition_three_manager/assets/demo/chart-area-demo.js"></script>
-        <script src="http://localhost/exhibition_three_manager/assets/demo/chart-bar-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/assets/demo/chart-area-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="http://localhost/exhibition_three_manager/js/datatables-simple-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/js/datatables-simple-demo.js"></script>
      
 <style>
         	
@@ -51,7 +51,7 @@
 	   	var num= $(e.relatedTarget).data('num');
     	var error="";
     	$.ajax({
-			url:"http://localhost/exhibition_three_manager/main/ajax/bookingAjax.jsp",
+			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/bookingAjax.jsp",
 			data: {"rezNum":num},
 			async:false,
 			type: "get",
@@ -86,17 +86,25 @@
 			
 		var now= new Date();
 		
+		if(rezCount<1){
+			alert("인원은 1명 이상이어야합니다. 예약페이지로 돌아갑니다.")
+			location.href="booking.jsp";
+			return;
+		}
+		
 		if(now > new Date(visitDate)){
-			alert("예약할 수 없는 날짜입니다.(방문날짜는 현재일자보다 이를수 없습니다.)");
+			alert("예약할 수 없는 날짜입니다.\n예약페이지로 돌아갑니다.");
+			location.href="booking.jsp";
 			return;
 				
 		}
 		if(rezCount=="" || visitDate==""){
-			alert("예약인원과 방문날짜는 비어있을 수 없습니다.");
+			alert("예약인원과 방문날짜는 비어있을 수 없습니다. 예약페이지로 돌아갑니다.");
+			location.href="booking.jsp";
 			return;
 		}
 		 $.ajax({
-			url:"http://localhost/exhibition_three_manager/main/ajax/bookingModifyAjax.jsp",
+			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/bookingModifyAjax.jsp",
 			data: {"rezCount":rezCount, "visitDate":visitDate, "rezNum":num},
 			async:false,
 			type: "get",
@@ -116,7 +124,7 @@
 	function cancelRez() {
 		var num= $("#mainRezNum").text();
 		 $.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/bookingCancelAjax.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/bookingCancelAjax.jsp",
 				data: {"rezNum":num},
 				async:false,
 				type: "get",
@@ -137,7 +145,7 @@
 	function rezConfirm() {
 		var num= $("#mainRezNum").text();
 		 $.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/bookingConfirmAjax.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/bookingConfirmAjax.jsp",
 				data: {"rezNum":num},
 				async:false,
 				type: "get",
@@ -216,9 +224,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                       <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                       <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
    					</ul>
                 </li>
             </ul>
@@ -240,7 +248,7 @@
                         <!-- 검색창 -->
 							<div id="searchDiv" >
 								
-                            <form class="d-flex" action="http://localhost/exhibition_three_manager/main/booking.jsp" name="dataSearchFrm">
+                            <form class="d-flex" action="http://<%=application.getInitParameter("domain") %>/main/booking.jsp" name="dataSearchFrm">
                             	<div class="input-group mb-3" style="width:300px; height:40px; margin-top:10px;" >
 								  <span class="input-group-text" id="addon-wrapping">방문날짜</span>
 					      		  <input type="date" name="vDate" class="form-control" placeholder="방문 일자" style="width:200px;" id="vDate" value="${param.vDate}">

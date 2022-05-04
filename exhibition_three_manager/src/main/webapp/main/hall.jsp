@@ -4,7 +4,8 @@
 <%@page import="org.apache.catalina.mbeans.UserMBean"%>
 <%@page import="java.util.List"%>
 <%@page import="VO.ExHallVO"%>
-<%@include file="admin_id_session.jsp" %> 
+<%@include file="admin_id_session.jsp" %>
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="전시장"%>
@@ -19,18 +20,18 @@
         <meta name="author" content="" />
         <title>Exhibition Hall</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <!-- jQeury CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="http://localhost/exhibition_three_manager/js/scripts.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="assets/demo/chart-area-demo.js"></script>
         <script src="assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="http://localhost/exhibition_three_manager/js/datatables-simple-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/js/datatables-simple-demo.js"></script>
         <!-- 다음 우편번호 api -->
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
@@ -50,7 +51,7 @@ $(function(){
 		$("#hallDetail").modal('show');
 		
 		$.ajax({
-			url:"http://localhost/exhibition_three_manager/main/ajax/hallDetailAjax.jsp",
+			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallDetailAjax.jsp",
 			type:"post",
 			data:{ "hallNum":hallNum},
 			dataType:"json",
@@ -97,7 +98,7 @@ $(function(){
 				$("#confirmAdd").modal('hide'); 
 				
 				$.ajax({
-					url:"http://localhost/exhibition_three_manager/main/ajax/hallInsertAjax.jsp",
+					url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallInsertAjax.jsp",
 					type:"post",
 					data:{
 						exName : $("#exName_add").val(), 
@@ -139,7 +140,7 @@ $(function(){
 			 $("#confirmModify").modal('hide');
 			 
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/hallUpdateAjax.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallUpdateAjax.jsp",
 				type:"post",
 				data:{
 					"exName" : $("#exName_de").val(),
@@ -179,7 +180,7 @@ $(function(){
 			$("#confirmDelete").modal('hide');
 			 
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/hallDeleteAjax.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallDeleteAjax.jsp",
 				type:"post",
 				data:{ "hallNum": $("#exNum_de").val()},
 				error:function(xhr){
@@ -259,7 +260,7 @@ function checkAdd(){
  	$.each(coordinate, function(idx, c){
 		$(c).change(function(){
 		     if (!reg.test($(c).val())) {
-		         alert('좌표를 정확히 입력해주세요. 정수부분 3자리, 소수부분 5자리까지 입력가능합니다.');
+		         alert('좌표를 정확히 입력해주세요. 정수부분 3자리, 소수부분 6자리까지 입력가능합니다.');
 		         return false;
 		     }
 		});
@@ -273,7 +274,7 @@ function checkUpdate(){
 	
 	var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/; //폰 번호 검증
 	var regTel = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))-(\d{3,4})-(\d{4})$/;  //일반전화 검증
-	var reg =  /^[+-]?(\d{1,3})?[.](\d{0,5})?$/;; //좌표 검증
+	var reg =  /^[+-]?(\d{1,3})?[.](\d{0,6})?$/;; //좌표 검증
 	
 	
      if (!regPhone.test($("#mgrTel_de").val())) {
@@ -287,12 +288,12 @@ function checkUpdate(){
      }
      
      if (!reg.test($("#lat_de").val())) {
-         alert('위도를 정확히 입력해주세요. +-, 정수부분 3자리, 소수부분 5자리까지 입력가능합니다.');
+         alert('위도를 정확히 입력해주세요. +-, 정수부분 3자리, 소수부분 6자리까지 입력가능합니다.');
          return;
      }
      
      if (!reg.test($("#long_de").val())) {
-         alert('경도를 정확히 입력해주세요. +-, 정수부분 3자리, 소수부분 5자리까지 입력가능합니다.');
+         alert('경도를 정확히 입력해주세요. +-, 정수부분 3자리, 소수부분 6자리까지 입력가능합니다.');
          return;
      }
      
@@ -372,7 +373,7 @@ if(keyword==null||"".equals(keyword)){
   <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -383,9 +384,9 @@ if(keyword==null||"".equals(keyword)){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -406,7 +407,7 @@ if(keyword==null||"".equals(keyword)){
                         </ol>
                         <!-- 검색 div -->
                          <div  style="width: 400px; float: right; margin-bottom: 10px">
-                            <form id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/exhibition_three_manager/main/hall.jsp">
+                            <form id = "searchFrm" class="d-flex" name="searchFrm" action="http://<%=application.getInitParameter("domain") %>/main/hall.jsp">
 		                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"  >
 										  <option ${param.option =="ex_hall_name"? "selected":""} value="ex_hall_name">전시장명</option>
 										  <option ${param.option =="ex_loc"? "selected":""} value="ex_loc">전시 위치</option>

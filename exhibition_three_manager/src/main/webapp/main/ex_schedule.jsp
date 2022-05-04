@@ -21,7 +21,7 @@
         <meta name="author" content="" />
         <title>Exhibition Schedule</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
         <!-- jQuery CDN -->
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -42,7 +42,7 @@
 			var exNum = $("#exNum").val();
 			
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_release.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_release.jsp",
 				data:{"exNum":exNum},
 				type:"post",
 				dataType:"json",
@@ -67,9 +67,8 @@
 			var num= $("#exNum").val();
 			var poster=$("#hidPoster").val();
 			var addImg=$("#hidAddImg").val();
-			alert(num);
 			 $.ajax({
-					url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_delete.jsp",
+					url:"http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_delete.jsp",
 					data: {"exNum":num, "poster":poster,"addImg":addImg},
 					type: "post",
 					dataType:"json",
@@ -121,7 +120,7 @@
 			$("#modifyModal").on('show.bs.modal', function(e) {
 				var exNum = $(e.relatedTarget).data('num');
 				$.ajax({
-					url:"http://localhost/exhibition_three_manager/main/ajax/exhibition_detail.jsp",
+					url:"http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_detail.jsp",
 					data:{"exNum": exNum},
 					dataType:"json",
 					error : function(xhr){
@@ -338,7 +337,7 @@
 
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
             <!-- <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
  			 <!-- Navbar Search-->
@@ -351,9 +350,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -373,7 +372,7 @@
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
                         <div class="card-body">
-                               <form class="d-flex" style="float:right" action="http://localhost/exhibition_three_manager/main/ex_schedule.jsp" name="dataSearchFrm">
+                               <form class="d-flex" style="float:right" action="http://<%=application.getInitParameter("domain") %>/main/ex_schedule.jsp" name="dataSearchFrm">
 			                         <div class="input-group mb-3" style="width:350px;">
 											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;" name="dataSearchItem" >
 											  <option ${(param.dataSearchItem=="ex_name")?"selected":""} value="ex_name">전시명</option>
@@ -499,7 +498,7 @@
 					        <button type="button" class="btn-close exit"  aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					     <form id="addFrm" method="post"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_add.jsp" enctype="multipart/form-data" target='blankifr'>
+					     <form id="addFrm" method="post"action="http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_add.jsp" enctype="multipart/form-data" target='blankifr'>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="exTitle">전시명</label>
 								  <input type="email" class="form-control" id="addExName" name="addExName" placeholder="전시명"  style="width:200px">
@@ -618,7 +617,7 @@
 					        <button type="button" class="btn-close exit" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					      <form id="modifyExhibition"action="http://localhost/exhibition_three_manager/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
+					      <form id="modifyExhibition"action="http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
 					      <div class="row">
 						      <div class="col-6">
 							      <label class="exTitle">전시 번호 </label>

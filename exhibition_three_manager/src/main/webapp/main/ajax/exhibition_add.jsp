@@ -9,7 +9,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-File saveDirectory = new File("C:/Users/user/git/exhibition_admin/exhibition_three_manager/src/main/webapp/images");
+File saveDirectory = new File("E:/exhibTest_service/images");
 if(!saveDirectory.exists()){
 	saveDirectory.mkdirs();
 }

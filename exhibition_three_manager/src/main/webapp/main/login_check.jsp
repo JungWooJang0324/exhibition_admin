@@ -1,3 +1,4 @@
+<%@page import="org.apache.tomcat.util.codec.binary.Base64"%>
 <%@page import="java.security.MessageDigest"%>
 <%@page import="DAO.AdminDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,7 +12,10 @@
 
 	MessageDigest  md = MessageDigest.getInstance("SHA-512");
 	md.update(pw.getBytes());
-	String passNew=new String(md.digest());
+	Base64 base=new Base64();
+	String passNew=new String( base.encode( md.digest()) );
+	
+	
 	
 	AdminDAO ad = new AdminDAO();
 	String date =ad.login(id, passNew);
@@ -25,7 +29,6 @@
 		%>
 		<script type="text/javascript">
 		alert("아이디와 비밀번호가 틀립니다!");
-		
 		history.back();
 		</script>
 				

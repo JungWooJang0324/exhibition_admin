@@ -12,7 +12,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Login</title>
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
       
       
@@ -42,7 +42,7 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                     <div class="card-body" style="margin-top: 20px;">
-                                        <form action="http://localhost/exhibition_three_manager/main/login_check.jsp" method="post" id="loginForm">
+                                        <form action="http://<%=application.getInitParameter("domain") %>/main/login_check.jsp" method="post" id="loginForm">
                                             <div class="form-floating mb-3">
                                                 <input class="form-control" id="inEmail" type="email" name="admin_id" placeholder="name@example.com" value="exhib" onkeyup="enter()" />
                                                 <label for="inputEmail">Email address</label>

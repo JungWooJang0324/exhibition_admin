@@ -17,7 +17,7 @@
         <meta name="author" content="" />
         <title>Member</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <!-- jQeury CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
@@ -70,7 +70,7 @@
 			}//end if
 			
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/member_ajax.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/member_ajax.jsp",
 				data : {
 					"id":id,
 					"name" : name,
@@ -183,7 +183,7 @@
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -194,9 +194,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -217,7 +217,7 @@
                         </ol>
                         <!-- 검색창 -->
 							<div id="searchDiv" >
-                            <form action="http://localhost/exhibition_three_manager/main/admin_member.jsp" name="dataSearchFrm" class="d-flex" style="float:right">
+                            <form action="http://<%=application.getInitParameter("domain") %>/main/admin_member.jsp" name="dataSearchFrm" class="d-flex" style="float:right">
 			                         <div class="input-group mb-3" style="width:300px;">
 										 <select class="form-select" aria-label=".form-select-sm example" name="dataSearchItem" style="height:35px;">
 											  <option ${(param.dataSearchItem =="name")?"selected":""} value="name">이름</option>

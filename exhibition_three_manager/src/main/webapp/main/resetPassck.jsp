@@ -1,4 +1,5 @@
 
+<%@page import="org.apache.tomcat.util.codec.binary.Base64"%>
 <%@page import="java.security.MessageDigest"%>
 <%@page import="DAO.AdminDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -9,17 +10,20 @@
 	String newPass =  request.getParameter("newPass");
 	
 	MessageDigest  md = MessageDigest.getInstance("SHA-512");
+	
 	md.update(newPass.getBytes());
-		
-	String newPassNew=new String(md.digest());
 
-	
-	
+	Base64 base=new Base64();
+	String newPassNew=new String( base.encode( md.digest()));
+
 	AdminDAO ad=new AdminDAO();
 	boolean flag=ad.resetPass(sessionId, newPassNew);
 	
 	if(flag){
 		session.invalidate();
-		response.sendRedirect("http://localhost/exhibition_three_manager/main/index.jsp");
+		String url=application.getInitParameter("domain");
+		String redirectUrl="http://"+url+"/main/index.jsp";
+
+		response.sendRedirect(redirectUrl);
 	}
 %>

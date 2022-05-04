@@ -2,5 +2,7 @@
     pageEncoding="UTF-8"%>
 <%
 	session.invalidate();
-	response.sendRedirect("http://localhost/exhibition_three_manager/main/index.jsp");
+	String domain=application.getInitParameter("domain");
+	String requestUrl="http://"+domain+"/main/index.jsp";
+	response.sendRedirect(requestUrl);
 %>

@@ -45,7 +45,7 @@ public class ExHallManagerDAO {
 					count = rs.getInt(1);
 				}
 			} else {
-				sql.append("	where ").append(option).append(" like '%'||?||'%'		");
+				sql.append("	and ").append(option).append(" like '%'||?||'%'		");
 
 				pstmt = con.prepareStatement(sql.toString());
 				pstmt.setString(1, keyword.trim());

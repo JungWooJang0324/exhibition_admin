@@ -17,18 +17,18 @@
         <meta name="author" content="" />
         <title>Board</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <!-- jQeury CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/assets/demo/chart-area-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+        <script src="http://<%=application.getInitParameter("domain") %>/js/datatables-simple-demo.js"></script>
      
         <style>
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
@@ -61,7 +61,7 @@ $(function(){
 		$("#boardDetail").modal('show'); 
 		
 		$.ajax({
-			url:"http://localhost/exhibition_three_manager/main/ajax/boardDetailAjax.jsp",
+			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/boardDetailAjax.jsp",
 			type:"post",
 			data:{ "bdId":bdId	},
 			dataType:"json",
@@ -89,7 +89,7 @@ $(function(){
 		 $("#modifyOk").click(function(){
 			 $("#confirmModify").modal('hide');
 			$.ajax({
-				url:"http://localhost/exhibition_three_manager/main/ajax/boardUpdateAjax.jsp",
+				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/boardUpdateAjax.jsp",
 				type:"post",
 				data:{
 					"catNum" : $("#catName_de").val(),
@@ -127,7 +127,7 @@ function deletePost( dbId ){
 	 $("#deleteOk").click(function(){
 		$("#confirmDelete").modal('hide');
 		$.ajax({
-			url:"http://localhost/exhibition_three_manager/main/ajax/boardDeleteAjax.jsp",
+			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/boardDeleteAjax.jsp",
 			type:"post",
 			data:{ "bdId_de": dbId },
 			error:function(xhr){
@@ -217,7 +217,7 @@ if(keyword==null||"".equals(keyword)){
  <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibition_three_manager/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -228,9 +228,9 @@ if(keyword==null||"".equals(keyword)){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                       <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/settings.jsp">Settings</a></li>
+                       <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://localhost/exhibition_three_manager/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
    		            </ul>
                 </li>
             </ul>
@@ -251,7 +251,7 @@ if(keyword==null||"".equals(keyword)){
                         </ol>
                         <!-- 검색 div -->
                         <div class="card-body" style="width: 400px; float: right;">
-                            <form class="d-flex" id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/exhibition_three_manager/main/board.jsp">
+                            <form class="d-flex" id = "searchFrm" class="d-flex" name="searchFrm" action="http://<%=application.getInitParameter("domain") %>/main/board.jsp">
 	                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"   >
 									  <option ${param.option =="title"? "selected":""} value="title">제목 </option>
 									  <option ${param.option =="userid"? "selected":""} value="userid">작성자</option>
@@ -344,7 +344,7 @@ if(keyword==null||"".equals(keyword)){
 								%>
 								<%if(startPage>pageBlock){ %>
 									<li>
-										<a  href="board.jsp?pageNum=<%=startPage - pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">이전</a>
+										<a href="http://<%=application.getInitParameter("domain") %>/main/board.jsp?pageNum=<%=startPage - pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item">이전</a>
 									</li>
 								<%}
 								  for(int i=startPage; i<=endPage; i++){
@@ -353,7 +353,7 @@ if(keyword==null||"".equals(keyword)){
 											<%=i %>
 										</a></li>
 									<%}else{%>
-										<li><a href="board.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary page-item">
+										<li><a href="http://<%=application.getInitParameter("domain") %>/main/board.jsp?pageNum=<%=i %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;"class="text-secondary page-item">
 											<%=i %>
 										</a></li>
 								<%		}
@@ -361,7 +361,7 @@ if(keyword==null||"".equals(keyword)){
 							  		
 							  		if(endPage<pageCount){%>	
 							  			<li>
-										<a  href="board.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item page-item">다음</a>
+										<a  href="http://<%=application.getInitParameter("domain") %>/main/board.jsp?pageNum=<%=startPage + pageBlock %>&option=${param.option}&keyword=${param.keyword}" style="margin-right:10px;text-decoration:none;"class="text-secondary page-item page-item">다음</a>
 										</li>
 								<%	}
 						  		}%>

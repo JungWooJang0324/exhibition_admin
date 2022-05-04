@@ -10,7 +10,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>500 Error</title>
-        <link href="http://localhost/exhibition_three_manager/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
     </head>
     <body>
@@ -23,7 +23,7 @@
                                 <div class="text-center mt-4">
                                     <h2>불편을 드려 죄송합니다.</h2>
                                     <p class="lead"></p>
-                                    <a href="http://localhost/exhibition_three_manager/main/index.jsp">
+                                    <a href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">
                                         <i class="fas fa-arrow-left me-1"></i>
                                         대시보드로 돌아가기
                                     </a>

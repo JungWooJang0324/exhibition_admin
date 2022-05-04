@@ -9,7 +9,13 @@
     <welcome-file>default.jsp</welcome-file>
     <welcome-file>default.htm</welcome-file>
   </welcome-file-list>
-   
+   <session-config>
+   	<session-timeout>30</session-timeout>
+   </session-config>
+   	<context-param>
+		<param-name>domain</param-name>
+		<param-value>localhost/exhibition_three_manager</param-value>
+	</context-param>
   <error-page>
   	<error-code>404</error-code>
   	<location>/main/err/admin_error404.jsp</location>
