@@ -4,7 +4,7 @@
 <%@page import="org.apache.catalina.mbeans.UserMBean"%>
 <%@page import="java.util.List"%>
 <%@page import="VO.ExHallVO"%>
-<%-- <%@include file="admin_id_session.jsp" %> --%>
+<%@include file="admin_id_session.jsp" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="전시장"%>
