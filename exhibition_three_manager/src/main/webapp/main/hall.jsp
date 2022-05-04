@@ -4,7 +4,7 @@
 <%@page import="org.apache.catalina.mbeans.UserMBean"%>
 <%@page import="java.util.List"%>
 <%@page import="VO.ExHallVO"%>
-<%@include file="admin_id_session.jsp" %>
+<%-- <%@include file="admin_id_session.jsp" %> --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="전시장"%>
@@ -181,7 +181,7 @@ $(function(){
 			$.ajax({
 				url:"http://localhost/exhibition_three_manager/main/ajax/hallDeleteAjax.jsp",
 				type:"post",
-				data:{ "hallNum": $("#exNum_de").text()},
+				data:{ "hallNum": $("#exNum_de").val()},
 				error:function(xhr){
 					console.log(xhr.status+" / "+xhr.statusText);
 				},
@@ -239,7 +239,7 @@ function checkAdd(){
 	var coordinate = ["#lat_add","#long_add"];
  	var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/; //폰 번호 검증
 	var regTel = /^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]))-(\d{3,4})-(\d{4})$/;  //일반전화 검증
-	var reg =  /^[+-]?(\d{1,3})?[.](\d{0,5})?$/; //좌표검증
+	var reg =  /^[+-]?(\d{1,3})?[.](\d{0,6})?$/; //좌표검증
 	
 	
 	$("#mgrTel_add").change(function(){
@@ -436,8 +436,7 @@ if(keyword==null||"".equals(keyword)){
                                   	%>
                                   	<c:forEach var="exVO" items="${list}">
                                         <tr style="cursor:pointer" class = "trDetail" >
-                                            <%-- <td><c:out value="${exVO.rnum}"/></td>  --%>
-                                            <td><%=number-- %></td>
+                                            <td><c:out value="${exVO.exHallNum}"/></td>
                                             <td><c:out value="${exVO.exName}"/></td>                                          	
                                             <td><c:out value="${exVO.exLoc}"/></td>
                                             <td id="hiddenTd" style="padding: 0px;">

@@ -15,7 +15,7 @@ import connection.DbConnection;
 public class ExHallManagerDAO {
 
 	/**
-	 * Å×ÀÌºí ·¹ÄÚµåÀÇ °³¼ö¸¦ ±¸ÇÏ´Â ¸Þ¼Òµå
+	 * ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼Òµï¿½
 	 * 
 	 * @return
 	 */
@@ -34,7 +34,7 @@ public class ExHallManagerDAO {
 
 			StringBuilder sql = new StringBuilder();
 
-			sql.append("	select count(ex_hall_num) from exhibition_hall			");
+			sql.append("	select count(ex_hall_num) from exhibition_hall	where hall_deleted ='f'		");
 
 			if ("".equals(keyword) || keyword == null) {
 				pstmt = con.prepareStatement(sql.toString());
@@ -71,7 +71,7 @@ public class ExHallManagerDAO {
 	
 	
 	/**
-	 * Àü½ÃÀå °Ë»ö select ÇÔ¼ö
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ select ï¿½Ô¼ï¿½
 	 * 
 	 * @param start
 	 * @param end
@@ -99,9 +99,9 @@ public class ExHallManagerDAO {
 				.append("	select * 																		")
 				.append(" 	from (select rownum as rnum, ex_hall_name, ex_loc, ex_hall_num 					")
 				.append("		from( select *	from EXHIBITION_HALL										")
-				.append("				where  																").append(option)
+				.append("				where  HALL_DELETED='f'	and															").append(option)
 				.append(" 				like '%'||?||'%' order by ex_hall_num	desc) where rownum <=? )	")
-				.append("	where rnum >= ?  order by rnum 													");
+				.append("	where rnum >= ?   order by rnum 													");
 
 			pstmt = con.prepareStatement(selectExHall.toString());
 			pstmt.setString(1, keyword.trim());
@@ -146,7 +146,7 @@ public class ExHallManagerDAO {
 		try {
 			conn = dc.getConn();
 
-			String insertExhibitonHall = "insert into EXHIBITION_HALL(ex_hall_num, ex_hall_name, ex_loc, zipcode, latitude, longitude, mgr_name, mgr_tel, ex_tel, address1, address2) values(ex_hall_seq.nextval, ?,?,?,?,?,?,?,?,?,?)";
+			String insertExhibitonHall = "insert into EXHIBITION_HALL(ex_hall_num, hall_deleted, ex_hall_name, ex_loc, zipcode, latitude, longitude, mgr_name, mgr_tel, ex_tel, address1, address2) values(ex_hall_seq.nextval, 'f', ?,?,?,?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(insertExhibitonHall);
 
 			pstmt.setString(1, ehVO.getExName());
@@ -230,8 +230,9 @@ public class ExHallManagerDAO {
 
 		try {
 			con = dc.getConn();
-
-			String deleteExhibitonHall = "delete from EXHIBITION_HALL where EX_HALL_NUM=? ";
+			//UPDATE EXHIBITION_HALL SET HALL_DELETED='t' WHERE EX_HALL_NUM=65
+			String deleteExhibitonHall = "UPDATE EXHIBITION_HALL SET HALL_DELETED='t' WHERE EX_HALL_NUM=?";
+//			String deleteExhibitonHall = "delete from EXHIBITION_HALL where EX_HALL_NUM=? ";
 
 			pstmt = con.prepareStatement(deleteExhibitonHall);
 
@@ -310,7 +311,7 @@ public class ExHallManagerDAO {
 	
 //	 public static void main(String[] args) { 
 //		 ExHallManagerDAO ehmDAO = new ExHallManagerDAO (); 
-//		 System.out.println(ehmDAO.getTotalRows("ex_hall_name","°æ±â"));
+//		 System.out.println(ehmDAO.getTotalRows("ex_hall_name","ï¿½ï¿½ï¿½"));
 //		 try {
 //			 System.out.println(ehmDAO.selectAllExHall(0,10));
 ////			System.out.println(ehmDAO.selectSearchExHall(0,10,"",""));
